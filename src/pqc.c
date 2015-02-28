@@ -11,6 +11,10 @@
 
 #include "pool.h"
 #include "pqc.h"
+#include "invalidation/pqcd_inva.h"
+#include "invalidation/my_server.h"
+#include "invalidation/ext_info_hash.h"
+
 
 #define MEMCACHED_PID_FILE "/tmp/memcached.pid"
 
@@ -40,10 +44,24 @@ int UseQueryCache = 1;
 
 int FoundInQueryCache = 0;
 
+/********************************************************DEEPAK***********************************************************/
+
+htable *h;
+//usedlist *l;
+
+/********************************************************DEEPAK***********************************************************/
+
 int
 pqc_init(int run_as_daemon)
 {
   pqc_start_memcached(run_as_daemon);
+
+/********************************************************DEEPAK***********************************************************/
+
+h = init_htable();
+//l = init_list();
+
+/********************************************************DEEPAK***********************************************************/
 
   if ( memc!=NULL )
   {
@@ -289,7 +307,7 @@ encode_key(const char *s, char *buf, size_t buflen)
 static void
 dump_cache_data(const char *data, size_t len)
 {
-  int i;
+ /* int i;
 
   pool_debug("dump_cache_data: len = %d", len);
 
@@ -309,7 +327,7 @@ dump_cache_data(const char *data, size_t len)
 
   for (; i<len ; i++) {
     pool_debug("dump_cache_data: %d(%c) ", data[i], data[i]);
-  }
+  }*/
 }
 
 int
@@ -345,6 +363,30 @@ pqc_set_cache(POOL_CONNECTION *frontend, const char *query, const char *data, si
     pool_error("pqc_set_cache: %s", memcached_strerror(memc, rc));
     return 0;
   }
+
+/********************************************************DEEPAK***********************************************************/
+
+    int oid = 0;
+
+    //extracted_info_nodes_ll **new_head = get_ll_head();
+e_htable **eh_new = get_ehtable_head();
+
+
+   /* while ((*new_head) == NULL)
+        new_head = get_ll_head();*/
+
+                //pool_debug("\n\nTESTING IN PQC Address of main head is %u & allocated head is %u", (*new_head), (*new_head)->head);
+pool_debug("\n\nTESTING IN PQC Address of main head is %u, allocated head is %u & size is %d", (*eh_new), (*eh_new)->table, (*eh_new)->tot_size);
+
+    //if ( (oid = found_in_ll(new_head, query) ) != NULL )       //returns 0 if not found else oid
+    if ( (oid = found_in_ehtable(*eh_new, query) ) != 0 )       //returns 0 if not found else oid
+    {
+        //populate_inva_strucs(h, l, oid, tmpkey);
+        populate_inva_strucs(h, oid, tmpkey);
+
+    }
+
+/********************************************************DEEPAK***********************************************************/
 
   pool_debug("pqc_set_cache: succeeded.");
 
@@ -462,18 +504,18 @@ pqc_send_cached_messages(POOL_CONNECTION *frontend, const char *qcache, int qcac
     char tmpkind;
     int tmplen;
     char tmpbuf[PQC_MAX_VALUE];
-    
+
     tmpkind = qcache[i];
     i += 1;
-    
+
     memcpy(&tmplen, qcache+i, sizeof(tmplen)); /* in network byte order */
     i += sizeof(tmplen);
 
     tmplen = ntohl(tmplen);
-    
+
     memcpy(tmpbuf, qcache+i, tmplen - sizeof(tmplen));
     i += tmplen - sizeof(tmplen);
-    
+
     /* No need to cache PARSE and BIND responses. */
     if (tmpkind == '1' || tmpkind == '2')
     {
