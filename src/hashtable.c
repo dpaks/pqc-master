@@ -1,16 +1,8 @@
-
 #include "invalidation/hashtable.h"
 
 void insert_into_hash(htable *h,int oid, char *memkey)
 {
-    //htable *h = init_htable();
-
-   // if(!hash_search(h, 8, "select * from payment8"))
     hash_insert(h, oid, memkey);
-   // hash_delete(h, oid, memkey);
-    //hash_display(h);
-
-//return 0;
 }
 
 htable *init_htable()
@@ -18,21 +10,20 @@ htable *init_htable()
     int i=0;
 
     htable *h = (htable *)malloc(sizeof(htable));
-    if(!h) {
-        //pool_error("Hash table creation failed!!!");        //in the calling function make sure that you do treat the returned '0'
-        //return 0;
-        puts("Hash table creation failed!!!");
+    if(!h)
+    {
+        pool_error("Hash table creation failed!!!");        //in the calling function make sure that you do treat the returned '0'
     }
 
     h->tot_size = HASHSIZE;
     h->table = (htable_node **)malloc((sizeof(htable_node *)) * (h->tot_size));
-    if(!h->table) {
-        //pool_error("Hash table creation failed!!!");        //in the calling function make sure that you do treat the returned '0'
-        //return 0;
-        puts("Hash table creation failed!!!");
+    if(!h->table)
+    {
+        pool_error("Hash table creation failed!!!");        //in the calling function make sure that you do treat the returned '0'
     }
 
-    for (i=0; i < h->tot_size; i++) {
+    for (i=0; i < h->tot_size; i++)
+    {
         h->table[i] = (htable_node *)malloc((sizeof(htable_node)));
         h->table[i]->next = NULL;
     }
@@ -44,22 +35,23 @@ void hash_insert(htable *h, int oid, char *memkey)
     int index;
     index = hash_fn(oid);
 
-    if (hash_search(h, index, memkey)) {        //returns 1 if data already exists in hash table
-        puts("Duplicate insertion detected");
+    if (hash_search(h, index, memkey))          //returns 1 if data already exists in hash table
+    {
+        pool_debug("Duplicate insertion detected");
         return;
     }
 
     htable_ll_node *temp = (htable_ll_node *)malloc(sizeof(htable_ll_node));
-    if(!temp) {
-        //pool_error("Hash table creation failed!!!");        //in the calling function make sure that you do treat the returned '0'
-        //return 0;
+    if(!temp)
+    {
+        pool_error("Hash table creation failed!!!");        //in the calling function make sure that you do treat the returned '0'
     }
 
     temp->oid = oid;
     temp->memkey = memkey;
     temp->next = h->table[index]->next;        //in chaining, new entries are added at front
     h->table[index]->next = temp;
-    printf("\n\t Successfully inserted %d %s at index %d in the Hash Table\n", h->table[index]->next->oid, h->table[index]->next->memkey,index);
+    pool_debug("\n\t Successfully inserted %d %s at index %d in the Hash Table\n", h->table[index]->next->oid, h->table[index]->next->memkey,index);
 
 }
 
@@ -72,10 +64,12 @@ void hash_delete(htable *h, int oid, char *memkey)
 
     temp = h->table[index]->next;
 
-    while (temp != NULL){
-        if (strcmp(temp->memkey, memkey) == 0) {
+    while (temp != NULL)
+    {
+        if (strcmp(temp->memkey, memkey) == 0)
+        {
             prev = temp->next;
-            printf("\t Successfully deleted %d %s \n", h->table[index]->next->oid, h->table[index]->next->memkey);
+            pool_debug("\t Successfully deleted %d %s \n", h->table[index]->next->oid, h->table[index]->next->memkey);
             free(temp);
             break;
         }
@@ -87,9 +81,11 @@ void hash_delete(htable *h, int oid, char *memkey)
 int hash_search(htable *h,int index, char *memkey)
 {
     htable_ll_node *temp = h->table[index]->next;
-    while (temp != NULL){
-        if (strcmp(temp->memkey, memkey) == 0) {
-            printf("\n\t Successfully found %d %s at index %d\n\n", temp->oid, temp->memkey, index);
+    while (temp != NULL)
+    {
+        if (strcmp(temp->memkey, memkey) == 0)
+        {
+            pool_debug("\n\t Successfully found %d %s at index %d\n\n", temp->oid, temp->memkey, index);
             return 1;
         }
         temp = temp->next;
@@ -102,18 +98,18 @@ void hash_display(htable *h)
     int i = 0;
     htable_ll_node *temp = NULL;
 
-     while (i < h->tot_size)
+    while (i < h->tot_size)
     {
-         if (h->table[i]->next != NULL)
+        if (h->table[i]->next != NULL)
         {
-             temp = h->table[i]->next;
-             while (temp != NULL)
+            temp = h->table[i]->next;
+            while (temp != NULL)
             {
-                printf("\t Index %d:- oid: %d memkey: %s \n", i, temp->oid, temp->memkey);
+                pool_debug("\t DISPLAYING: Index %d:- oid: %d memkey: %s \n", i, temp->oid, temp->memkey);
                 temp = temp->next;
             }
         }
-         i++;
+        i++;
     }
 }
 

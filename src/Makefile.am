@@ -7,7 +7,8 @@ pqcd_SOURCES = pool.h version.h pqcd.conf.sample \
 	pool_signal.h pool_signal.c ps_status.c strlcpy.c \
 	pool_hba.c pool_list.h pool_list.c pool_path.h pool_path.c \
 	pqc.c pqc.h \
-	my_server.c invalidation/my_server.h invalidation/pqcd_inva.h pqcd_inva.c\
+	my_server.c invalidation/my_server.h pqcd_inva.c invalidation/pqcd_inva.h hashtable.c invalidation/hashtable.h \
+	ext_info_hash.c invalidation/ext_info_hash.h \
 	pool_type.h pool_ip.h pool_ip.c pqcd_hba.conf.sample pgpool.pam
 
 pqcd_LDADD = -lmemcached -levent 

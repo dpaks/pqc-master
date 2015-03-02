@@ -4,6 +4,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include "pool.h"
 
 #define HASHSIZE 13     //I don't suppose more than 13 queries would be present in memcached at any time
 

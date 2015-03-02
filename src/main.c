@@ -146,6 +146,12 @@ int main(int argc, char **argv)
                 exit(1);
         }
 
+    if (pthread_setname_np (my_thread, "dpaks thread") != 0)
+        {
+                pool_error("Unable to name thread. Exiting...");
+                exit(1);
+        }
+
     /**********************************************************Deepak***************************************************************/
 
 

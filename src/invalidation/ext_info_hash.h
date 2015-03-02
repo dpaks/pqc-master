@@ -31,8 +31,8 @@ e_htable *init_e_htable();
 
 int store_extracted_info(e_htable **, char [], int);
 
-int e_hash_insert(e_htable *, int , char *);
-int e_hash_search(e_htable *,int , char *);     //0 for no match, 1 for a match
+int e_hash_insert(e_htable *, int , char []);
+int e_hash_search(e_htable *,int , int);     //0 for no match, 1 for a match
 void e_hash_delete(e_htable *,int , char *);
 void e_hash_display(e_htable *);
 
