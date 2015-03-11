@@ -8,6 +8,10 @@
 
 #include <libmemcached/memcached.h>
 
+//#include "invalidation/hashtable.h"
+//#include "invalidation/pqcd_inva.h"
+#include "invalidation/ext_info_hash.h"
+
 #define PQC_MAX_KEY   MEMCACHED_MAX_KEY
 //#define PQC_MAX_VALUE 8192
 #define PQC_MAX_VALUE (2*1024*1024)

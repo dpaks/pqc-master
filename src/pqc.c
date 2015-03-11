@@ -3,18 +3,14 @@
  *
  * Copyright(C) 2010 Uptime Technologies, LLC.
  */
-#include <ctype.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <unistd.h>
 #include <libmemcached/memcached.h>
 
 #include "pool.h"
 #include "pqc.h"
-#include "invalidation/pqcd_inva.h"
+#include "invalidation/main_headers.h"
 #include "invalidation/my_server.h"
-#include "invalidation/ext_info_hash.h"
-
+#include "invalidation/md5.h"
+#include "invalidation/file_oids.h"
 
 #define MEMCACHED_PID_FILE "/tmp/memcached.pid"
 
@@ -30,7 +26,8 @@ static char *buf = NULL;
 
 static int pqc_start_memcached(int);
 static int pqc_stop_memcached();
-static char *encode_key(const char *, char *, size_t);
+//static char *encode_key(const char *, char *, size_t);
+static char *encode_key(const char *, char *, POOL_CONNECTION *);
 
 /*
  * State flags combination:
@@ -46,7 +43,7 @@ int FoundInQueryCache = 0;
 
 /********************************************************DEEPAK***********************************************************/
 
-htable *h;
+//htable *h;
 //usedlist *l;
 
 /********************************************************DEEPAK***********************************************************/
@@ -58,7 +55,7 @@ pqc_init(int run_as_daemon)
 
     /********************************************************DEEPAK***********************************************************/
 
-    h = init_htable();
+    // h = init_htable();
 //l = init_list();
 
     /********************************************************DEEPAK***********************************************************/
@@ -283,14 +280,14 @@ pqc_buf_get(void)
 }
 
 
-static char *
+/*static char *
 encode_key(const char *s, char *buf, size_t buflen)
 {
     int i;
 
     memset(buf, 0, buflen);
 
-    /* replace ' ' to '_'. */
+     //replace ' ' to '_'.
     for (i=0 ; i<strlen(s) ; i++)
     {
         if (i>=buflen)
@@ -305,7 +302,7 @@ encode_key(const char *s, char *buf, size_t buflen)
     pool_debug("encode_key: `%s' -> `%s'", s, buf);
 
     return buf;
-}
+}*/
 
 static void
 dump_cache_data(const char *data, size_t len)
@@ -333,10 +330,47 @@ dump_cache_data(const char *data, size_t len)
      }*/
 }
 
+/*
+ * encode key.
+ * create cache key as md5(username + query string + database name)
+ */
+static char* encode_key(const char *s, char *buf, POOL_CONNECTION *backend)
+{
+    char* strkey;
+    int u_length;
+    int d_length;
+    int q_length;
+    int length;
+
+    u_length = strlen(backend->username);
+    /*ereport(DEBUG1,
+            (errmsg("memcache encode key"),
+                     errdetail("username: \"%s\" database_name: \"%s\"", backend->info->user,backend->info->database)));*/
+
+    d_length = strlen(backend->database);
+
+    q_length = strlen(s);
+    /* ereport(DEBUG1,
+             (errmsg("memcache encode key"),
+                      errdetail("query: \"%s\"", s))); */
+
+    length = u_length + d_length + q_length + 1;
+
+    strkey = (char*)malloc(sizeof(char) * length);
+
+    snprintf(strkey, length, "%s%s%s", backend->username, s, backend->database);
+
+    pg_md5_hash(s, strlen(s), buf);
+
+    free(strkey);
+    strkey = NULL;
+    return buf;
+}
+
 int
 pqc_set_cache(POOL_CONNECTION *frontend, const char *query, const char *data, size_t datalen)
 {
-    char tmpkey[PQC_MAX_KEY];
+    char tmpkey[33];
 
     if ( !IsQueryCacheEnabled )
         return 0;
@@ -347,17 +381,19 @@ pqc_set_cache(POOL_CONNECTION *frontend, const char *query, const char *data, si
     pool_debug("pqc_set_cache: Query=%s", query);
     dump_cache_data(data, datalen);
 
-    if ( frontend!=NULL && frontend->database!=NULL )
-    {
-        char tmp[PQC_MAX_KEY];
+    encode_key(query, tmpkey, frontend);
 
-        snprintf(tmp, sizeof(tmp), "%s %s", frontend->database, query);
-        encode_key(tmp, tmpkey, sizeof(tmpkey));
-    }
-    else
-    {
-        encode_key(query, tmpkey, sizeof(tmpkey));
-    }
+    /*  if ( frontend!=NULL && frontend->database!=NULL )
+      {
+          char tmp[PQC_MAX_KEY];
+
+          snprintf(tmp, sizeof(tmp), "%s %s", frontend->database, query);
+          encode_key(tmp, tmpkey, sizeof(tmpkey));
+      }
+      else
+      {
+          encode_key(query, tmpkey, sizeof(tmpkey));
+      }*/
 
     rc = memcached_set(memc, tmpkey, strlen(tmpkey), data, datalen, pool_config.query_cache_expiration, 0);
 
@@ -369,25 +405,7 @@ pqc_set_cache(POOL_CONNECTION *frontend, const char *query, const char *data, si
 
     /********************************************************DEEPAK***********************************************************/
 
-    int oid = 0;
-
-    //extracted_info_nodes_ll **new_head = get_ll_head();
-    e_htable **eh_new = get_ehtable_head();
-
-
-    while ((*eh_new) == NULL)
-        eh_new = get_ehtable_head();
-
-    //pool_debug("\n\nTESTING IN PQC Address of main head is %u & allocated head is %u", (*new_head), (*new_head)->head);
-    pool_debug("\tTESTING IN PQC Address of main head is %u, allocated head is %u & size is %d\n", (*eh_new), (*eh_new)->table, (*eh_new)->tot_size);
-
-    //if ( (oid = found_in_ll(new_head, query) ) != NULL )       //returns 0 if not found else oid
-    if ( (oid = found_in_ehtable(*eh_new, query) ) != 0 )       //returns 0 if not found else oid
-    {
-        //populate_inva_strucs(h, l, oid, tmpkey);
-        populate_inva_strucs(h, oid, tmpkey);
-
-    }
+    pool_add_table_oid_map(frontend, tmpkey);
 
     /********************************************************DEEPAK***********************************************************/
 
@@ -409,17 +427,18 @@ pqc_get_cache(POOL_CONNECTION *frontend, const char *query, char **buf, size_t *
     if ( strlen(query)<=0 )
         return 0;
 
-    if ( frontend!=NULL && frontend->database!=NULL )
-    {
-        char tmp[PQC_MAX_KEY];
+    /* if ( frontend!=NULL && frontend->database!=NULL )
+     {
+         char tmp[PQC_MAX_KEY];
 
-        snprintf(tmp, sizeof(tmp), "%s %s", frontend->database, query);
-        encode_key(tmp, tmpkey, sizeof(tmpkey));
-    }
-    else
-    {
-        encode_key(query, tmpkey, sizeof(tmpkey));
-    }
+         snprintf(tmp, sizeof(tmp), "%s %s", frontend->database, query);
+         encode_key(tmp, tmpkey, sizeof(tmpkey));
+     }
+     else
+     {
+         encode_key(query, tmpkey, sizeof(tmpkey));
+     }*/
+    encode_key(query, tmpkey, frontend);
 
     ptr = memcached_get(memc, tmpkey, strlen(tmpkey), len, &flags2, &rc);
 

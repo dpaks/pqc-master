@@ -138,7 +138,9 @@ main.o: main.c /usr/include/stdc-predef.h pool.h config.h pool_signal.h \
  /usr/include/libmemcached-1.0/version.h \
  /usr/include/libmemcached-1.0/sasl.h \
  /usr/include/libmemcached-1.0/deprecated_types.h \
- invalidation/my_server.h /usr/include/pthread.h /usr/include/sched.h \
+ invalidation/ext_info_hash.h pool.h /usr/include/error.h \
+ /usr/include/i386-linux-gnu/bits/error.h invalidation/my_server.h \
+ /usr/include/pthread.h /usr/include/sched.h \
  /usr/include/i386-linux-gnu/bits/sched.h \
  /usr/include/i386-linux-gnu/bits/setjmp.h
 
@@ -485,6 +487,14 @@ pqc.h:
 /usr/include/libmemcached-1.0/sasl.h:
 
 /usr/include/libmemcached-1.0/deprecated_types.h:
+
+invalidation/ext_info_hash.h:
+
+pool.h:
+
+/usr/include/error.h:
+
+/usr/include/i386-linux-gnu/bits/error.h:
 
 invalidation/my_server.h:
 

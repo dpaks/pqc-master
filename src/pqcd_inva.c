@@ -1,6 +1,8 @@
 #include "invalidation/pqcd_inva.h"
 #include "pool.h"
 
+/***********************************************Writing to File using MMAP****************************************************/
+
 void *send_to_mmap(char *str, int numbytes)
 {
     int fdin;
@@ -31,6 +33,8 @@ void *send_to_mmap(char *str, int numbytes)
     return src;
 }
 
+/***********************************************Retrieving from File****************************************************/
+
 char *get_from_mmap(int *numbytes)
 {
     FILE *fp;
@@ -55,16 +59,22 @@ char *get_from_mmap(int *numbytes)
     ++i;
     buf[i] = '\0';
     *numbytes = i;
+
+    /*lseek(fdin, 0, SEEK_SET);
+    if (write(fdin, "", 1) == -1)
+    {
+        perror("Writing into mmap file error");
+    }*/
     fclose(fp);
     return buf;
 
 }
-/***********************************************Populate invalidation structures****************************************************/
+/***********************************************Populate invalidation structures****************************************************
 
 //void populate_inva_strucs(htable *h, usedlist *l, int oid, char *tempkey)
 void populate_inva_strucs(htable *h, int oid, char *tempkey)
 {
     insert_into_hash(h, oid, tempkey);
     //insert_into_list(l, oid, tempkey);
-}
+}*/
 

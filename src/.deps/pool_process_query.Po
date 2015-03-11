@@ -133,7 +133,9 @@ pool_process_query.o: pool_process_query.c /usr/include/stdc-predef.h \
  /usr/include/libmemcached-1.0/verbosity.h \
  /usr/include/libmemcached-1.0/version.h \
  /usr/include/libmemcached-1.0/sasl.h \
- /usr/include/libmemcached-1.0/deprecated_types.h
+ /usr/include/libmemcached-1.0/deprecated_types.h \
+ invalidation/ext_info_hash.h pool.h /usr/include/error.h \
+ /usr/include/i386-linux-gnu/bits/error.h
 
 /usr/include/stdc-predef.h:
 
@@ -464,3 +466,11 @@ pqc.h:
 /usr/include/libmemcached-1.0/sasl.h:
 
 /usr/include/libmemcached-1.0/deprecated_types.h:
+
+invalidation/ext_info_hash.h:
+
+pool.h:
+
+/usr/include/error.h:
+
+/usr/include/i386-linux-gnu/bits/error.h:

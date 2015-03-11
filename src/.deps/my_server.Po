@@ -64,7 +64,88 @@ my_server.o: my_server.c /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/sigthread.h /usr/include/pthread.h \
  /usr/include/sched.h /usr/include/i386-linux-gnu/bits/sched.h \
  /usr/include/i386-linux-gnu/bits/timex.h \
- /usr/include/i386-linux-gnu/bits/setjmp.h invalidation/pqcd_inva.h
+ /usr/include/i386-linux-gnu/bits/setjmp.h invalidation/pqcd_inva.h \
+ /usr/include/fcntl.h /usr/include/i386-linux-gnu/bits/fcntl.h \
+ /usr/include/i386-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/i386-linux-gnu/bits/stat.h \
+ /usr/include/i386-linux-gnu/bits/fcntl2.h \
+ /usr/include/i386-linux-gnu/sys/stat.h \
+ /usr/include/i386-linux-gnu/sys/mman.h \
+ /usr/include/i386-linux-gnu/bits/mman.h \
+ /usr/include/i386-linux-gnu/bits/mman-linux.h pqc.h \
+ /usr/include/libmemcached/memcached.h \
+ /usr/include/libmemcached-1.0/memcached.h /usr/include/inttypes.h \
+ /usr/lib/gcc/i686-linux-gnu/4.8/include/stdbool.h \
+ /usr/include/libmemcached-1.0/visibility.h \
+ /usr/include/libmemcached-1.0/configure.h \
+ /usr/include/libmemcached-1.0/platform.h \
+ /usr/include/i386-linux-gnu/sys/un.h /usr/include/netinet/tcp.h \
+ /usr/include/libmemcached-1.0/limits.h \
+ /usr/include/libmemcached-1.0/defaults.h \
+ /usr/include/libmemcached-1.0/types/behavior.h \
+ /usr/include/libmemcached-1.0/types/callback.h \
+ /usr/include/libmemcached-1.0/types/connection.h \
+ /usr/include/libmemcached-1.0/types/hash.h \
+ /usr/include/libmemcached-1.0/types/return.h \
+ /usr/include/libmemcached-1.0/types/server_distribution.h \
+ /usr/include/libmemcached-1.0/return.h \
+ /usr/include/libmemcached-1.0/types.h \
+ /usr/include/libmemcached-1.0/callbacks.h \
+ /usr/include/libmemcached-1.0/alloc.h \
+ /usr/include/libmemcached-1.0/triggers.h \
+ /usr/include/libhashkit-1.0/hashkit.h \
+ /usr/include/libhashkit-1.0/visibility.h \
+ /usr/include/libhashkit-1.0/configure.h \
+ /usr/include/libhashkit-1.0/types.h /usr/include/libhashkit-1.0/has.h \
+ /usr/include/libhashkit-1.0/algorithm.h \
+ /usr/include/libhashkit-1.0/behavior.h \
+ /usr/include/libhashkit-1.0/digest.h \
+ /usr/include/libhashkit-1.0/function.h \
+ /usr/include/libhashkit-1.0/str_algorithm.h \
+ /usr/include/libhashkit-1.0/strerror.h \
+ /usr/include/libhashkit-1.0/string.h \
+ /usr/include/libmemcached-1.0/struct/callback.h \
+ /usr/include/libmemcached-1.0/struct/string.h \
+ /usr/include/libmemcached-1.0/struct/result.h \
+ /usr/include/libmemcached-1.0/struct/allocator.h \
+ /usr/include/libmemcached-1.0/struct/sasl.h \
+ /usr/include/libmemcached-1.0/struct/memcached.h \
+ /usr/include/libmemcached-1.0/struct/server.h \
+ /usr/include/libmemcached-1.0/struct/stat.h \
+ /usr/include/libmemcached-1.0/basic_string.h \
+ /usr/include/libmemcached-1.0/error.h \
+ /usr/include/libmemcached-1.0/stats.h \
+ /usr/include/libmemcached-1.0/allocators.h \
+ /usr/include/libmemcached-1.0/analyze.h \
+ /usr/include/libmemcached-1.0/struct/analysis.h \
+ /usr/include/libmemcached-1.0/auto.h \
+ /usr/include/libmemcached-1.0/behavior.h \
+ /usr/include/libmemcached-1.0/callback.h \
+ /usr/include/libmemcached-1.0/delete.h \
+ /usr/include/libmemcached-1.0/dump.h \
+ /usr/include/libmemcached-1.0/encoding_key.h \
+ /usr/include/libmemcached-1.0/exist.h \
+ /usr/include/libmemcached-1.0/fetch.h \
+ /usr/include/libmemcached-1.0/flush.h \
+ /usr/include/libmemcached-1.0/flush_buffers.h \
+ /usr/include/libmemcached-1.0/get.h /usr/include/libmemcached-1.0/hash.h \
+ /usr/include/libmemcached-1.0/options.h \
+ /usr/include/libmemcached-1.0/parse.h \
+ /usr/include/libmemcached-1.0/quit.h \
+ /usr/include/libmemcached-1.0/result.h \
+ /usr/include/libmemcached-1.0/server.h \
+ /usr/include/libmemcached-1.0/server_list.h \
+ /usr/include/libmemcached-1.0/storage.h \
+ /usr/include/libmemcached-1.0/strerror.h \
+ /usr/include/libmemcached-1.0/touch.h \
+ /usr/include/libmemcached-1.0/verbosity.h \
+ /usr/include/libmemcached-1.0/version.h \
+ /usr/include/libmemcached-1.0/sasl.h \
+ /usr/include/libmemcached-1.0/deprecated_types.h \
+ invalidation/ext_info_hash.h pool.h config.h pool_signal.h pool_type.h \
+ pool_list.h /usr/include/error.h \
+ /usr/include/i386-linux-gnu/bits/error.h pool.h \
+ invalidation/main_headers.h /usr/include/ctype.h
 
 /usr/include/stdc-predef.h:
 
@@ -247,3 +328,191 @@ invalidation/my_server.h:
 /usr/include/i386-linux-gnu/bits/setjmp.h:
 
 invalidation/pqcd_inva.h:
+
+/usr/include/fcntl.h:
+
+/usr/include/i386-linux-gnu/bits/fcntl.h:
+
+/usr/include/i386-linux-gnu/bits/fcntl-linux.h:
+
+/usr/include/i386-linux-gnu/bits/stat.h:
+
+/usr/include/i386-linux-gnu/bits/fcntl2.h:
+
+/usr/include/i386-linux-gnu/sys/stat.h:
+
+/usr/include/i386-linux-gnu/sys/mman.h:
+
+/usr/include/i386-linux-gnu/bits/mman.h:
+
+/usr/include/i386-linux-gnu/bits/mman-linux.h:
+
+pqc.h:
+
+/usr/include/libmemcached/memcached.h:
+
+/usr/include/libmemcached-1.0/memcached.h:
+
+/usr/include/inttypes.h:
+
+/usr/lib/gcc/i686-linux-gnu/4.8/include/stdbool.h:
+
+/usr/include/libmemcached-1.0/visibility.h:
+
+/usr/include/libmemcached-1.0/configure.h:
+
+/usr/include/libmemcached-1.0/platform.h:
+
+/usr/include/i386-linux-gnu/sys/un.h:
+
+/usr/include/netinet/tcp.h:
+
+/usr/include/libmemcached-1.0/limits.h:
+
+/usr/include/libmemcached-1.0/defaults.h:
+
+/usr/include/libmemcached-1.0/types/behavior.h:
+
+/usr/include/libmemcached-1.0/types/callback.h:
+
+/usr/include/libmemcached-1.0/types/connection.h:
+
+/usr/include/libmemcached-1.0/types/hash.h:
+
+/usr/include/libmemcached-1.0/types/return.h:
+
+/usr/include/libmemcached-1.0/types/server_distribution.h:
+
+/usr/include/libmemcached-1.0/return.h:
+
+/usr/include/libmemcached-1.0/types.h:
+
+/usr/include/libmemcached-1.0/callbacks.h:
+
+/usr/include/libmemcached-1.0/alloc.h:
+
+/usr/include/libmemcached-1.0/triggers.h:
+
+/usr/include/libhashkit-1.0/hashkit.h:
+
+/usr/include/libhashkit-1.0/visibility.h:
+
+/usr/include/libhashkit-1.0/configure.h:
+
+/usr/include/libhashkit-1.0/types.h:
+
+/usr/include/libhashkit-1.0/has.h:
+
+/usr/include/libhashkit-1.0/algorithm.h:
+
+/usr/include/libhashkit-1.0/behavior.h:
+
+/usr/include/libhashkit-1.0/digest.h:
+
+/usr/include/libhashkit-1.0/function.h:
+
+/usr/include/libhashkit-1.0/str_algorithm.h:
+
+/usr/include/libhashkit-1.0/strerror.h:
+
+/usr/include/libhashkit-1.0/string.h:
+
+/usr/include/libmemcached-1.0/struct/callback.h:
+
+/usr/include/libmemcached-1.0/struct/string.h:
+
+/usr/include/libmemcached-1.0/struct/result.h:
+
+/usr/include/libmemcached-1.0/struct/allocator.h:
+
+/usr/include/libmemcached-1.0/struct/sasl.h:
+
+/usr/include/libmemcached-1.0/struct/memcached.h:
+
+/usr/include/libmemcached-1.0/struct/server.h:
+
+/usr/include/libmemcached-1.0/struct/stat.h:
+
+/usr/include/libmemcached-1.0/basic_string.h:
+
+/usr/include/libmemcached-1.0/error.h:
+
+/usr/include/libmemcached-1.0/stats.h:
+
+/usr/include/libmemcached-1.0/allocators.h:
+
+/usr/include/libmemcached-1.0/analyze.h:
+
+/usr/include/libmemcached-1.0/struct/analysis.h:
+
+/usr/include/libmemcached-1.0/auto.h:
+
+/usr/include/libmemcached-1.0/behavior.h:
+
+/usr/include/libmemcached-1.0/callback.h:
+
+/usr/include/libmemcached-1.0/delete.h:
+
+/usr/include/libmemcached-1.0/dump.h:
+
+/usr/include/libmemcached-1.0/encoding_key.h:
+
+/usr/include/libmemcached-1.0/exist.h:
+
+/usr/include/libmemcached-1.0/fetch.h:
+
+/usr/include/libmemcached-1.0/flush.h:
+
+/usr/include/libmemcached-1.0/flush_buffers.h:
+
+/usr/include/libmemcached-1.0/get.h:
+
+/usr/include/libmemcached-1.0/hash.h:
+
+/usr/include/libmemcached-1.0/options.h:
+
+/usr/include/libmemcached-1.0/parse.h:
+
+/usr/include/libmemcached-1.0/quit.h:
+
+/usr/include/libmemcached-1.0/result.h:
+
+/usr/include/libmemcached-1.0/server.h:
+
+/usr/include/libmemcached-1.0/server_list.h:
+
+/usr/include/libmemcached-1.0/storage.h:
+
+/usr/include/libmemcached-1.0/strerror.h:
+
+/usr/include/libmemcached-1.0/touch.h:
+
+/usr/include/libmemcached-1.0/verbosity.h:
+
+/usr/include/libmemcached-1.0/version.h:
+
+/usr/include/libmemcached-1.0/sasl.h:
+
+/usr/include/libmemcached-1.0/deprecated_types.h:
+
+invalidation/ext_info_hash.h:
+
+pool.h:
+
+config.h:
+
+pool_signal.h:
+
+pool_type.h:
+
+pool_list.h:
+
+/usr/include/error.h:
+
+/usr/include/i386-linux-gnu/bits/error.h:
+
+pool.h:
+
+invalidation/main_headers.h:
+
+/usr/include/ctype.h:

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "pool.h"
 
 #define LISTSIZE 13     //I don't suppose more than 13 queries would be present in memcached at any time
 
@@ -28,5 +29,7 @@ typedef struct usedlist
 usedlist *init_list();
 void insert_into_list(usedlist *,int ,char *);
 void list_insert(usedlist *, int ,char *);
+void list_display(usedlist *);
+int list_search(usedlist *, int, char *, int *);
 
 #endif // USED_LIST_H

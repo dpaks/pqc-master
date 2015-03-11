@@ -1,17 +1,12 @@
 #include "invalidation/my_server.h"
 #include "invalidation/pqcd_inva.h"
-
+#include "pqc.h"
 #include "invalidation/ext_info_hash.h"
 #include "pool.h"
-#include <pthread.h>
+
+#include "invalidation/main_headers.h"
 
 pthread_mutex_t lock_ll;
-e_htable *eh;
-
-e_htable **get_ehtable_head()
-{
-    return &eh;
-}
 
 void sigchld_handler(int s)
 {
@@ -29,9 +24,37 @@ void *get_in_addr(struct sockaddr *sa)
     return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
-void *recv_info(void *arg)
+void *recv_info(void *eh_from_main)
 {
-    eh = init_e_htable();
+    e_htable **eh = ((e_htable **)eh_from_main);
+    init_e_htable(eh);
+
+    char *dir = "/tmp/mypqcd";
+    char *prev_query = malloc(sizeof(char) * 250);      //size of query is assumed to be max 250
+    strcpy(prev_query, " ");
+
+    if (mkdir(dir, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
+    {
+        if (errno != EEXIST)
+        {
+            perror("\tCREATION of directory1 failed in my_server.c ");
+        }
+    }
+
+    char *dir1 = "/tmp/mypqcd/oiddir";
+
+    if (mkdir(dir1, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
+    {
+        if (errno != EEXIST)
+        {
+
+            perror("\tCREATION of directory2 failed in my_server.c ");
+        }
+        else
+            pool_debug("\tDIRECTORY \"%s\" already exists!\n", dir1);
+    }
+//free(dir);
+//free(dir1);
 
     if (pthread_mutex_init(&lock_ll, NULL) != 0)
     {
@@ -39,12 +62,12 @@ void *recv_info(void *arg)
         //return 1;
     }
 
-    int sockfd, new_fd;  // listen on sock_fd, new connection on new_fd
+    int sockfd, new_fd, fd;  // listen on sock_fd, new connection on new_fd
     struct addrinfo hints, *servinfo, *p;
     struct sockaddr_storage their_addr; // connector's address information
     socklen_t sin_size;
     struct sigaction sa;
-    int yes=1, index;
+    int yes=1;
     char s[INET6_ADDRSTRLEN];
     void *src;
     int rv, numbytes, c_status;
@@ -123,13 +146,10 @@ void *recv_info(void *arg)
             perror("accept");
             continue;
         }
-
         inet_ntop(their_addr.ss_family,
                   get_in_addr((struct sockaddr *)&their_addr),
                   s, sizeof s);
         pool_debug("\tserver: got connection from %s\n", s);
-
-        //pthread_mutex_lock(&lock_ll);
 
         if (!fork())   // this is the child process
         {
@@ -142,7 +162,6 @@ void *recv_info(void *arg)
             }
             pool_debug("\tSize of %s using strlen is %d\n", buf, strlen(buf));
             buf[numbytes] = '\0';
-                       // pool_debug("\tSize of %s using strlen AFTER --numbytes is %d\n", buf, strlen(buf));
 
             if (buf[0] == 't' && numbytes > 2)      //t: cacheable query ; >2: in the called fn, we shift elements of array to left by two positions
             {
@@ -158,20 +177,22 @@ void *recv_info(void *arg)
             perror("waitpid");
             exit(EXIT_FAILURE);
         }
+        close(new_fd);  // parent doesn't need this
 
         pthread_mutex_lock(&lock_ll);           //mutex lock
 
         numbytes = 0;
         new_buf = get_from_mmap(&numbytes);
+        pool_debug("\tPrev_query BEFORE is %s", prev_query);
+        store_extracted_info(eh, new_buf, numbytes, prev_query);
+        pool_debug("\tPrev_query AFTER is %s", prev_query);
+
         pool_debug("\tBUF RETRIEVED FROM MMAP: %s", new_buf);
 
-        index = store_extracted_info(&eh, new_buf, numbytes);
-        e_hash_display(eh);
         pthread_mutex_unlock(&lock_ll);         //mutex unlock
 
-        close(new_fd);  // parent doesn't need this
-
     }
+    close(fd);
     pthread_mutex_destroy(&lock_ll);
 
     return NULL;

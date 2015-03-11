@@ -5,6 +5,8 @@ void insert_into_hash(htable *h,int oid, char *memkey)
     hash_insert(h, oid, memkey);
 }
 
+/***********************************************Initialization****************************************************/
+
 htable *init_htable()
 {
     int i=0;
@@ -29,6 +31,8 @@ htable *init_htable()
     }
     return h;
 }
+
+/***********************************************Insertion****************************************************/
 
 void hash_insert(htable *h, int oid, char *memkey)
 {
@@ -55,6 +59,8 @@ void hash_insert(htable *h, int oid, char *memkey)
 
 }
 
+/***********************************************Deletion****************************************************/
+
 void hash_delete(htable *h, int oid, char *memkey)
 {
     int index;
@@ -78,6 +84,8 @@ void hash_delete(htable *h, int oid, char *memkey)
     }
 }
 
+/***********************************************Search****************************************************/
+
 int hash_search(htable *h,int index, char *memkey)
 {
     htable_ll_node *temp = h->table[index]->next;
@@ -92,6 +100,8 @@ int hash_search(htable *h,int index, char *memkey)
     }
     return 0;
 }
+
+/***********************************************Displaying****************************************************/
 
 void hash_display(htable *h)
 {
@@ -112,6 +122,8 @@ void hash_display(htable *h)
         i++;
     }
 }
+
+/***********************************************Hash Function****************************************************/
 
 int hash_fn(int oid)
 {
