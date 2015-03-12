@@ -119,7 +119,6 @@ static volatile int failover_signo = 0;
 
 int myargc;
 char **myargv;
-e_htable *eh_to_server = NULL;
 
 /*
 * pgpool main program
@@ -142,7 +141,7 @@ int main(int argc, char **argv)
 
     pthread_t my_thread;
 
-    if (pthread_create (&my_thread, NULL, recv_info, &eh_to_server) != 0)
+    if (pthread_create (&my_thread, NULL, recv_info, NULL) != 0)
         {
                 pool_error("Unable to create thread. Exiting...");
                 exit(1);
@@ -1115,7 +1114,3 @@ static void pool_sleep(unsigned int second)
 	POOL_SETMASK(&BlockSig);
 }
 
-e_htable **get_ehtable_head()
-{
-    return &eh_to_server;
-}

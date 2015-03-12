@@ -13,7 +13,7 @@
 #include <sys/mman.h>
 
 //void populate_inva_strucs(htable *, usedlist *, int , char *);
-void *send_to_mmap(char *, int);
+void send_to_mmap(char *, int);
 
 char *get_from_mmap(int *);
 

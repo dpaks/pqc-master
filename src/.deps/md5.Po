@@ -35,7 +35,8 @@ md5.o: md5.c /usr/include/stdc-predef.h invalidation/c.h \
  /usr/include/i386-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
  /usr/include/i386-linux-gnu/asm/errno.h /usr/include/asm-generic/errno.h \
  /usr/include/asm-generic/errno-base.h /usr/include/locale.h \
- /usr/include/i386-linux-gnu/bits/locale.h invalidation/md5.h
+ /usr/include/i386-linux-gnu/bits/locale.h invalidation/md5.h \
+ invalidation/c.h
 
 /usr/include/stdc-predef.h:
 
@@ -142,3 +143,5 @@ invalidation/c.h:
 /usr/include/i386-linux-gnu/bits/locale.h:
 
 invalidation/md5.h:
+
+invalidation/c.h:

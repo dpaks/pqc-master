@@ -2,7 +2,7 @@
 /*
  * $Header: /cvsroot/pgpool/pgpool/pool_process_query.c,v 1.60 2007/08/29 05:44:50 y-asaba Exp $
  *
- * pgpool: a language independent connection pool server for PostgreSQL 
+ * pgpool: a language independent connection pool server for PostgreSQL
  * written by Tatsuo Ishii
  *
  * Copyright (c) 2003-2007	PgPool Global Development Group
@@ -38,7 +38,7 @@
 #include <ctype.h>
 
 #include "pool.h"
-
+#include "invalidation/file_oids.h"
 #include "pqc.h"
 
 #define INIT_STATEMENT_LIST_SIZE 8
@@ -62,62 +62,62 @@ typedef struct {
 	PreparedStatement **stmt_list;
 } PreparedStatementList;
 
-static POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend,
 										POOL_CONNECTION_POOL *backend);
 
-static POOL_STATUS Query(POOL_CONNECTION *frontend, 
+static POOL_STATUS Query(POOL_CONNECTION *frontend,
 						 POOL_CONNECTION_POOL *backend, char *query);
 
-static POOL_STATUS Execute(POOL_CONNECTION *frontend, 
+static POOL_STATUS Execute(POOL_CONNECTION *frontend,
 						   POOL_CONNECTION_POOL *backend);
 
-static POOL_STATUS Parse(POOL_CONNECTION *frontend, 
+static POOL_STATUS Parse(POOL_CONNECTION *frontend,
 						 POOL_CONNECTION_POOL *backend);
 
 #ifdef NOT_USED
-static POOL_STATUS Sync(POOL_CONNECTION *frontend, 
+static POOL_STATUS Sync(POOL_CONNECTION *frontend,
 						   POOL_CONNECTION_POOL *backend);
 #endif
 
-static POOL_STATUS ReadyForQuery(POOL_CONNECTION *frontend, 
+static POOL_STATUS ReadyForQuery(POOL_CONNECTION *frontend,
 								 POOL_CONNECTION_POOL *backend, int send_ready);
 
-static POOL_STATUS CompleteCommandResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS CompleteCommandResponse(POOL_CONNECTION *frontend,
 										   POOL_CONNECTION_POOL *backend);
 
-static POOL_STATUS CopyInResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS CopyInResponse(POOL_CONNECTION *frontend,
 								  POOL_CONNECTION_POOL *backend);
 
-static POOL_STATUS CopyOutResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS CopyOutResponse(POOL_CONNECTION *frontend,
 								   POOL_CONNECTION_POOL *backend);
 
 static POOL_STATUS CopyDataRows(POOL_CONNECTION *frontend,
 								POOL_CONNECTION_POOL *backend, int copyin);
 
-static POOL_STATUS CursorResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS CursorResponse(POOL_CONNECTION *frontend,
 								  POOL_CONNECTION_POOL *backend);
 
 static POOL_STATUS EmptyQueryResponse(POOL_CONNECTION *frontend,
 									  POOL_CONNECTION_POOL *backend);
 
-static int RowDescription(POOL_CONNECTION *frontend, 
+static int RowDescription(POOL_CONNECTION *frontend,
 						  POOL_CONNECTION_POOL *backend);
 
-static POOL_STATUS AsciiRow(POOL_CONNECTION *frontend, 
+static POOL_STATUS AsciiRow(POOL_CONNECTION *frontend,
 							POOL_CONNECTION_POOL *backend,
 							short num_fields);
 
-static POOL_STATUS BinaryRow(POOL_CONNECTION *frontend, 
+static POOL_STATUS BinaryRow(POOL_CONNECTION *frontend,
 							 POOL_CONNECTION_POOL *backend,
 							 short num_fields);
 
-static POOL_STATUS FunctionCall(POOL_CONNECTION *frontend, 
+static POOL_STATUS FunctionCall(POOL_CONNECTION *frontend,
 								POOL_CONNECTION_POOL *backend);
 
-static POOL_STATUS FunctionResultResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS FunctionResultResponse(POOL_CONNECTION *frontend,
 										  POOL_CONNECTION_POOL *backend);
 
-static POOL_STATUS ProcessFrontendResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS ProcessFrontendResponse(POOL_CONNECTION *frontend,
 										   POOL_CONNECTION_POOL *backend);
 
 static POOL_STATUS send_extended_protocol_message(POOL_CONNECTION *cp,
@@ -171,7 +171,7 @@ static int is_drop_database(char *query);		/* returns non 0 if this is a DROP DA
 static void query_ps_status(char *query, POOL_CONNECTION_POOL *backend);		/* show ps status */
 static int detect_deadlock_error(POOL_CONNECTION *master, int major);
 
-POOL_STATUS pool_process_query(POOL_CONNECTION *frontend, 
+POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 							   POOL_CONNECTION_POOL *backend,
 							   int connection_reuse,
 							   int first_ready_for_query_received)
@@ -578,12 +578,12 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 					/* FunctionResultResponse and FunctionVoidResponse */
 					status = FunctionResultResponse(frontend, backend);
 					break;
-				
+
 				case 'Z':
 					/* Ready for query */
 					status = ReadyForQuery(frontend, backend, 1);
 					break;
-				
+
 				default:
 					pool_error("Unknown message type %c(%02x)", kind, kind);
 					exit(1);
@@ -602,7 +602,7 @@ POOL_STATUS pool_process_query(POOL_CONNECTION *frontend,
 	return POOL_CONTINUE;
 }
 
-static POOL_STATUS Query(POOL_CONNECTION *frontend, 
+static POOL_STATUS Query(POOL_CONNECTION *frontend,
 						 POOL_CONNECTION_POOL *backend, char *query)
 {
 	char *string, *string1;
@@ -757,7 +757,7 @@ static POOL_STATUS Query(POOL_CONNECTION *frontend,
 		{
 			stmt = lookup_prepared_statement_by_statement(&prepared_list,
 														  portal_name);
-		
+
 			if (!stmt)
 				string1 = string;
 			else
@@ -808,7 +808,7 @@ static POOL_STATUS Query(POOL_CONNECTION *frontend,
 			}
 
 			pool_debug("Query: a cache fetched. len=%d", qcachelen);
-			
+
 			/*
 			 * FIXME: This should not be reached, but now it sometimes happens.
 			 */
@@ -828,18 +828,18 @@ static POOL_STATUS Query(POOL_CONNECTION *frontend,
 			if (MAJOR(backend) == PROTO_MAJOR_V3)
 			{
 				signed char state;
-				
+
 				/* FIXME: need to fix the state variable. */
 				state = 'I';
-				
+
 				/* set transaction state */
 				MASTER(backend)->tstate = state;
-				
+
 				pqc_send_message(frontend, 'Z', 5, (char *)&state);
 			}
 			else
 				pool_write(frontend, "Z", 1);
-			
+
 			if (pool_flush(frontend))
 				return POOL_END;
 		}
@@ -875,7 +875,7 @@ do_exec:
 /*
  * process EXECUTE (V3 only)
  */
-static POOL_STATUS Execute(POOL_CONNECTION *frontend, 
+static POOL_STATUS Execute(POOL_CONNECTION *frontend,
 						   POOL_CONNECTION_POOL *backend)
 {
 	char *string;		/* portal name + null terminate + max_tobe_returned_rows */
@@ -926,7 +926,7 @@ static POOL_STATUS Execute(POOL_CONNECTION *frontend,
 	 *        if it's available.
 	 */
 	snprintf(cachekey, sizeof(cachekey), "%s%s", stmt->prepared_string + hint_offset, stmt->bind_parameter_string);
-	
+
 	pool_debug("query cache key = <%s>", cachekey);
 
 	pqc_push_current_query(cachekey);
@@ -967,18 +967,18 @@ static POOL_STATUS Execute(POOL_CONNECTION *frontend,
 			if (MAJOR(backend) == PROTO_MAJOR_V3)
 			{
 				signed char state;
-				
+
 				/* FIXME: need to fix the state variable. */
 				state = 'I';
-				
+
 				/* set transaction state */
 				MASTER(backend)->tstate = state;
-				
+
 				pqc_send_message(frontend, 'Z', 5, (char *)&state);
 			}
 			else
 				pool_write(frontend, "Z", 1);
-			
+
 			if (pool_flush(frontend))
 				return POOL_END;
 		}
@@ -1078,7 +1078,7 @@ static POOL_STATUS send_execute_message(POOL_CONNECTION *cp,
 /*
  * process PARSE (V3 only)
  */
-static POOL_STATUS Parse(POOL_CONNECTION *frontend, 
+static POOL_STATUS Parse(POOL_CONNECTION *frontend,
 						 POOL_CONNECTION_POOL *backend)
 {
 	char kind;
@@ -1185,7 +1185,7 @@ static POOL_STATUS Parse(POOL_CONNECTION *frontend,
 /*
  * process Sync (V3 only)
  */
-static POOL_STATUS Sync(POOL_CONNECTION *frontend, 
+static POOL_STATUS Sync(POOL_CONNECTION *frontend,
 						   POOL_CONNECTION_POOL *backend)
 {
 	char *string;		/* portal name + null terminate + max_tobe_returned_rows */
@@ -1213,7 +1213,7 @@ static POOL_STATUS Sync(POOL_CONNECTION *frontend,
 }
 #endif
 
-static POOL_STATUS ReadyForQuery(POOL_CONNECTION *frontend, 
+static POOL_STATUS ReadyForQuery(POOL_CONNECTION *frontend,
 								 POOL_CONNECTION_POOL *backend, int send_ready)
 {
 	StartupPacket *sp;
@@ -1293,17 +1293,17 @@ static POOL_STATUS ReadyForQuery(POOL_CONNECTION *frontend,
 
 	sp = MASTER_CONNECTION(backend)->sp;
 	if (MASTER(backend)->tstate == 'T')
-		snprintf(psbuf, sizeof(psbuf), "%s %s %s idle in transaction", 
+		snprintf(psbuf, sizeof(psbuf), "%s %s %s idle in transaction",
 				 sp->user, sp->database, remote_ps_data);
 	else
-		snprintf(psbuf, sizeof(psbuf), "%s %s %s idle", 
+		snprintf(psbuf, sizeof(psbuf), "%s %s %s idle",
 				 sp->user, sp->database, remote_ps_data);
 	set_ps_display(psbuf, false);
 
 	return POOL_CONTINUE;
 }
 
-static POOL_STATUS CompleteCommandResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS CompleteCommandResponse(POOL_CONNECTION *frontend,
 										   POOL_CONNECTION_POOL *backend)
 {
 	char *string, *string1;
@@ -1324,7 +1324,7 @@ static POOL_STATUS CompleteCommandResponse(POOL_CONNECTION *frontend,
 	return POOL_CONTINUE;
 }
 
-static int RowDescription(POOL_CONNECTION *frontend, 
+static int RowDescription(POOL_CONNECTION *frontend,
 						  POOL_CONNECTION_POOL *backend)
 {
 	short num_fields, num_fields1;
@@ -1375,7 +1375,7 @@ static int RowDescription(POOL_CONNECTION *frontend,
 	return num_fields;
 }
 
-static POOL_STATUS AsciiRow(POOL_CONNECTION *frontend, 
+static POOL_STATUS AsciiRow(POOL_CONNECTION *frontend,
 							POOL_CONNECTION_POOL *backend,
 							short num_fields)
 {
@@ -1444,7 +1444,7 @@ static POOL_STATUS AsciiRow(POOL_CONNECTION *frontend,
 	return POOL_CONTINUE;
 }
 
-static POOL_STATUS BinaryRow(POOL_CONNECTION *frontend, 
+static POOL_STATUS BinaryRow(POOL_CONNECTION *frontend,
 							 POOL_CONNECTION_POOL *backend,
 							 short num_fields)
 {
@@ -1507,7 +1507,7 @@ static POOL_STATUS BinaryRow(POOL_CONNECTION *frontend,
 	return POOL_CONTINUE;
 }
 
-static POOL_STATUS CursorResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS CursorResponse(POOL_CONNECTION *frontend,
 								  POOL_CONNECTION_POOL *backend)
 {
 	char *string, *string1;
@@ -1527,7 +1527,7 @@ static POOL_STATUS CursorResponse(POOL_CONNECTION *frontend,
 	return POOL_CONTINUE;
 }
 
-POOL_STATUS ErrorResponse(POOL_CONNECTION *frontend, 
+POOL_STATUS ErrorResponse(POOL_CONNECTION *frontend,
 						  POOL_CONNECTION_POOL *backend)
 {
 	char *string;
@@ -1542,7 +1542,7 @@ POOL_STATUS ErrorResponse(POOL_CONNECTION *frontend,
 	pool_write(frontend, "E", 1);
 	if (pool_write_and_flush(frontend, string, len) < 0)
 		return POOL_END;
-			
+
 	return POOL_CONTINUE;
 }
 
@@ -1589,7 +1589,7 @@ POOL_STATUS ErrorResponse2(POOL_CONNECTION *frontend,
 	return POOL_CONTINUE;
 }
 
-POOL_STATUS NoticeResponse(POOL_CONNECTION *frontend, 
+POOL_STATUS NoticeResponse(POOL_CONNECTION *frontend,
 								  POOL_CONNECTION_POOL *backend)
 {
 	char *string, *string1;
@@ -1609,7 +1609,7 @@ POOL_STATUS NoticeResponse(POOL_CONNECTION *frontend,
 	return POOL_CONTINUE;
 }
 
-static POOL_STATUS CopyInResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS CopyInResponse(POOL_CONNECTION *frontend,
 								  POOL_CONNECTION_POOL *backend)
 {
 	POOL_STATUS status;
@@ -1630,7 +1630,7 @@ static POOL_STATUS CopyInResponse(POOL_CONNECTION *frontend,
 	return status;
 }
 
-static POOL_STATUS CopyOutResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS CopyOutResponse(POOL_CONNECTION *frontend,
 								   POOL_CONNECTION_POOL *backend)
 {
 	POOL_STATUS status;
@@ -1672,7 +1672,7 @@ static POOL_STATUS CopyDataRows(POOL_CONNECTION *frontend,
 
 				if (pool_read(frontend, &kind, 1) < 0)
 					return POOL_END;
-				
+
 				SimpleForwardToBackend(kind, frontend, backend);
 
 				/* CopyData? */
@@ -1693,7 +1693,7 @@ static POOL_STATUS CopyDataRows(POOL_CONNECTION *frontend,
 
 				if ((kind = pool_read_kind(backend)) < 0)
 					return POOL_END;
-				
+
 				SimpleForwardToFrontend(kind, frontend, backend);
 
 				/* CopyData? */
@@ -1721,7 +1721,7 @@ static POOL_STATUS CopyDataRows(POOL_CONNECTION *frontend,
 			pool_write(MASTER(backend), string, len);
 		}
 		else
-			pool_write(frontend, string, len);			
+			pool_write(frontend, string, len);
 
 		if (len == PROTO_MAJOR_V3)
 		{
@@ -1759,7 +1759,7 @@ static POOL_STATUS EmptyQueryResponse(POOL_CONNECTION *frontend,
 	return pool_write_and_flush(frontend, "", 1);
 }
 
-static POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend,
 										POOL_CONNECTION_POOL *backend)
 {
 	int pid, pid1;
@@ -1780,7 +1780,7 @@ static POOL_STATUS NotificationResponse(POOL_CONNECTION *frontend,
 	return pool_write_and_flush(frontend, condition, len);
 }
 
-static POOL_STATUS FunctionCall(POOL_CONNECTION *frontend, 
+static POOL_STATUS FunctionCall(POOL_CONNECTION *frontend,
 								POOL_CONNECTION_POOL *backend)
 {
 	char dummy[2];
@@ -1833,7 +1833,7 @@ static POOL_STATUS FunctionCall(POOL_CONNECTION *frontend,
 	return POOL_CONTINUE;
 }
 
-static POOL_STATUS FunctionResultResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS FunctionResultResponse(POOL_CONNECTION *frontend,
 										  POOL_CONNECTION_POOL *backend)
 {
 	char dummy;
@@ -1874,7 +1874,7 @@ static POOL_STATUS FunctionResultResponse(POOL_CONNECTION *frontend,
 	return pool_flush(frontend);
 }
 
-static POOL_STATUS ProcessFrontendResponse(POOL_CONNECTION *frontend, 
+static POOL_STATUS ProcessFrontendResponse(POOL_CONNECTION *frontend,
 										   POOL_CONNECTION_POOL *backend)
 {
 	char fkind;
@@ -2020,7 +2020,7 @@ int pool_check_fd(POOL_CONNECTION *cp, int notimeout)
 
 		if (fds == 0)
 		{
-			pool_error("pool_check_fd: data is not ready tp->tv_sec %d tp->tp_usec %d", 
+			pool_error("pool_check_fd: data is not ready tp->tv_sec %d tp->tp_usec %d",
 					   pool_config.replication_timeout / 1000,
 					   (pool_config.replication_timeout - (timeout.tv_sec * 1000))*1000);
 			break;
@@ -2188,7 +2188,7 @@ static void process_reporting(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *b
 	snprintf(status[i].value, MAXVALLEN, "%d", pool_config.master_slave_mode);
 	status[i].desc = "if true, operate in master/slave mode";
 	i++;
-		 
+
 	status[i].name = "connection_cache";
 	snprintf(status[i].value, MAXVALLEN, "%d", pool_config.connection_cache);
 	status[i].desc = "if true, cache connection pool";
@@ -2414,7 +2414,7 @@ static void process_reporting(POOL_CONNECTION *frontend, POOL_CONNECTION_POOL *b
 			len = htonl(strlen(status[i].value));
 			pool_write(frontend, &len, sizeof(len));
 			pool_write(frontend, status[i].value, strlen(status[i].value));
-			
+
 			len = htonl(strlen(status[i].desc));
 			pool_write(frontend, &len, sizeof(len));
 			pool_write(frontend, status[i].desc, strlen(status[i].desc));
@@ -2502,7 +2502,7 @@ POOL_STATUS SimpleForwardToFrontend(char kind, POOL_CONNECTION *frontend, POOL_C
 	else if (kind == 'C' && select_in_transaction)
 		select_in_transaction = 0;
 
-	/* 
+	/*
 	 * Remove a pending function if a received message is not
 	 * NoticeResponse.
 	 */
@@ -2555,6 +2555,7 @@ POOL_STATUS SimpleForwardToFrontend(char kind, POOL_CONNECTION *frontend, POOL_C
 			 * Expire a result buffer to disable the query cache
 			 * on non-SELECT statement.
 			 */
+            invalidate_query_cache(frontend, pqc_pop_current_query());
 			pool_debug("SimpleForwardToFrontend: Non-SELECT statement. Query cache disabled.");
 			pqc_buf_init();
 			IsQueryCacheEnabled = false;
@@ -3340,7 +3341,7 @@ static int need_insert_lock(POOL_CONNECTION_POOL *backend, char *query)
 {
 	if (MAJOR(backend) != PROTO_MAJOR_V3)
 		return 0;
-	
+
 	/*
 	 * either insert_lock directive specified and without "NO INSERT LOCK" comment
 	 * or "INSERT LOCK" comment exists?
@@ -3712,7 +3713,7 @@ static void del_prepared_list(PreparedStatementList *p, PreparedStatement *stmt)
 
 	free(stmt->statement_name);
 	free(stmt);
-	
+
 	if (i == p->cnt)
 		return;
 
@@ -3785,7 +3786,7 @@ static int send_deallocate(POOL_CONNECTION_POOL *backend, PreparedStatementList 
 
 	if (p->cnt <= n)
 		return 1;
-	
+
 	len = strlen(p->stmt_list[n]->statement_name) + 14; /* "DEALLOCATE \"" + "\"" + '\0' */
 	query = malloc(len);
 	if (query == NULL)
@@ -3875,7 +3876,7 @@ static POOL_STATUS error_kind_mismatch(POOL_CONNECTION *frontend, POOL_CONNECTIO
 
 	pool_error("pool_process_query: kind does not match between backends master(%c) secondary(%c)",
 			   kind, kind1);
-	pool_send_error_message(frontend, MAJOR(backend), "XX000", 
+	pool_send_error_message(frontend, MAJOR(backend), "XX000",
 							"kind mismatch between backends", "",
 							"check data consistency between master and secondary", __FILE__, __LINE__);
 
@@ -3891,7 +3892,7 @@ static POOL_STATUS error_kind_mismatch(POOL_CONNECTION *frontend, POOL_CONNECTIO
 		notice_backend_error(0);
 		exit(1);
 	}
-	
+
 	if (pool_config.replication_stop_on_mismatch)
 		return POOL_FATAL;
 	else
@@ -3925,13 +3926,13 @@ static int detect_deadlock_error(POOL_CONNECTION *master, int major)
 		if (major == PROTO_MAJOR_V3)
 		{
 			char *error_code;
-			
+
 			if (pool_read(master, &len, sizeof(len)) < 0)
 				return POOL_END;
 			readlen += sizeof(len);
 			memcpy(p, &len, sizeof(len));
 			p += sizeof(len);
-			
+
 			len = ntohl(len) - 4;
 			str = malloc(len);
 			pool_read(master, str, len);

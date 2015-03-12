@@ -3,13 +3,13 @@
 
 /***********************************************Writing to File using MMAP****************************************************/
 
-void *send_to_mmap(char *str, int numbytes)
+void send_to_mmap(char *str, int numbytes)
 {
     int fdin;
     void *src;
     struct stat sbuf;
 
-    if ((fdin = open("mmapfile.txt", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH)) < 0)
+    if ((fdin = open("/tmp/mypqcd/mmapfile.txt", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH)) < 0)
         perror("can’t open mmapfile for reading");
 
     lseek(fdin, 100, SEEK_SET);            //Assuming that maximum query size is 100 characters
@@ -29,8 +29,6 @@ void *send_to_mmap(char *str, int numbytes)
     memcpy(src, str, numbytes);
 
     close(fdin);
-    //munmap(src, sbuf.st_size);
-    return src;
 }
 
 /***********************************************Retrieving from File****************************************************/
@@ -45,7 +43,7 @@ char *get_from_mmap(int *numbytes)
     }
     int i=0;
 
-    fp = fopen("mmapfile.txt","r");
+    fp = fopen("/tmp/mypqcd/mmapfile.txt","r");
 
    if( fp == NULL )
    {
@@ -69,12 +67,5 @@ char *get_from_mmap(int *numbytes)
     return buf;
 
 }
-/***********************************************Populate invalidation structures****************************************************
 
-//void populate_inva_strucs(htable *h, usedlist *l, int oid, char *tempkey)
-void populate_inva_strucs(htable *h, int oid, char *tempkey)
-{
-    insert_into_hash(h, oid, tempkey);
-    //insert_into_list(l, oid, tempkey);
-}*/
 

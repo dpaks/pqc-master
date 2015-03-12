@@ -1,4 +1,4 @@
-cscope 15 $HOME/Project Source Codes/Postgres/pqc-master/src               0000606522
+cscope 15 $HOME/Project Source Codes/Postgres/pqc-master/src               0000598278
 	@child.c
 
 24 
@@ -4093,49 +4093,49 @@ size_t
 	~"övÆid©i⁄/md5.h
 "
 
-4 
+3 
+	~"övÆid©i⁄/maö_hódîs.h
+"
+
+4 
+	~"poﬁ.h
+"
+
+6 
 	#EMAXDATASIZE
  100
 
 	)
 
-5 
+7 
 	#MAX_KEY
  256
 
 	)
 
-9 
+11 
 	$°‹e_exåa˘ed_öfo
-(
-e_hèbÀ
- **
-eh
-, 
+(
 buf
 [
 EMAXDATASIZE
 ], 
 numbyãs
-, *
-¥ev_quîy
 )
 
-12 
+13 
 i
 , 
 j
-, 
-quîy_Àn
- = 0;
+;
 
-13 
+14 
 time_t
  
 cur_time
 ;
 
-14 *
+15 *
 quîy_‰om_buf
  = (*)
 	`mÆloc
@@ -4143,25 +4143,27 @@ quîy_‰om_buf
 numbyãs
 -2-5) * ());
 
-15 
+16 
 oid_‰om_buf
 [6];
 
-16 
+17 
 	`time
 (&
 cur_time
 );
 
-18 *
+19 *
 dú
- = "/tmp/mypqcd/oiddir";
+ = "/tmp/mypqcd";
 
-19 
+20 
 ∑th
-[100];
+[100], 
+ty≥
+;
 
-20 *
+21 *
 checksum
  = 
 	`mÆloc
@@ -4169,21 +4171,21 @@ checksum
 MAX_KEY
 );
 
-21 
+22 
 fd
 , 
-Àn_¨r_of_oid
-, 
 k
-=0;
+=0, 
+oid_size
+;
 
-22 
+23 
 Êock
  
 Ê
 ;
 
-24 
+25 
 Ê
 .
 l_ty≥
@@ -4191,7 +4193,7 @@ l_ty≥
 F_WRLCK
 ;
 
-25 
+26 
 Ê
 .
 l_whí˚
@@ -4199,19 +4201,23 @@ l_whí˚
 SEEK_SET
 ;
 
-26 
+27 
 Ê
 .
 l_°¨t
  = 0;
 
-27 
+28 
 Ê
 .
 l_Àn
  = 0;
 
-30 
+30 i‡(
+buf
+[0] == 't')
+
+32 
 	`¢¥ötf
 (
 ∑th
@@ -4219,7 +4225,15 @@ l_Àn
 dú
 , "ext_info");
 
-31 i‡((
+36 
+	`¢¥ötf
+(
+∑th
+, ’©h), "%s/%s", 
+dú
+, "ext_info_inva");
+
+38 i‡((
 fd
  = 
 	`›í
@@ -4235,53 +4249,71 @@ O_APPEND
 S_IRWXU
 |
 S_IRWXO
+|
+S_IRWXG
 )) == -1)
 
-33 
+40 
 	`≥º‹
-("\tFailedÅo open file \n");
+("\tFailedÅo open file inÉxt_info_hash ");
 
-37 
+41 
+	`exô
+(1);
+
+43 
+	`fchmod
+(
+fd
+, 
+S_IRWXU
+|
+S_IRWXO
+|
+S_IRWXG
+);
+
+45 
 	`poﬁ_debug
 ("Numbyã†ö st‹e_exåa˘ed_öfÿi†%d", 
 numbyãs
 );
 
-38 
+47 
 i
  = 0; i < 2; i++)
 
-40 
+49 
 j
  = 0; j < 
 numbyãs
 ; j++)
 
-42 
+51 
 buf
 [
 j
 ] = buf[j+1];
 
-44 --
+53 --
 numbyãs
 ;
 
-47 
+56 
 i
  = 0;
 
-48 
+57 
 j
  = 0;
 
-50 
+59 
 buf
 [
 i
 ] != ';')
 
-52 
+61 
 quîy_‰om_buf
 [
 i
@@ -4289,23 +4321,23 @@ i
 buf
 [i];
 
-53 
+62 
 i
 ++;
 
-55 
+64 
 quîy_‰om_buf
 [
 i
 ] = ';';
 
-56 
+65 
 quîy_‰om_buf
 [++
 i
 ] = '\0';
 
-57 
+66 
 	`poﬁ_debug
 ("\tEXTRACTED QUERY FROM BUF: %†o‡size: %d", 
 quîy_‰om_buf
@@ -4313,59 +4345,17 @@ quîy_‰om_buf
 	`°æí
 (query_from_buf));
 
-59 i‡(
-	`°rcmp
-(
-¥ev_quîy
-, " ") == 0)
-
-61 
-	`°r˝y
-(
-¥ev_quîy
-, 
-quîy_‰om_buf
-);
-
-64 i‡(
-	`°rcmp
-(
-quîy_‰om_buf
-, 
-¥ev_quîy
-) != 0)
-
-66 
-ch¨_oid
-[6];
-
-67 *
-¨r_of_oid
- = 
-	`found_ö_ehèbÀ
-(*
-eh
-, 
-¥ev_quîy
-);
-
 68 
-	`poﬁ_debug
-("\tPªv_quîy bef‹êMD5 i†%s", 
-¥ev_quîy
-);
-
-70 
 	`pg_md5_hash
 (
-¥ev_quîy
+quîy_‰om_buf
 , 
 	`°æí
-’ªv_quîy), 
+(quîy_‰om_buf), 
 checksum
 );
 
-72 i‡(
+70 i‡(
 	`f˙é
 (
 fd
@@ -4373,17 +4363,21 @@ fd
 F_SETLKW
 , &
 Ê
-) == -1) {
+) == -1)
 
-73 
+72 
 	`≥º‹
 ("fcntl");
 
-74 
+73 
 	`exô
 (1);
 
-77 i‡(
+77 
+	`poﬁ_debug
+("\tFILEÜocked inÉxt_info_hash!\n");
+
+80 i‡(
 	`wrôe
 (
 fd
@@ -4393,89 +4387,29 @@ checksum
 	`°æí
 (checksum)) == -1)
 
-79 
-	`poﬁ_debug
-("\tWriteÉrror for Checksum!\n");
+82 
+	`≥º‹
+("\tWriteÉrror for Checksum! ");
 
-83 
+85 
 	`poﬁ_debug
 ("\tWROTE checksum\n");
 
-84 
-¨r_of_oid
-[
-k
-] != -1)
-
-86 
-	`¢¥ötf
-(
-ch¨_oid
-, 6, "%d", 
-¨r_of_oid
-[
-k
-]);
-
-87 i‡((
-	`wrôe
-(
-fd
-, " ", 1Ë=-1Ë| (wrôe(fd, 
-ch¨_oid
-, 5) == -1))
-
-89 
-	`poﬁ_debug
-("\tWrôêîr‹ f‹ OID %s!\n",
-ch¨_oid
-);
-
-93 
-	`poﬁ_debug
-("\tWROTE oid: %s\n", 
-ch¨_oid
-);
-
-95 
-k
-++;
-
-97 
-	`wrôe
-(
-fd
-, "\n", 1);
-
-98 
-	`˛o£
-(
-fd
-);
-
-100 
-Ê
-.
-l_ty≥
- = 
-F_UNLCK
-;
-
-102 
-	`°r˝y
-(
-¥ev_quîy
-, 
-quîy_‰om_buf
-);
-
-104 
+87 
 buf
 [
 i
 ] != '\0')
 
-106 
+89 
+oid_size
+ = 5;
+
+90 
+oid_size
+ > 0)
+
+92 
 oid_‰om_buf
 [
 j
@@ -4485,13 +4419,21 @@ buf
 i
 ++];
 
-108 
+93 
+oid_size
+--;
+
+95 
 oid_‰om_buf
 [
 j
 ] = '\0';
 
-109 
+96 
+j
+ = 0;
+
+97 
 	`poﬁ_debug
 ("\tEXTRACTED OID FROM BUF: %†o‡size: %d", 
 oid_‰om_buf
@@ -4499,669 +4441,77 @@ oid_‰om_buf
 	`°æí
 (oid_from_buf));
 
-111 
-	`poﬁ_debug
-("\tGOINGÅÿHASH INSERT oid: %s, quîy: %s\n", 
+99 i‡((
+	`wrôe
+(
+fd
+, " ", 1Ë=-1Ë| (wrôe(fd, 
 oid_‰om_buf
-, 
-quîy_‰om_buf
-);
+, 5) == -1))
 
-112  
-	`e_hash_ö£π
-(
-eh
-, 
-	`©oi
-(
-oid_‰om_buf
-Ë, 
-quîy_‰om_buf
-);
-
-113 
-	}
-}
-
-117 
-	$öô_e_hèbÀ
-(
-e_hèbÀ
- **
-h
-)
-
-119 
-i
-=0;
-
-120 *
-h
- = (
-e_hèbÀ
- *)
-	`mÆloc
-((e_htable));
-
-121 if(!(*
-h
-))
-
-123 
-	`poﬁ_îr‹
-("HashÅable creation failed!!!\n");
-
-126 (*
-h
-)->
-tŸ_size
- = 0;
-
-127 (*
-h
-)->
-èbÀ
- = (
-e_hèbÀ_node
- **)
-	`mÆloc
-((”_hèbÀ_node)Ë* (
-EHASHSIZE
-));
-
-128 if(!(*
-h
-)->
-èbÀ
-)
-
-130 
-	`poﬁ_îr‹
-("HashÅable creation failed!!!\n");
-
-133 
-i
-=0; i < 
-EHASHSIZE
-; i++)
-
-135 (*
-h
-)->
-èbÀ
-[
-i
-] = (
-e_hèbÀ_node
- *)
-	`mÆloc
-(((e_htable_node)));
-
-136 (*
-h
-)->
-èbÀ
-[
-i
-]->
-√xt
- = 
-NULL
-;
-
-138 
-	}
-}
-
-142 
-	$e_hash_ö£π
-(
-e_hèbÀ
- **
-h
-, 
-oid
-, 
-memkey
-[
-EMAXDATASIZE
-])
-
-144 
-ödex
-;
-
-145 
-ödex
- = (
-	`e_hash_‚
-((*)
-memkey
-))%19;
-
-146 
-	`poﬁ_debug
-("\tMEMKEY THAT IS TO BE INSERTED: %s", 
-memkey
-);
-
-147 i‡(
-	`e_hash_£¨ch
-((*
-h
-), 
-ödex
-, 
-oid
-, 
-memkey
-))
-
-149 
-	`poﬁ_debug
-("\tDuplicate insertion in EHash Table detected\n");
-
-153 
-e_hèbÀ_Œ_node
- *
-ãmp
- = (e_hèbÀ_Œ_nodê*)
-	`mÆloc
-((e_htable_ll_node));
-
-154 if(!
-ãmp
-)
-
-156 
-	`poﬁ_îr‹
-("HashÅable creation failed!!!");
-
-159 
-ãmp
-->
-oid
- = oid;
-
-160 
-ãmp
-->
-memkey
- = 
-	`mÆloc
-((
-	`°æí
-(memkey)+1) * ());
-
-161 
-	`°r˝y
-(
-ãmp
-->
-memkey
-, memkey);
-
-162 
-ãmp
-->
-√xt
- = (*
-h
-)->
-èbÀ
-[
-ödex
-]->next;
-
-163 (*
-h
-)->
-èbÀ
-[
-ödex
-]->
-√xt
- = 
-ãmp
-;
-
-164 ++((*
-h
-)->
-tŸ_size
-);
-
-165 
-	`poﬁ_debug
-("\tSuc˚ssfuŒy in£πed oid: %d & quîy: %†© index %d i¿thêHash TabÀ &ÅŸ_sizêi†%d\n", (*
-h
-)->
-èbÀ
-[
-ödex
-]->
-√xt
-->
-oid
-, (*h)->èbÀ[ödex]->√xt->
-memkey
-,ödex, (*h)->
-tŸ_size
-);
-
-166  
-ödex
-;
-
-167 
-	}
-}
-
-171 
-	$e_hash_dñëe
-(
-e_hèbÀ
- *
-h
-, 
-oid
-, *
-memkey
-)
-
-173 
-ödex
-;
-
-174 
-e_hèbÀ_Œ_node
- *
-ãmp
- = 
-NULL
-, *
-¥ev
- = NULL;
-
-176 
-ödex
- = (
-	`e_hash_‚
-((*)
-memkey
-))%19;
-
-178 
-ãmp
- = 
-h
-->
-èbÀ
-[
-ödex
-]->
-√xt
-;
-
-180 
-ãmp
- !
-NULL
-)
-
-182 i‡(
-	`°rcmp
-(
-ãmp
-->
-memkey
-, memkey) == 0)
-
-184 
-¥ev
- = 
-ãmp
-->
-√xt
-;
-
-185 
-	`poﬁ_debug
-("\tSuc˚ssfuŒy dñëed oid: %d & quîy: %†‰om index %d\n", 
-h
-->
-èbÀ
-[
-ödex
-]->
-√xt
-->
-oid
-, h->èbÀ[ödex]->√xt->
-memkey
-, index);
-
-186 
-	`‰ì
-(
-ãmp
-);
-
-187 
-ãmp
- = 
-NULL
-;
-
-190 
-¥ev
- = 
-ãmp
-;
-
-191 
-ãmp
- =Åemp->
-√xt
-;
-
-193 
-	}
-}
-
-197 
-	$e_hash_£¨ch
-(
-e_hèbÀ
- *
-h
-,
-ödex
-, 
-oid
-, *
-memkey
-)
-
-199 
-e_hèbÀ_Œ_node
- *
-ãmp
- = 
-h
-->
-èbÀ
-[
-ödex
-]->
-√xt
-;
-
-200 
-ãmp
- !
-NULL
-)
-
-202 i‡((
-ãmp
-->
-oid
- =oidË&& (
-	`°rcmp
-—emp->
-memkey
-,memkey) == 0))
-
-204 
-	`poﬁ_debug
-("\tSuc˚ssfuŒy found oid: %d & quîy: %†© index %d\n", 
-ãmp
-->
-oid
-,Åemp->
-memkey
-, 
-ödex
-);
-
-207 
-ãmp
- =Åemp->
-√xt
-;
-
-210 
-	}
-}
-
-214 
-	$e_hash_di•œy
-(
-e_hèbÀ
- *
-h
-)
-
-216 
-i
- = 0;
-
-217 
-e_hèbÀ_Œ_node
- *
-ãmp
- = 
-NULL
-;
-
-219 
-i
- < 
-EHASHSIZE
-)
-
-221 i‡(
-h
-->
-èbÀ
-[
-i
-]->
-√xt
- !
-NULL
-)
-
-223 
-ãmp
- = 
-h
-->
-èbÀ
-[
-i
-]->
-√xt
-;
-
-224 
-ãmp
- !
-NULL
-)
-
-226 
-	`poﬁ_debug
-("\tDISPLAYING: Index %d:- oid: %d memkey: %†©ádd∏%u\n", 
-i
-, 
-ãmp
-->
-oid
-,Åemp->
-memkey
-,temp);
-
-227 
-ãmp
- =Åemp->
-√xt
-;
-
-230 
-i
-++;
-
-232 
-	}
-}
-
-236 
-	$e_hash_‚
-(*
-°r
-)
-
-238 
-hash
- = 5381;
-
-239 
-c
-;
-
-241 
-c
- = *
-°r
-++)
-
-242 
-hash
- = ((hash << 5Ë+ hashË+ 
-c
-;
-
-244  
-hash
-;
-
-245 
-	}
-}
-
-249 *
-	$found_ö_ehèbÀ
-(
-e_hèbÀ
- *
-h
-, *
-quîy
-)
-
-251 
-ödex
-, 
-i
-=0;
-
-252 *
-¨r_of_oid
- = 
-	`mÆloc
-(() * 10);
-
-253 i‡(!
-¨r_of_oid
-)
-
-255 
+101 
 	`≥º‹
-("arr_of_oid creation failed!");
+("\tWriteÉrror for OID! ");
 
-257 
-ödex
- = (
-	`e_hash_‚
-((*)
-quîy
-))%19;
-
-259 
-e_hèbÀ_Œ_node
- *
-ãmp
- = (
-h
-)->
-èbÀ
-[
-ödex
-]->
-√xt
-;
-
-261 
-ãmp
- !
-NULL
-)
-
-263 i‡(
-	`°rcmp
-(
-ãmp
-->
-memkey
-, 
-quîy
-) == 0)
-
-265 
+105 
 	`poﬁ_debug
-("\tSuc˚ssfuŒy found oid: %d & quîy: %†© index %d\n", 
-ãmp
-->
-oid
-,Åemp->
-memkey
-, 
-ödex
+("\tWROTE oid: %s\n", 
+oid_‰om_buf
 );
 
-266 
-¨r_of_oid
-[
-i
-++] = 
-ãmp
-->
-oid
+109 i‡(
+	`wrôe
+(
+fd
+, "\n", 1) == -1)
+
+110 
+	`≥º‹
+("\tWritingÇewline char inÉxt_info_hash ");
+
+112 
+Ê
+.
+l_ty≥
+ = 
+F_UNLCK
 ;
 
-269 
-ãmp
- =Åemp->
-√xt
-;
+113 i‡(
+	`f˙é
+(
+fd
+, 
+F_SETLK
+, &
+Ê
+) == -1)
 
-271 
-¨r_of_oid
-[
-i
-] = -1;
+115 
+	`≥º‹
+("\tUnlocking inÉxt_info_hash ");
 
-272 i‡(
-i
->0)
+116 
+	`˛o£
+(
+fd
+);
 
-274  
-¨r_of_oid
-;
+117 
+	`exô
+(1);
 
-277 
+121 
+	`poﬁ_debug
+("\tFILE unlocked inÉxt_info_hash!\n");
+
+124 
+	`˛o£
+(
+fd
+);
+
+125 
 	}
 }
 
@@ -5177,143 +4527,9 @@ EXT_INFO_HASH_H
 
 	)
 
-4 
-	~<°dio.h
->
-
-5 
-	~<°dlib.h
->
-
-6 
-	~<°rög.h
->
-
-7 
-	~<time.h
->
-
-8 
-	~"poﬁ.h
-"
-
-9 
-	~<îr‹.h
->
-
-11 
-	#EHASHSIZE
- 19
-
-12 
-
-	)
-
-13 
-	se_hèbÀ_Œ_node
-
-
-15 
-	moid
-;
-
-16 *
-	mmemkey
-;
-
-17 
-e_hèbÀ_Œ_node
- *
-	m√xt
-;
-
-18 }
-	te_hèbÀ_Œ_node
-;
-
-20 
-	se_hèbÀ_node
-
-
-22 
-e_hèbÀ_Œ_node
- *
-	m√xt
-;
-
-23 }
-	te_hèbÀ_node
-;
-
-25 
-	se_hèbÀ
-
-
-27 
-	mtŸ_size
-;
-
-28 
-e_hèbÀ_node
- **
-	mèbÀ
-;
-
-29 }
-	te_hèbÀ
-;
-
-31 
-öô_e_hèbÀ
-(
-e_hèbÀ
- **);
-
-32 
+4 
 °‹e_exåa˘ed_öfo
-(
-e_hèbÀ
- **, [], , *);
-
-33 
-e_hash_ö£π
-(
-e_hèbÀ
- **, , []);
-
-34 
-e_hash_£¨ch
-(
-e_hèbÀ
- *,, , *);
-
-35 
-e_hash_dñëe
-(
-e_hèbÀ
- *,, *);
-
-36 
-e_hash_di•œy
-(
-e_hèbÀ
- *);
-
-37 
-e_hèbÀ
- **
-gë_ehèbÀ_hód
-();
-
-38 
-e_hash_‚
-(*);
-
-39 *
-found_ö_ehèbÀ
-(
-e_hèbÀ
- *, *);
+([], );
 
 	@invalidation/my_server.h
 
@@ -12373,15 +11589,7 @@ sig_©omic_t
 	gmy¨gv
 ;
 
-122 
-e_hèbÀ
- *
-	geh_to_£rvî
- = 
-NULL
-;
-
-127 
+126 
 	$maö
 (
 ¨gc
@@ -12389,43 +11597,43 @@ NULL
 ¨gv
 )
 
-129 
+128 
 ›t
 ;
 
-130 
+129 
 c⁄f_fûe
 [
 POOLMAXPATHLEN
 +1];
 
-131 
+130 
 hba_fûe
 [
 POOLMAXPATHLEN
 +1];
 
-132 
+131 
 i
 ;
 
-133 
+132 
 pid
 ;
 
-135 
+134 
 my¨gc
  = 
 ¨gc
 ;
 
-136 
+135 
 my¨gv
  = 
 ¨gv
 ;
 
-138 
+137 
 	`¢¥ötf
 (
 c⁄f_fûe
@@ -12435,7 +11643,7 @@ DEFAULT_CONFIGDIR
 POOL_CONF_FILE_NAME
 );
 
-139 
+138 
 	`¢¥ötf
 (
 hba_fûe
@@ -12445,13 +11653,13 @@ DEFAULT_CONFIGDIR
 HBA_CONF_FILE_NAME
 );
 
-143 
+142 
 ±hªad_t
  
 my_thªad
 ;
 
-145 i‡(
+144 i‡(
 	`±hªad_¸óã
  (&
 my_thªad
@@ -12459,33 +11667,31 @@ my_thªad
 NULL
 , 
 ªcv_öfo
-, &
-eh_to_£rvî
-) != 0)
+, NULL) != 0)
 
-147 
+146 
 	`poﬁ_îr‹
 ("UnableÅo createÅhread. Exiting...");
 
-148 
+147 
 	`exô
 (1);
 
-151 i‡(
+150 i‡(
 	`±hªad_£äame_≈
  (
 my_thªad
 , "dpaksÅhread") != 0)
 
-153 
+152 
 	`poﬁ_îr‹
 ("UnableÅoÇameÅhread. Exiting...");
 
-154 
+153 
 	`exô
 (1);
 
-160 (
+159 (
 ›t
  = 
 	`gë›t
@@ -12495,23 +11701,23 @@ my_thªad
 ¨gv
 , "a:df:hm:ns:")) != -1)
 
-162 
+161 
 ›t
 )
 
-165 i‡(!
+164 i‡(!
 ›èrg
 )
 
-167 
+166 
 	`ußge
 ();
 
-168 
+167 
 	`exô
 (1);
 
-170 
+169 
 	`°∫˝y
 (
 hba_fûe
@@ -12519,23 +11725,23 @@ hba_fûe
 ›èrg
 , (hba_file));
 
-174 
+173 
 debug
  = 1;
 
-178 i‡(!
+177 i‡(!
 ›èrg
 )
 
-180 
+179 
 	`ußge
 ();
 
-181 
+180 
 	`exô
 (1);
 
-183 
+182 
 	`°∫˝y
 (
 c⁄f_fûe
@@ -12543,141 +11749,141 @@ c⁄f_fûe
 ›èrg
 , (conf_file));
 
-187 
+186 
 	`ußge
 ();
 
-188 
+187 
 	`exô
 (0);
 
-192 i‡(!
+191 i‡(!
 ›èrg
 )
 
-194 
+193 
 	`ußge
 ();
 
-195 
+194 
 	`exô
 (1);
 
-197 i‡(*
+196 i‡(*
 ›èrg
  ='s' || !
 	`°rcmp
 ("smart", optarg))
 
-198 
+197 
 °›_sig
  = 
 SIGTERM
 ;
 
-199 i‡(*
+198 i‡(*
 ›èrg
  ='f' || !
 	`°rcmp
 ("fast", optarg))
 
-200 
+199 
 °›_sig
  = 
 SIGINT
 ;
 
-201 i‡(*
+200 i‡(*
 ›èrg
  ='i' || !
 	`°rcmp
 ("immediate", optarg))
 
-202 
+201 
 °›_sig
  = 
 SIGQUIT
 ;
 
-205 
+204 
 	`ußge
 ();
 
-206 
+205 
 	`exô
 (1);
 
-211 
+210 
 nŸ_dëach
  = 1;
 
-215 i‡(!
+214 i‡(!
 ›èrg
 )
 
-217 
+216 
 	`ußge
 ();
 
-218 
+217 
 	`exô
 (1);
 
-220 i‡(*
+219 i‡(*
 ›èrg
  ='m' || !
 	`°rcmp
 ("master", optarg))
 
-221 
+220 
 swôch_ovî_sig
  = 
 SIGUSR1
 ;
 
-222 i‡(*
+221 i‡(*
 ›èrg
  ='s' || !
 	`°rcmp
 ("secondary", optarg))
 
-223 
+222 
 swôch_ovî_sig
  = 
 SIGUSR2
 ;
 
-226 
+225 
 	`ußge
 ();
 
-227 
+226 
 	`exô
 (1);
+
+231 
+	`ußge
+();
 
 232 
-	`ußge
-();
-
-233 
 	`exô
 (1);
 
-237 i‡(
+236 i‡(
 	`poﬁ_gë_c⁄fig
 (
 c⁄f_fûe
 ))
 
-239 
+238 
 	`poﬁ_îr‹
 ("UnableÅo get configuration. Exiting...");
 
-240 
+239 
 	`exô
 (1);
 
-244 
+243 
 poﬁ_c⁄fig
 .
 cuºít_backíd_ho°_«me
@@ -12685,7 +11891,7 @@ cuºít_backíd_ho°_«me
 backíd_ho°_«me
 ;
 
-245 
+244 
 poﬁ_c⁄fig
 .
 cuºít_backíd_p‹t
@@ -12693,17 +11899,17 @@ cuºít_backíd_p‹t
 backíd_p‹t
 ;
 
-248 i‡(
+247 i‡(
 poﬁ_c⁄fig
 .
 weight_ma°î
  <= 0.0)
 
-249 
+248 
 weight_ma°î
  = 0;
 
-251 
+250 
 weight_ma°î
  = (
 RAND_MAX
@@ -12711,7 +11917,7 @@ RAND_MAX
 poﬁ_c⁄fig
 .weight_master /
 
-252 (
+251 (
 poﬁ_c⁄fig
 .
 weight_ma°î
@@ -12719,31 +11925,31 @@ weight_ma°î
 weight_£c⁄d¨y
 ));
 
-254 
+253 
 	`poﬁ_debug
 ("weight: %ld", 
 weight_ma°î
 );
 
-257 i‡(
+256 i‡(
 poﬁ_c⁄fig
 .
 íabÀ_poﬁ_hba
 )
 
-258 
+257 
 	`lﬂd_hba
 (
 hba_fûe
 );
 
-263 i‡(
+262 i‡(
 ›töd
  =(
 ¨gc
  - 1))
 
-265 i‡(!
+264 i‡(!
 	`°rcmp
 (
 ¨gv
@@ -12751,15 +11957,15 @@ hba_fûe
 ›töd
 ], "stop"))
 
-267 
+266 
 	`°›_me
 ();
 
-268 
+267 
 	`exô
 (0);
 
-270 i‡(!
+269 i‡(!
 	`°rcmp
 (
 ¨gv
@@ -12767,45 +11973,45 @@ hba_fûe
 ›töd
 ], "switch"))
 
-272 
+271 
 	`swôch_me
 ();
 
-273 
+272 
 	`exô
 (0);
 
-277 
+276 
 	`ußge
 ();
 
-278 
+277 
 	`exô
 (1);
 
-284 i‡(
+283 i‡(
 ›töd
  =
 ¨gc
 )
 
-286 
+285 
 pid
  = 
 	`ªad_pid_fûe
 ();
 
-287 i‡(
+286 i‡(
 pid
  > 0)
 
-289 i‡(
+288 i‡(
 	`kûl
 (
 pid
 , 0) == 0)
 
-291 
+290 
 	`Ârötf
 (
 °dîr
@@ -12813,47 +12019,47 @@ pid
 pid
 );
 
-292 
+291 
 	`exô
 (1);
 
-295 
+294 
 	`Ârötf
 (
 °dîr
 , "pid file found but it seems bogus. TryingÅo startÖqcdányway...\n");
 
-303 
+302 
 	`ußge
 ();
 
-304 
+303 
 	`exô
 (1);
 
-308 
+307 
 	`poﬁöômask
 ();
 
-310 i‡(
+309 i‡(
 nŸ_dëach
 )
 
-311 
+310 
 	`wrôe_pid_fûe
 ();
 
-313 
+312 
 	`d´m⁄ize
 ();
 
-315 
+314 
 mypid
  = 
 	`gëpid
 ();
 
-318 
+317 
 	`¢¥ötf
 (
 un_addr
@@ -12861,19 +12067,19 @@ un_addr
 sun_∑th
 , (un_addr.sun_path), "%s/.s.PGSQL.%d",
 
-319 
+318 
 poﬁ_c⁄fig
 .
 sockë_dú
 ,
 
-320 
+319 
 poﬁ_c⁄fig
 .
 p‹t
 );
 
-323 
+322 
 	`poﬁ_sig«l
 (
 SIGPIPE
@@ -12881,19 +12087,19 @@ SIGPIPE
 SIG_IGN
 );
 
-326 
+325 
 unix_fd
  = 
 	`¸óã_unix_domaö_sockë
 ();
 
-329 i‡(
+328 i‡(
 poﬁ_c⁄fig
 .
 li°í_addªs£s
 [0])
 
-331 
+330 
 öë_fd
  = 
 	`¸óã_öë_domaö_sockë
@@ -12903,7 +12109,7 @@ poﬁ_c⁄fig
 li°í_addªs£s
 );
 
-334 
+333 
 pids
  = 
 	`mÆloc
@@ -12915,21 +12121,21 @@ num_öô_chûdªn
 pid_t
 ));
 
-335 i‡(
+334 i‡(
 pids
  =
 NULL
 )
 
-337 
+336 
 	`poﬁ_îr‹
 ("failedÅoállocateÖids");
 
-338 
+337 
 	`myexô
 (1);
 
-340 
+339 
 	`mem£t
 (
 pids
@@ -12941,21 +12147,21 @@ num_öô_chûdªn
 pid_t
 ));
 
-345 i‡–!
+344 i‡–!
 	`pqc_öô
 (!
 nŸ_dëach
 ) )
 
-347 
+346 
 	`poﬁ_îr‹
 ("failedÅo initializeÅhe query cache.");
 
-348 
+347 
 	`myexô
 (1);
 
-352 
+351 
 i
 =0;i<
 poﬁ_c⁄fig
@@ -12963,7 +12169,7 @@ poﬁ_c⁄fig
 num_öô_chûdªn
 ;i++)
 
-354 
+353 
 pids
 [
 i
@@ -12975,13 +12181,13 @@ unix_fd
 öë_fd
 );
 
-358 
+357 
 	`POOL_SETMASK
 (&
 BlockSig
 );
 
-359 
+358 
 	`poﬁ_sig«l
 (
 SIGTERM
@@ -12989,7 +12195,7 @@ SIGTERM
 exô_h™dÀr
 );
 
-360 
+359 
 	`poﬁ_sig«l
 (
 SIGINT
@@ -12997,7 +12203,7 @@ SIGINT
 exô_h™dÀr
 );
 
-361 
+360 
 	`poﬁ_sig«l
 (
 SIGQUIT
@@ -13005,7 +12211,7 @@ SIGQUIT
 exô_h™dÀr
 );
 
-362 
+361 
 	`poﬁ_sig«l
 (
 SIGCHLD
@@ -13013,10 +12219,18 @@ SIGCHLD
 ª≠_h™dÀr
 );
 
-363 
+362 
 	`poﬁ_sig«l
 (
 SIGUSR1
+, 
+Áûovî_h™dÀr
+);
+
+363 
+	`poﬁ_sig«l
+(
+SIGUSR2
 , 
 Áûovî_h™dÀr
 );
@@ -13024,42 +12238,34 @@ SIGUSR1
 364 
 	`poﬁ_sig«l
 (
-SIGUSR2
-, 
-Áûovî_h™dÀr
-);
-
-365 
-	`poﬁ_sig«l
-(
 SIGHUP
 , 
 exô_h™dÀr
 );
 
-368 i‡(
+367 i‡(
 	`pùe
 (
 pùe_fds
 ) < 0)
 
-370 
+369 
 	`poﬁ_îr‹
 ("failedÅo createÖipe");
 
-371 
+370 
 	`myexô
 (1);
 
-374 
+373 
 	`poﬁ_log
 ("pqcd successfully started");
 
-381 
+380 
 CHECK_REQUEST
 ;
 
-384 i‡(!
+383 i‡(!
 degíî©ed
  && 
 poﬁ_c⁄fig
@@ -13067,25 +12273,25 @@ poﬁ_c⁄fig
 hó…h_check_≥riod
  > 0)
 
-386 
+385 
 °s
 ;
 
-387 
+386 
 ¶ìp_time
 ;
 
-389 
+388 
 	`poﬁ_log
 ("starting health checking");
 
-391 i‡(
+390 i‡(
 poﬁ_c⁄fig
 .
 hó…h_check_timeout
  > 0)
 
-398 
+397 
 	`poﬁ_sig«l
 (
 SIGALRM
@@ -13093,7 +12299,7 @@ SIGALRM
 hó…h_check_timî_h™dÀr
 );
 
-399 
+398 
 	`Æ¨m
 (
 poﬁ_c⁄fig
@@ -13101,21 +12307,21 @@ poﬁ_c⁄fig
 hó…h_check_timeout
 );
 
-405 
+404 
 î∫o
  = 0;
 
-406 
+405 
 hó…h_check_timî_expúed
  = 0;
 
-407 
+406 
 °s
  = 
 	`hó…h_check
 ();
 
-409 i‡(
+408 i‡(
 î∫o
  !
 EINTR
@@ -13123,33 +12329,33 @@ EINTR
 hó…h_check_timî_expúed
 ))
 
-411 i‡(
+410 i‡(
 °s
  == -1)
 
-413 
+412 
 	`Áûovî
 (
 SIGUSR1
 );
 
-415 i‡(
+414 i‡(
 °s
  == -2)
 
-417 
+416 
 	`Áûovî
 (
 SIGUSR2
 );
 
-421 i‡(
+420 i‡(
 poﬁ_c⁄fig
 .
 hó…h_check_timeout
  > 0)
 
-424 
+423 
 	`poﬁ_sig«l
 (
 SIGALRM
@@ -13157,7 +12363,7 @@ SIGALRM
 SIG_IGN
 );
 
-427 
+426 
 ¶ìp_time
  = 
 poﬁ_c⁄fig
@@ -13165,23 +12371,23 @@ poﬁ_c⁄fig
 hó…h_check_≥riod
 ;
 
-428 
+427 
 	`poﬁ_¶ìp
 (
 ¶ìp_time
 );
 
-434 
+433 
 r
 ;
 
-436 
+435 
 	`POOL_SETMASK
 (&
 UnBlockSig
 );
 
-437 
+436 
 r
  = 
 	`poﬁ_∑u£
@@ -13189,25 +12395,25 @@ r
 NULL
 );
 
-438 
+437 
 	`POOL_SETMASK
 (&
 BlockSig
 );
 
-439 i‡(
+438 i‡(
 r
  > 0)
 
-446 
+445 
 	}
 }
 
-448 
+447 
 	$ußge
 ()
 
-450 
+449 
 	`Ârötf
 (
 °dîr
@@ -13217,37 +12423,37 @@ VERSION
 PGPOOLVERSION
 );
 
-451 
+450 
 	`Ârötf
 (
 °dîr
 , "á generic connectionÖool/replication/load balance server for PostgreSQL\n\n");
 
-452 
+451 
 	`Ârötf
 (
 °dîr
 , "usage:Öqcd [-f config_file][-a hba_file][-n][-d]\n");
 
-453 
+452 
 	`Ârötf
 (
 °dîr
 , "usage:Öqcd [-f config_file][-a hba_file] [-m {s[mart]|f[ast]|i[mmediate]}] stop\n");
 
-454 
+453 
 	`Ârötf
 (
 °dîr
 , "usage:Öqcd [-f config_file][-a hba_file] [-s {m[aster]|s[econdary]] switch\n");
 
-455 
+454 
 	`Ârötf
 (
 °dîr
 , "usage:Öqcd -h\n");
 
-456 
+455 
 	`Ârötf
 (
 °dîr
@@ -13257,7 +12463,7 @@ DEFAULT_CONFIGDIR
 POOL_CONF_FILE_NAME
 );
 
-457 
+456 
 	`Ârötf
 (
 °dîr
@@ -13267,67 +12473,67 @@ DEFAULT_CONFIGDIR
 HBA_CONF_FILE_NAME
 );
 
-458 
+457 
 	`Ârötf
 (
 °dîr
 , " -n: don'tÑun in daemon mode. doesÇot detatch controlÅty\n");
 
-459 
+458 
 	`Ârötf
 (
 °dîr
 , " -d: debug mode.Üots of debug information will beÖrinted\n");
 
-460 
+459 
 	`Ârötf
 (
 °dîr
 , " stop: stopÖqcd\n");
 
-461 
+460 
 	`Ârötf
 (
 °dîr
 , " switch: send switch overÑequestÅoÖqcd\n");
 
-462 
+461 
 	`Ârötf
 (
 °dîr
 , " -h:ÖrintÅhis help\n");
 
-463 
+462 
 	}
 }
 
-468 
+467 
 	$d´m⁄ize
 ()
 
-470 
+469 
 i
 ;
 
-471 
+470 
 pid_t
  
 pid
 ;
 
-473 
+472 
 pid
  = 
 	`f‹k
 ();
 
-474 i‡(
+473 i‡(
 pid
  =(
 pid_t
 ) -1)
 
-476 
+475 
 	`poﬁ_îr‹
 ("f‹k(ËÁûed.Ñós⁄: %s", 
 	`°ªº‹
@@ -13335,27 +12541,27 @@ pid_t
 î∫o
 ));
 
-477 
+476 
 	`exô
 (1);
 
-480 i‡(
+479 i‡(
 pid
  > 0)
 
-482 
+481 
 	`exô
 (0);
 
-485 #ifde‡
+484 #ifde‡
 HAVE_SETSID
 
 
-486 i‡(
+485 i‡(
 	`£tsid
 () < 0)
 
-488 
+487 
 	`poﬁ_îr‹
 ("£tsid(ËÁûed.Ñós⁄:%s", 
 	`°ªº‹
@@ -13363,11 +12569,11 @@ HAVE_SETSID
 î∫o
 ));
 
-489 
+488 
 	`exô
 (1);
 
-493 
+492 
 i
  = 
 	`›í
@@ -13375,71 +12581,71 @@ i
 O_RDWR
 );
 
-494 
+493 
 	`dup2
 (
 i
 , 0);
 
-495 
+494 
 	`dup2
 (
 i
 , 1);
 
-496 
+495 
 	`dup2
 (
 i
 , 2);
 
-497 
+496 
 	`˛o£
 (
 i
 );
 
-499 
+498 
 	`wrôe_pid_fûe
 ();
 
-500 
+499 
 	}
 }
 
-506 
+505 
 	$°›_me
 ()
 
-508 
+507 
 pid_t
  
 pid
 ;
 
-510 
+509 
 	`pqc_de°roy
 ();
 
-512 
+511 
 pid
  = 
 	`ªad_pid_fûe
 ();
 
-513 i‡(
+512 i‡(
 pid
  < 0)
 
-515 
+514 
 	`poﬁ_îr‹
 ("couldÇotÑeadÖid file");
 
-516 
+515 
 	`exô
 (1);
 
-519 i‡(
+518 i‡(
 	`kûl
 (
 pid
@@ -13447,7 +12653,7 @@ pid
 °›_sig
 ) == -1)
 
-521 
+520 
 	`poﬁ_îr‹
 ("couldÇŸ st›Öid: %d.Ñós⁄: %s", 
 pid
@@ -13457,71 +12663,71 @@ pid
 î∫o
 ));
 
-522 
+521 
 	`exô
 (1);
 
-525 
+524 
 	`Ârötf
 (
 °dîr
 , "stopÑequest sentÅoÖqcd. waiting forÅermination...");
 
-527 
+526 
 	`kûl
 (
 pid
 , 0) == 0)
 
-529 
+528 
 	`Ârötf
 (
 °dîr
 , ".");
 
-530 
+529 
 	`¶ìp
 (1);
 
-532 
+531 
 	`Ârötf
 (
 °dîr
 , "done.\n");
 
-533 
+532 
 	}
 }
 
-538 
+537 
 	$swôch_me
 ()
 
-540 
+539 
 pid_t
  
 pid
 ;
 
-542 
+541 
 pid
  = 
 	`ªad_pid_fûe
 ();
 
-544 i‡(
+543 i‡(
 pid
  < 0)
 
-546 
+545 
 	`poﬁ_îr‹
 ("couldÑeadÖid file");
 
-547 
+546 
 	`exô
 (1);
 
-550 i‡(
+549 i‡(
 	`kûl
 (
 pid
@@ -13529,7 +12735,7 @@ pid
 swôch_ovî_sig
 ) == -1)
 
-552 
+551 
 	`poﬁ_îr‹
 ("couldÇŸ síd swôch ovîÑeque°Åÿpid: %d.Ñós⁄: %s", 
 pid
@@ -13539,39 +12745,39 @@ pid
 î∫o
 ));
 
-553 
+552 
 	`exô
 (1);
 
-556 
+555 
 	`poﬁ_log
 ("switch overÑequest sent");
 
-557 
+556 
 	}
 }
 
-562 
+561 
 	$ªad_pid_fûe
 ()
 
-564 
+563 
 FILE
  *
 fd
 ;
 
-565 
+564 
 ∑th
 [
 POOLMAXPATHLEN
 ];
 
-566 
+565 
 pidbuf
 [128];
 
-568 
+567 
 	`¢¥ötf
 (
 ∑th
@@ -13583,7 +12789,7 @@ logdú
 PID_FILE_NAME
 );
 
-569 
+568 
 fd
  = 
 	`f›í
@@ -13591,11 +12797,11 @@ fd
 ∑th
 , "r");
 
-570 i‡(!
+569 i‡(!
 fd
 )
 
-574 i‡(
+573 i‡(
 	`‰ód
 (
 pidbuf
@@ -13603,11 +12809,11 @@ pidbuf
 fd
 ) <= 0)
 
-576 
+575 
 	`poﬁ_îr‹
 ("couldÇotÑeadÖid fileás %s.Ñeason: %s",
 
-577 
+576 
 ∑th
 , 
 	`°ªº‹
@@ -13615,49 +12821,49 @@ fd
 î∫o
 ));
 
-578 
+577 
 	`f˛o£
 (
 fd
 );
 
-581 
+580 
 	`f˛o£
 (
 fd
 );
 
-582 (
+581 (
 	`©oi
 (
 pidbuf
 ));
 
-583 
+582 
 	}
 }
 
-588 
+587 
 	$wrôe_pid_fûe
 ()
 
-590 
+589 
 FILE
  *
 fd
 ;
 
-591 
+590 
 ∑th
 [
 POOLMAXPATHLEN
 ];
 
-592 
+591 
 pidbuf
 [128];
 
-594 
+593 
 	`¢¥ötf
 (
 ∑th
@@ -13669,7 +12875,7 @@ logdú
 PID_FILE_NAME
 );
 
-595 
+594 
 fd
  = 
 	`f›í
@@ -13677,15 +12883,15 @@ fd
 ∑th
 , "w");
 
-596 i‡(!
+595 i‡(!
 fd
 )
 
-598 
+597 
 	`poﬁ_îr‹
 ("couldÇot openÖid fileás %s.Ñeason: %s",
 
-599 
+598 
 ∑th
 , 
 	`°ªº‹
@@ -13693,11 +12899,11 @@ fd
 î∫o
 ));
 
-600 
+599 
 	`exô
 (1);
 
-602 
+601 
 	`¢¥ötf
 (
 pidbuf
@@ -13705,7 +12911,7 @@ pidbuf
 	`gëpid
 ());
 
-603 
+602 
 	`fwrôe
 (
 pidbuf
@@ -13715,17 +12921,17 @@ pidbuf
 fd
 );
 
-604 i‡(
+603 i‡(
 	`f˛o£
 (
 fd
 ))
 
-606 
+605 
 	`poﬁ_îr‹
 ("couldÇot writeÖid fileás %s.Ñeason: %s",
 
-607 
+606 
 ∑th
 , 
 	`°ªº‹
@@ -13733,15 +12939,15 @@ fd
 î∫o
 ));
 
-608 
+607 
 	`exô
 (1);
 
-610 
+609 
 	}
 }
 
-615 
+614 
 pid_t
  
 	$f‹k_a_chûd
@@ -13751,23 +12957,23 @@ unix_fd
 öë_fd
 )
 
-617 
+616 
 pid_t
  
 pid
 ;
 
-619 
+618 
 pid
  = 
 	`f‹k
 ();
 
-621 i‡(
+620 i‡(
 pid
  == 0)
 
-623 
+622 
 my¨gv
  = 
 	`ßve_ps_di•œy_¨gs
@@ -13775,13 +12981,13 @@ my¨gv
 my¨gc
 , myargv);
 
-626 
+625 
 	`POOL_SETMASK
 (&
 UnBlockSig
 );
 
-627 
+626 
 	`do_chûd
 (
 unix_fd
@@ -13789,11 +12995,11 @@ unix_fd
 öë_fd
 );
 
-629 i‡(
+628 i‡(
 pid
  == -1)
 
-631 
+630 
 	`poﬁ_îr‹
 ("f‹k(ËÁûed.Ñós⁄: %s", 
 	`°ªº‹
@@ -13801,47 +13007,47 @@ pid
 î∫o
 ));
 
-632 
+631 
 	`myexô
 (1);
 
-634  
+633  
 pid
 ;
 
-635 
+634 
 	}
 }
 
-640 
+639 
 	$¸óã_öë_domaö_sockë
 (c⁄° *
 ho°«me
 )
 
-642 
+641 
 sockaddr_ö
  
 addr
 ;
 
-643 
+642 
 fd
 ;
 
-644 
+643 
 °©us
 ;
 
-645 
+644 
 ⁄e
  = 1;
 
-646 
+645 
 Àn
 ;
 
-648 
+647 
 fd
  = 
 	`sockë
@@ -13851,11 +13057,11 @@ AF_INET
 SOCK_STREAM
 , 0);
 
-649 i‡(
+648 i‡(
 fd
  == -1)
 
-651 
+650 
 	`poﬁ_îr‹
 ("FaûedÅÿ¸óã INET domaö sockë.Ñós⁄: %s", 
 	`°ªº‹
@@ -13863,11 +13069,11 @@ fd
 î∫o
 ));
 
-652 
+651 
 	`myexô
 (1);
 
-654 i‡((
+653 i‡((
 	`£tsock›t
 (
 fd
@@ -13879,11 +13085,11 @@ SO_REUSEADDR
 ⁄e
 ,
 
-655 (
+654 (
 ⁄e
 ))) == -1)
 
-657 
+656 
 	`poﬁ_îr‹
 ("£tsock›t(ËÁûed.Ñós⁄: %s", 
 	`°ªº‹
@@ -13891,17 +13097,17 @@ SO_REUSEADDR
 î∫o
 ));
 
-658 
+657 
 	`myexô
 (1);
 
-661 
+660 
 	`mem£t
 ((*Ë&
 addr
 , 0, (addr));
 
-662 ((
+661 ((
 sockaddr
  *)&
 addr
@@ -13911,13 +13117,13 @@ addr
 AF_INET
 ;
 
-664 i‡(
+663 i‡(
 	`°rcmp
 (
 ho°«me
 , "*")==0)
 
-666 
+665 
 addr
 .
 sö_addr
@@ -13929,13 +13135,13 @@ s_addr
 INADDR_ANY
 );
 
-670 
+669 
 ho°ít
  *
 ho°öfo
 ;
 
-672 
+671 
 ho°öfo
  = 
 	`gëho°by«me
@@ -13943,11 +13149,11 @@ ho°öfo
 ho°«me
 );
 
-673 i‡(!
+672 i‡(!
 ho°öfo
 )
 
-675 
+674 
 	`poﬁ_îr‹
 ("couldÇŸÑesﬁvêho°Çamê\"%s\": %s", 
 ho°«me
@@ -13957,11 +13163,11 @@ ho°«me
 h_î∫o
 ));
 
-676 
+675 
 	`myexô
 (1);
 
-678 
+677 
 addr
 .
 sö_addr
@@ -13973,7 +13179,7 @@ ho°öfo
 h_addr
 ;
 
-681 
+680 
 addr
 .
 sö_p‹t
@@ -13985,13 +13191,13 @@ poﬁ_c⁄fig
 p‹t
 );
 
-682 
+681 
 Àn
  = (
 sockaddr_ö
 );
 
-683 
+682 
 °©us
  = 
 	`böd
@@ -14005,11 +13211,11 @@ addr
 Àn
 );
 
-684 i‡(
+683 i‡(
 °©us
  == -1)
 
-686 
+685 
 	`poﬁ_îr‹
 ("böd(ËÁûed.Ñós⁄: %s", 
 	`°ªº‹
@@ -14017,11 +13223,11 @@ addr
 î∫o
 ));
 
-687 
+686 
 	`myexô
 (1);
 
-690 
+689 
 °©us
  = 
 	`li°í
@@ -14031,11 +13237,11 @@ fd
 PGPOOLMAXLITSENQUEUELENGTH
 );
 
-691 i‡(
+690 i‡(
 °©us
  < 0)
 
-693 
+692 
 	`poﬁ_îr‹
 ("li°í(ËÁûed.Ñós⁄: %s", 
 	`°ªº‹
@@ -14043,41 +13249,41 @@ PGPOOLMAXLITSENQUEUELENGTH
 î∫o
 ));
 
-694 
+693 
 	`myexô
 (1);
 
-696  
+695  
 fd
 ;
 
-697 
+696 
 	}
 }
 
-702 
+701 
 	$¸óã_unix_domaö_sockë
 ()
 
-704 
+703 
 sockaddr_un
  
 addr
 ;
 
-705 
+704 
 fd
 ;
 
-706 
+705 
 °©us
 ;
 
-707 
+706 
 Àn
 ;
 
-709 
+708 
 fd
  = 
 	`sockë
@@ -14087,11 +13293,11 @@ AF_UNIX
 SOCK_STREAM
 , 0);
 
-710 i‡(
+709 i‡(
 fd
  == -1)
 
-712 
+711 
 	`poﬁ_îr‹
 ("FaûedÅÿ¸óã UNIX domaö sockë.Ñós⁄: %s", 
 	`°ªº‹
@@ -14099,17 +13305,17 @@ fd
 î∫o
 ));
 
-713 
+712 
 	`myexô
 (1);
 
-715 
+714 
 	`mem£t
 ((*Ë&
 addr
 , 0, (addr));
 
-716 ((
+715 ((
 sockaddr
  *)&
 addr
@@ -14119,7 +13325,7 @@ addr
 AF_UNIX
 ;
 
-717 
+716 
 	`¢¥ötf
 (
 addr
@@ -14129,13 +13335,13 @@ sun_∑th
 un_addr
 .sun_path);
 
-718 
+717 
 Àn
  = (
 sockaddr_un
 );
 
-719 
+718 
 °©us
  = 
 	`böd
@@ -14149,11 +13355,11 @@ addr
 Àn
 );
 
-720 i‡(
+719 i‡(
 °©us
  == -1)
 
-722 
+721 
 	`poﬁ_îr‹
 ("böd(ËÁûed.Ñós⁄: %s", 
 	`°ªº‹
@@ -14161,11 +13367,11 @@ addr
 î∫o
 ));
 
-723 
+722 
 	`myexô
 (1);
 
-726 i‡(
+725 i‡(
 	`chmod
 (
 un_addr
@@ -14173,7 +13379,7 @@ un_addr
 sun_∑th
 , 0777) == -1)
 
-728 
+727 
 	`poﬁ_îr‹
 ("chmod(ËÁûed.Ñós⁄: %s", 
 	`°ªº‹
@@ -14181,11 +13387,11 @@ sun_∑th
 î∫o
 ));
 
-729 
+728 
 	`myexô
 (1);
 
-732 
+731 
 °©us
  = 
 	`li°í
@@ -14195,11 +13401,11 @@ fd
 PGPOOLMAXLITSENQUEUELENGTH
 );
 
-733 i‡(
+732 i‡(
 °©us
  < 0)
 
-735 
+734 
 	`poﬁ_îr‹
 ("li°í(ËÁûed.Ñós⁄: %s", 
 	`°ªº‹
@@ -14207,37 +13413,37 @@ PGPOOLMAXLITSENQUEUELENGTH
 î∫o
 ));
 
-736 
+735 
 	`myexô
 (1);
 
-738  
+737  
 fd
 ;
 
-739 
+738 
 	}
 }
 
-741 
+740 
 	$myexô
 (
 code
 )
 
-743 
+742 
 ∑th
 [
 POOLMAXPATHLEN
 ];
 
-745 i‡(
+744 i‡(
 	`gëpid
 (Ë!
 mypid
 )
 
-748 
+747 
 	`u∆ök
 (
 un_addr
@@ -14245,7 +13451,7 @@ un_addr
 sun_∑th
 );
 
-749 
+748 
 	`¢¥ötf
 (
 ∑th
@@ -14257,29 +13463,29 @@ logdú
 PID_FILE_NAME
 );
 
-750 
+749 
 	`u∆ök
 (
 ∑th
 );
 
-752 
+751 
 	`exô
 (
 code
 );
 
-753 
+752 
 	}
 }
 
-756 
+755 
 	$nŸi˚_backíd_îr‹
 (
 ma°î
 )
 
-758 
+757 
 pid_t
  
 ∑ª¡
@@ -14287,7 +13493,7 @@ pid_t
 	`gëµid
 ();
 
-760 
+759 
 	`poﬁ_log
 ("nŸi˚_backíd_îr‹: ma°î: %d faû ovîÑeque° fromÖid %d", 
 ma°î
@@ -14295,11 +13501,11 @@ ma°î
 	`gëpid
 ());
 
-762 i‡(
+761 i‡(
 ma°î
 )
 
-763 
+762 
 	`kûl
 (
 ∑ª¡
@@ -14307,7 +13513,7 @@ ma°î
 SIGUSR1
 );
 
-765 
+764 
 	`kûl
 (
 ∑ª¡
@@ -14315,19 +13521,19 @@ SIGUSR1
 SIGUSR2
 );
 
-768 #ifde‡
+767 #ifde‡
 NOT_USED
 
 
-769 
+768 
 	`¶ìp
 (1);
 
-771 
+770 
 	}
 }
 
-773 
+772 
 RETSIGTYPE
  
 	$exô_h™dÀr
@@ -14335,93 +13541,93 @@ RETSIGTYPE
 sig
 )
 
-775 
+774 
 i
 ;
 
-777 
+776 
 	`POOL_SETMASK
 (&
 AuthBlockSig
 );
 
-783 i‡(
+782 i‡(
 	`gëpid
 (Ë!
 mypid
 )
 
-785 
+784 
 	`poﬁ_debug
 ("exit_handler: IámÇotÖarent");
 
-786 
+785 
 	`POOL_SETMASK
 (&
 UnBlockSig
 );
 
-787 
+786 
 	`exô
 (0);
 
-790 i‡(
+789 i‡(
 sig
  =
 SIGTERM
 )
 
-791 
+790 
 	`poﬁ_log
 ("received smart shutdownÑequest");
 
-792 i‡(
+791 i‡(
 sig
  =
 SIGINT
 )
 
-793 
+792 
 	`poﬁ_log
 ("received fast shutdownÑequest");
 
-794 i‡(
+793 i‡(
 sig
  =
 SIGQUIT
 )
 
-795 
+794 
 	`poﬁ_log
 ("received immediate shutdownÑequest");
 
-796 i‡(
+795 i‡(
 sig
  =
 SIGHUP
 )
 
-797 
+796 
 	`poﬁ_log
 ("received idle connection closeÑequest");
 
-800 
+799 
 	`poﬁ_îr‹
 ("exô_h™dÀr: unknow¿sig«»ª˚ived %d", 
 sig
 );
 
-801 
+800 
 	`POOL_SETMASK
 (&
 UnBlockSig
 );
 
-805 
+804 
 exôög
  = 1;
 
-807 
+806 
 i
  = 0; i < 
 poﬁ_c⁄fig
@@ -14429,7 +13635,7 @@ poﬁ_c⁄fig
 num_öô_chûdªn
 ; i++)
 
-809 
+808 
 pid_t
  
 pid
@@ -14439,11 +13645,11 @@ pids
 i
 ];
 
-810 i‡(
+809 i‡(
 pid
 )
 
-812 
+811 
 	`kûl
 (
 pid
@@ -14451,41 +13657,41 @@ pid
 sig
 );
 
-816 i‡(
+815 i‡(
 sig
  =
 SIGHUP
 )
 
-818 
+817 
 exôög
  = 0;
 
-819 
+818 
 	`POOL_SETMASK
 (&
 UnBlockSig
 );
 
-823 
+822 
 	`POOL_SETMASK
 (&
 UnBlockSig
 );
 
-825 
+824 
 	`waô
 (
 NULL
 ) > 0)
 
-828 i‡(
+827 i‡(
 î∫o
  !
 ECHILD
 )
 
-829 
+828 
 	`poﬁ_îr‹
 ("waô(ËÁûed.Ñós⁄:%s", 
 	`°ªº‹
@@ -14493,27 +13699,27 @@ ECHILD
 î∫o
 ));
 
-834 i‡–!
+833 i‡–!
 	`pqc_de°roy
 () )
 
-836 
+835 
 	`poﬁ_îr‹
 ("failedÅo finishÅhe query cache.");
 
-837 
+836 
 	`myexô
 (1);
 
-840 
+839 
 	`myexô
 (0);
 
-841 
+840 
 	}
 }
 
-849 
+848 
 RETSIGTYPE
  
 	$Áûovî_h™dÀr
@@ -14521,85 +13727,85 @@ RETSIGTYPE
 sig
 )
 
-851 
+850 
 	`POOL_SETMASK
 (&
 BlockSig
 );
 
-852 
+851 
 Áûovî_ªque°
  = 1;
 
-853 
+852 
 Áûovî_signo
  = 
 sig
 ;
 
-854 
+853 
 	`wrôe
 (
 pùe_fds
 [1], "\0", 1);
 
-855 
+854 
 	`POOL_SETMASK
 (&
 UnBlockSig
 );
 
-856 
+855 
 	}
 }
 
-862 
+861 
 	$Áûovî
 (
 sig
 )
 
-864 
+863 
 i
 ;
 
-865 
+864 
 ª∂iˇti⁄
  = 0;
 
-867 
+866 
 	`poﬁ_debug
 ("failover_handler called");
 
-873 i‡(
+872 i‡(
 	`gëpid
 (Ë!
 mypid
 )
 
-875 
+874 
 	`poﬁ_debug
 ("failover_handler: IámÇotÖarent");
 
-882 i‡(
+881 i‡(
 exôög
 )
 
-890 i‡(
+889 i‡(
 swôchög
 )
 
-895 #ifde‡
+894 #ifde‡
 NOT_USED
 
 
-897 i‡(
+896 i‡(
 poﬁ_c⁄fig
 .
 £c⁄d¨y_backíd_p‹t
  == 0)
 
-906 
+905 
 	`°rcmp
 (
 poﬁ_c⁄fig
@@ -14609,7 +13815,7 @@ cuºít_backíd_ho°_«me
 £c⁄d¨y_backíd_ho°_«me
 ) ||
 
-907 
+906 
 poﬁ_c⁄fig
 .
 cuºít_backíd_p‹t
@@ -14617,11 +13823,11 @@ cuºít_backíd_p‹t
 £c⁄d¨y_backíd_p‹t
 )
 
-909 
+908 
 swôchög
  = 1;
 
-911 i‡(!
+910 i‡(!
 degíî©ed
  && 
 poﬁ_c⁄fig
@@ -14629,45 +13835,45 @@ poﬁ_c⁄fig
 £c⁄d¨y_backíd_p‹t
  != 0)
 
-913 
+912 
 	`poﬁ_log
 ("starting failover from %s(%d)Åo %s(%d)",
 
-914 
+913 
 poﬁ_c⁄fig
 .
 cuºít_backíd_ho°_«me
 ,
 
-915 
+914 
 poﬁ_c⁄fig
 .
 cuºít_backíd_p‹t
 ,
 
-916 
+915 
 poﬁ_c⁄fig
 .
 £c⁄d¨y_backíd_ho°_«me
 ,
 
-917 
+916 
 poﬁ_c⁄fig
 .
 £c⁄d¨y_backíd_p‹t
 );
 
-918 
+917 
 poﬁ_c⁄fig
 .
 £rvî_°©us
 [0] = 2;
 
-922 
+921 
 	`poﬁ_log
 ("restartingÖqcd");
 
-926 
+925 
 i
  = 0; i < 
 poﬁ_c⁄fig
@@ -14675,7 +13881,7 @@ poﬁ_c⁄fig
 num_öô_chûdªn
 ; i++)
 
-928 
+927 
 pid_t
  
 pid
@@ -14685,11 +13891,11 @@ pids
 i
 ];
 
-929 i‡(
+928 i‡(
 pid
 )
 
-931 
+930 
 	`kûl
 (
 pid
@@ -14697,25 +13903,25 @@ pid
 SIGQUIT
 );
 
-932 
+931 
 	`poﬁ_debug
 ("kû»%d", 
 pid
 );
 
-936 
+935 
 	`waô
 (
 NULL
 ) > 0)
 
-939 i‡(
+938 i‡(
 î∫o
  !
 ECHILD
 )
 
-940 
+939 
 	`poﬁ_îr‹
 ("waô(ËÁûed.Ñós⁄:%s", 
 	`°ªº‹
@@ -14723,7 +13929,7 @@ ECHILD
 î∫o
 ));
 
-942 i‡(!
+941 i‡(!
 degíî©ed
  && 
 poﬁ_c⁄fig
@@ -14731,7 +13937,7 @@ poﬁ_c⁄fig
 £c⁄d¨y_backíd_p‹t
  != 0)
 
-945 
+944 
 poﬁ_c⁄fig
 .
 cuºít_backíd_ho°_«me
@@ -14739,7 +13945,7 @@ cuºít_backíd_ho°_«me
 £c⁄d¨y_backíd_ho°_«me
 ;
 
-946 
+945 
 poﬁ_c⁄fig
 .
 cuºít_backíd_p‹t
@@ -14747,7 +13953,7 @@ cuºít_backíd_p‹t
 £c⁄d¨y_backíd_p‹t
 ;
 
-950 
+949 
 i
 =0;i<
 poﬁ_c⁄fig
@@ -14755,7 +13961,7 @@ poﬁ_c⁄fig
 num_öô_chûdªn
 ;i++)
 
-952 
+951 
 pids
 [
 i
@@ -14767,49 +13973,49 @@ unix_fd
 öë_fd
 );
 
-960 i‡(
+959 i‡(
 ª∂iˇti⁄
 )
 
-962 i‡(
+961 i‡(
 sig
  =
 SIGUSR2
 )
 
-964 
+963 
 	`poﬁ_log
 ("degeneration done. shutdown secondary host %s(%d)",
 
-965 
+964 
 poﬁ_c⁄fig
 .
 £c⁄d¨y_backíd_ho°_«me
 ,
 
-966 
+965 
 poﬁ_c⁄fig
 .
 £c⁄d¨y_backíd_p‹t
 );
 
-970 
+969 
 	`poﬁ_log
 ("degeneration done. shutdown master host %s(%d)",
 
-971 
+970 
 poﬁ_c⁄fig
 .
 backíd_ho°_«me
 ,
 
-972 
+971 
 poﬁ_c⁄fig
 .
 backíd_p‹t
 );
 
-975 i‡(!
+974 i‡(!
 degíî©ed
  && 
 poﬁ_c⁄fig
@@ -14817,47 +14023,47 @@ poﬁ_c⁄fig
 £c⁄d¨y_backíd_p‹t
  != 0)
 
-977 
+976 
 	`poﬁ_log
 ("failover from %s(%d)Åo %s(%d) done.",
 
-978 
+977 
 poﬁ_c⁄fig
 .
 backíd_ho°_«me
 ,
 
-979 
+978 
 poﬁ_c⁄fig
 .
 backíd_p‹t
 ,
 
-980 
+979 
 poﬁ_c⁄fig
 .
 £c⁄d¨y_backíd_ho°_«me
 ,
 
-981 
+980 
 poﬁ_c⁄fig
 .
 £c⁄d¨y_backíd_p‹t
 );
 
-985 
+984 
 	`poﬁ_log
 ("restartingÖqcd done.");
 
-988 
+987 
 swôchög
  = 0;
 
-990 
+989 
 	}
 }
 
-995 
+994 
 RETSIGTYPE
  
 	$hó…h_check_timî_h™dÀr
@@ -14865,27 +14071,27 @@ RETSIGTYPE
 sig
 )
 
-997 
+996 
 	`POOL_SETMASK
 (&
 BlockSig
 );
 
-998 
+997 
 hó…h_check_timî_expúed
  = 1;
 
-999 
+998 
 	`POOL_SETMASK
 (&
 UnBlockSig
 );
 
-1000 
+999 
 	}
 }
 
-1005 
+1004 
 RETSIGTYPE
  
 	$ª≠_h™dÀr
@@ -14893,71 +14099,71 @@ RETSIGTYPE
 sig
 )
 
-1007 
+1006 
 	`POOL_SETMASK
 (&
 BlockSig
 );
 
-1008 
+1007 
 sigchld_ªque°
  = 1;
 
-1009 
+1008 
 	`wrôe
 (
 pùe_fds
 [1], "\0", 1);
 
-1010 
+1009 
 	`POOL_SETMASK
 (&
 UnBlockSig
 );
 
-1011 
+1010 
 	}
 }
 
-1017 
+1016 
 	$ª≠î
 ()
 
-1019 
+1018 
 pid_t
  
 pid
 ;
 
-1020 
+1019 
 °©us
 ;
 
-1021 
+1020 
 i
 ;
 
-1023 
+1022 
 	`poﬁ_debug
 ("reap_handler called");
 
-1024 
+1023 
 sigchld_ªque°
  = 0;
 
-1026 i‡(
+1025 i‡(
 exôög
 )
 
-1031 i‡(
+1030 i‡(
 swôchög
 )
 
-1036 #ifde‡
+1035 #ifde‡
 HAVE_WAITPID
 
 
-1037 (
+1036 (
 pid
  = 
 	`waôpid
@@ -14967,7 +14173,7 @@ pid
 WNOHANG
 )) > 0)
 
-1040 (
+1039 (
 pid
  = 
 	`waô3
@@ -14979,7 +14185,7 @@ WNOHANG
 NULL
 )) > 0)
 
-1044 
+1043 
 	`poﬁ_debug
 ("chûd %dÉxô†wôh sètu†%d by sig«»%d", 
 pid
@@ -14989,7 +14195,7 @@ pid
 	`WTERMSIG
 (status));
 
-1047 
+1046 
 i
 =0;i<
 poﬁ_c⁄fig
@@ -14997,7 +14203,7 @@ poﬁ_c⁄fig
 num_öô_chûdªn
 ;i++)
 
-1049 i‡(
+1048 i‡(
 pid
  =
 pids
@@ -15005,7 +14211,7 @@ pids
 i
 ])
 
-1052 i‡(!
+1051 i‡(!
 swôchög
  && !
 exôög
@@ -15013,7 +14219,7 @@ exôög
 °©us
 )
 
-1054 
+1053 
 pids
 [
 i
@@ -15025,7 +14231,7 @@ unix_fd
 öë_fd
 );
 
-1055 
+1054 
 	`poﬁ_debug
 ("f‹káÇew chûdÖid %d", 
 pids
@@ -15033,11 +14239,11 @@ pids
 i
 ]);
 
-1062 
+1061 
 	}
 }
 
-1067 
+1066 
 	$poﬁ_∑u£
 (
 timevÆ
@@ -15045,27 +14251,27 @@ timevÆ
 timeout
 )
 
-1069 
+1068 
 fd_£t
  
 rfds
 ;
 
-1070 
+1069 
 n
 ;
 
-1071 
+1070 
 dummy
 ;
 
-1073 
+1072 
 	`FD_ZERO
 (&
 rfds
 );
 
-1074 
+1073 
 	`FD_SET
 (
 pùe_fds
@@ -15073,7 +14279,7 @@ pùe_fds
 rfds
 );
 
-1075 
+1074 
 n
  = 
 	`£À˘
@@ -15087,11 +14293,11 @@ NULL
 timeout
 );
 
-1076 i‡(
+1075 i‡(
 n
  == 1)
 
-1077 
+1076 
 	`ªad
 (
 pùe_fds
@@ -15099,21 +14305,21 @@ pùe_fds
 dummy
 , 1);
 
-1078  
+1077  
 n
 ;
 
-1079 
+1078 
 	}
 }
 
-1085 
+1084 
 	$poﬁ_¶ìp
 (
 £c⁄d
 )
 
-1087 
+1086 
 timevÆ
  
 cuºít_time
@@ -15121,7 +14327,7 @@ cuºít_time
 ¶ìp_time
 ;
 
-1089 
+1088 
 	`gëtimeofday
 (&
 cuºít_time
@@ -15129,7 +14335,7 @@ cuºít_time
 NULL
 );
 
-1090 
+1089 
 ¶ìp_time
 .
 tv_£c
@@ -15139,7 +14345,7 @@ tv_£c
 cuºít_time
 .tv_sec;
 
-1091 
+1090 
 ¶ìp_time
 .
 tv_u£c
@@ -15147,13 +14353,13 @@ tv_u£c
 cuºít_time
 .tv_usec;
 
-1093 
+1092 
 	`POOL_SETMASK
 (&
 UnBlockSig
 );
 
-1094 
+1093 
 ¶ìp_time
 .
 tv_£c
@@ -15161,7 +14367,7 @@ tv_£c
 cuºít_time
 .tv_sec ||
 
-1095 
+1094 
 ¶ìp_time
 .
 tv_u£c
@@ -15169,17 +14375,17 @@ tv_u£c
 cuºít_time
 .tv_usec)
 
-1097 
+1096 
 timevÆ
  
 timeout
 ;
 
-1098 
+1097 
 r
 ;
 
-1100 
+1099 
 timeout
 .
 tv_£c
@@ -15189,7 +14395,7 @@ tv_£c
 cuºít_time
 .tv_sec;
 
-1101 
+1100 
 timeout
 .
 tv_u£c
@@ -15199,25 +14405,25 @@ tv_u£c
 cuºít_time
 .tv_usec;
 
-1102 i‡(
+1101 i‡(
 timeout
 .
 tv_u£c
  < 0)
 
-1104 
+1103 
 timeout
 .
 tv_£c
 --;
 
-1105 
+1104 
 timeout
 .
 tv_u£c
  += 1000000;
 
-1108 
+1107 
 r
  = 
 	`poﬁ_∑u£
@@ -15225,27 +14431,27 @@ r
 timeout
 );
 
-1109 
+1108 
 	`POOL_SETMASK
 (&
 BlockSig
 );
 
-1110 i‡(
+1109 i‡(
 r
  > 0)
 
-1111 
+1110 
 CHECK_REQUEST
 ;
 
-1112 
+1111 
 	`POOL_SETMASK
 (&
 UnBlockSig
 );
 
-1113 
+1112 
 	`gëtimeofday
 (&
 cuºít_time
@@ -15253,27 +14459,13 @@ cuºít_time
 NULL
 );
 
-1115 
+1114 
 	`POOL_SETMASK
 (&
 BlockSig
 );
 
-1116 
-	}
-}
-
-1118 
-e_hèbÀ
- **
-	$gë_ehèbÀ_hód
-()
-
-1120  &
-eh_to_£rvî
-;
-
-1121 
+1115 
 	}
 }
 
@@ -15390,40 +14582,14 @@ sö6_addr
 27 *
 	$ªcv_öfo
 (*
-eh_‰om_maö
+¨g
 )
 
-29 
-e_hèbÀ
- **
-eh
- = (”_hèbÀ **)
-eh_‰om_maö
-);
-
-30 
-	`öô_e_hèbÀ
-(
-eh
-);
-
-32 *
+29 *
 dú
  = "/tmp/mypqcd";
 
-33 *
-¥ev_quîy
- = 
-	`mÆloc
-(() * 250);
-
-34 
-	`°r˝y
-(
-¥ev_quîy
-, " ");
-
-36 i‡(
+31 i‡(
 	`mkdú
 (
 dú
@@ -15431,23 +14597,25 @@ dú
 S_IRWXU
 |
 S_IRWXO
+|
+S_IRWXG
 ) == -1)
 
-38 i‡(
+33 i‡(
 î∫o
  !
 EEXIST
 )
 
-40 
+35 
 	`≥º‹
-("\tCREATION of directory1 failed in my_server.c\n");
+("\tCREATION of directory1 failed in my_server.c ");
 
-44 *
+39 *
 dú1
  = "/tmp/mypqcd/oiddir";
 
-46 i‡(
+41 i‡(
 	`mkdú
 (
 dú1
@@ -15455,25 +14623,27 @@ dú1
 S_IRWXU
 |
 S_IRWXO
+|
+S_IRWXG
 ) == -1)
 
-48 i‡(
+43 i‡(
 î∫o
  !
 EEXIST
 )
 
-51 
+46 
 	`≥º‹
-("\tCREATION of directory2 failed in my_server.c\n");
+("\tCREATION of directory2 failed in my_server.c ");
 
-54 
+49 
 	`poﬁ_debug
 ("\tDIRECTORY \"%s\"áÃódyÉxi°s!\n", 
 dú1
 );
 
-59 i‡(
+54 i‡(
 	`±hªad_muãx_öô
 (&
 lock_Œ
@@ -15481,11 +14651,11 @@ lock_Œ
 NULL
 ) != 0)
 
-61 
+56 
 	`≥º‹
 ("\n mutex init failed\n");
 
-65 
+60 
 sockfd
 , 
 √w_fd
@@ -15493,7 +14663,7 @@ sockfd
 fd
 ;
 
-66 
+61 
 addröfo
  
 höts
@@ -15503,39 +14673,39 @@ höts
 p
 ;
 
-67 
+62 
 sockaddr_°‹age
  
 theú_addr
 ;
 
-68 
+63 
 sockÀn_t
  
 sö_size
 ;
 
-69 
+64 
 siga˘i⁄
  
 ß
 ;
 
-70 
+65 
 yes
 =1;
 
-71 
+66 
 s
 [
 INET6_ADDRSTRLEN
 ];
 
-72 *
+67 *
 §c
 ;
 
-73 
+68 
 rv
 , 
 numbyãs
@@ -15543,25 +14713,25 @@ numbyãs
 c_°©us
 ;
 
-74 
+69 
 buf
 [
 MAXDATASIZE
 ];
 
-75 *
+70 *
 √w_buf
  = 
 NULL
 ;
 
-77 
+72 
 	`mem£t
 (&
 höts
 , 0,  hints);
 
-78 
+73 
 höts
 .
 ai_Ámûy
@@ -15569,7 +14739,7 @@ ai_Ámûy
 AF_UNSPEC
 ;
 
-79 
+74 
 höts
 .
 ai_sockty≥
@@ -15577,7 +14747,7 @@ ai_sockty≥
 SOCK_STREAM
 ;
 
-80 
+75 
 höts
 .
 ai_Êags
@@ -15585,7 +14755,7 @@ ai_Êags
 AI_PASSIVE
 ;
 
-82 i‡((
+77 i‡((
 rv
  = 
 	`gëaddröfo
@@ -15599,7 +14769,7 @@ höts
 £rvöfo
 )) != 0)
 
-84 
+79 
 	`Ârötf
 (
 °dîr
@@ -15609,7 +14779,7 @@ höts
 rv
 ));
 
-89 
+84 
 p
  = 
 £rvöfo
@@ -15619,7 +14789,7 @@ NULL
 ai_√xt
 )
 
-91 i‡((
+86 i‡((
 sockfd
  = 
 	`sockë
@@ -15631,17 +14801,17 @@ ai_Ámûy
 ai_sockty≥
 ,
 
-92 
+87 
 p
 ->
 ai_¥Ÿocﬁ
 )) == -1)
 
-94 
+89 
 	`≥º‹
 ("server: socket");
 
-98 i‡(
+93 i‡(
 	`£tsock›t
 (
 sockfd
@@ -15653,15 +14823,15 @@ SO_REUSEADDR
 yes
 ,
 
-101 
+96 
 	`≥º‹
 ("setsockopt");
 
-102 
+97 
 	`exô
 (1);
 
-105 i‡(
+100 i‡(
 	`böd
 (
 sockfd
@@ -15673,35 +14843,35 @@ ai_addr
 ai_addæí
 ) == -1)
 
-107 
+102 
 	`˛o£
 (
 sockfd
 );
 
-108 
+103 
 	`≥º‹
 ("server: bind");
 
-115 i‡(
+110 i‡(
 p
  =
 NULL
 )
 
-117 
+112 
 	`Ârötf
 (
 °dîr
 , "server: failedÅo bind\n");
 
-121 
+116 
 	`‰ìaddröfo
 (
 £rvöfo
 );
 
-123 i‡(
+118 i‡(
 	`li°í
 (
 sockfd
@@ -15709,15 +14879,15 @@ sockfd
 BACKLOG
 ) == -1)
 
-125 
+120 
 	`≥º‹
 ("listen");
 
-126 
+121 
 	`exô
 (1);
 
-129 
+124 
 ß
 .
 ß_h™dÀr
@@ -15725,7 +14895,7 @@ BACKLOG
 sigchld_h™dÀr
 ;
 
-130 
+125 
 	`sigem±y£t
 (&
 ß
@@ -15733,7 +14903,7 @@ sigchld_h™dÀr
 ß_mask
 );
 
-131 
+126 
 ß
 .
 ß_Êags
@@ -15741,7 +14911,7 @@ sigchld_h™dÀr
 SA_RESTART
 ;
 
-132 i‡(
+127 i‡(
 	`siga˘i⁄
 (
 SIGCHLD
@@ -15751,25 +14921,25 @@ SIGCHLD
 NULL
 ) == -1)
 
-134 
+129 
 	`≥º‹
 ("sigaction");
 
-135 
+130 
 	`exô
 (1);
 
-138 
+133 
 	`poﬁ_debug
 ("\tserver: waiting for connections...\n");
 
-142 
+137 
 sö_size
  =  
 theú_addr
 ;
 
-143 
+138 
 √w_fd
  = 
 	`ac˚±
@@ -15783,15 +14953,15 @@ theú_addr
 sö_size
 );
 
-144 i‡(
+139 i‡(
 √w_fd
  == -1)
 
-146 
+141 
 	`≥º‹
 ("accept");
 
-149 
+144 
 	`öë_¡›
 (
 theú_addr
@@ -15799,7 +14969,7 @@ theú_addr
 ss_Ámûy
 ,
 
-150 
+145 
 	`gë_ö_addr
 ((
 sockaddr
@@ -15807,27 +14977,27 @@ sockaddr
 theú_addr
 ),
 
-151 
+146 
 s
 ,  s);
 
-152 
+147 
 	`poﬁ_debug
 ("\t£rvî: gŸ c⁄√˘i⁄ from %s\n", 
 s
 );
 
-154 i‡(!
+149 i‡(!
 	`f‹k
 ())
 
-156 
+151 
 	`˛o£
 (
 sockfd
 );
 
-158 i‡((
+153 i‡((
 numbyãs
  = 
 	`ªcv
@@ -15839,15 +15009,15 @@ buf
 MAXDATASIZE
 -1, 0)) == -1)
 
-160 
+155 
 	`≥º‹
 ("recv");
 
-161 
+156 
 	`exô
 (1);
 
-163 
+158 
 	`poﬁ_debug
 ("\tSizêo‡%†usög såÀ¿i†%d\n", 
 buf
@@ -15855,19 +15025,19 @@ buf
 	`°æí
 (buf));
 
-164 
+159 
 buf
 [
 numbyãs
 ] = '\0';
 
-166 i‡(
+161 i‡((
 buf
-[0] ='t' && 
+[0] ='t' | buf[0] ='f'Ë&& 
 numbyãs
  > 2)
 
-168 
+163 
 	`poﬁ_debug
 ("\t£rvî:Ñe˚ived '%s' o‡sizê%d\n",
 buf
@@ -15875,7 +15045,7 @@ buf
 numbyãs
 );
 
-169 
+164 
 §c
  = 
 	`£nd_to_mm≠
@@ -15885,49 +15055,49 @@ buf
 numbyãs
 );
 
-171 
+166 
 	`˛o£
 (
 √w_fd
 );
 
-172 
+167 
 	`exô
 (0);
 
-175 i‡(
+170 i‡(
 	`waô
 (&
 c_°©us
 ) == -1)
 
-177 
+172 
 	`≥º‹
 ("waitpid");
 
-178 
+173 
 	`exô
 (
 EXIT_FAILURE
 );
 
-180 
+175 
 	`˛o£
 (
 √w_fd
 );
 
-182 
+177 
 	`±hªad_muãx_lock
 (&
 lock_Œ
 );
 
-184 
+179 
 numbyãs
  = 0;
 
-185 
+180 
 √w_buf
  = 
 	`gë_‰om_mm≠
@@ -15935,59 +15105,43 @@ numbyãs
 numbyãs
 );
 
-186 
-	`poﬁ_debug
-("\tPªv_quîy BEFORE i†%s", 
-¥ev_quîy
-);
-
-187 
+181 
 	`°‹e_exåa˘ed_öfo
 (
-eh
-, 
 √w_buf
 , 
 numbyãs
-, 
-¥ev_quîy
 );
 
-188 
-	`poﬁ_debug
-("\tPªv_quîy AFTER i†%s", 
-¥ev_quîy
-);
-
-190 
+182 
 	`poﬁ_debug
 ("\tBUF RETRIEVED FROM MMAP: %s", 
 √w_buf
 );
 
-192 
+183 
 	`±hªad_muãx_u∆ock
 (&
 lock_Œ
 );
 
-195 
+186 
 	`˛o£
 (
 fd
 );
 
-196 
+187 
 	`±hªad_muãx_de°roy
 (&
 lock_Œ
 );
 
-198  
+189  
 NULL
 ;
 
-199 
+190 
 	}
 }
 
@@ -36935,6 +36089,10 @@ HAVE_SYS_TIME_H
 	~"poﬁ.h
 "
 
+41 
+	~"övÆid©i⁄/fûe_oids.h
+"
+
 42 
 	~"pqc.h
 "
@@ -46344,20 +45502,28 @@ p
 ());
 
 2558 
+	`övÆid©e_quîy_ˇche
+(
+‰⁄ãnd
+, 
+	`pqc_p›_cuºít_quîy
+());
+
+2559 
 	`poﬁ_debug
 ("SimpleForwardToFrontend: Non-SELECT statement. Query cache disabled.");
 
-2559 
+2560 
 	`pqc_buf_öô
 ();
 
-2560 
+2561 
 IsQuîyCacheE«bÀd
  = 
 Ál£
 ;
 
-2567 i‡(
+2568 i‡(
 	`poﬁ_wrôe
 (
 ‰⁄ãnd
@@ -46367,11 +45533,11 @@ p
 Àn
 ))
 
-2569  
+2570  
 POOL_END
 ;
 
-2572 
+2573 
 	`pqc_buf_add
 (
 p
@@ -46379,7 +45545,7 @@ p
 Àn
 );
 
-2574 
+2575 
 	`poﬁ_debug
 ("Sim∂eF‹w¨dToFr⁄ãnd: köd=%c,Üí=%d, d©a=%p", 
 köd
@@ -46389,61 +45555,61 @@ köd
 p
 );
 
-2576 i‡(
+2577 i‡(
 köd
  == 'A')
 
-2578 
+2579 
 	`poﬁ_Êush
 (
 ‰⁄ãnd
 );
 
-2580 i‡(
+2581 i‡(
 köd
  == 'E')
 
-2582 
+2583 
 i
 , 
 k
 ;
 
-2583 
+2584 
 ªs1
 , 
 ªs2
 ;
 
-2584 *
+2585 *
 p1
 ;
 
-2587 
+2588 
 IsQuîyCacheE«bÀd
  = 
 Ál£
 ;
 
-2588 
+2589 
 	`pqc_buf_öô
 ();
 
-2597 
+2598 
 e
 ;
 
-2599 
+2600 
 e
  = *
 p
 ++;
 
-2600 i‡(
+2601 i‡(
 e
  == '\0')
 
-2603 i‡(
+2604 i‡(
 e
  ='S' && (
 	`°rˇ£cmp
@@ -46451,35 +45617,35 @@ e
 p
 ) == 0 || strcasecmp("FATAL",Ö) == 0))
 
-2605 
+2606 
 	`poﬁ_Êush
 (
 ‰⁄ãnd
 );
 
-2606  
+2607  
 POOL_END
 ;
 
-2610 *
+2611 *
 p
 ++)
 
-2616 i‡(
+2617 i‡(
 £À˘_ö_å™ß˘i⁄
 )
 
-2618 i‡(
+2619 i‡(
 	`TSTATE
 (
 backíd
 ) != 'E')
 
-2620 
+2621 
 ö_lﬂd_bÆ™˚
  = 0;
 
-2621 
+2622 
 	`do_îr‹_comm™d
 (
 	`SECONDARY
@@ -46489,11 +45655,11 @@ backíd
 PROTO_MAJOR_V3
 );
 
-2623 
+2624 
 £À˘_ö_å™ß˘i⁄
  = 0;
 
-2626 
+2627 
 i
  = 0;ò< 
 backíd
@@ -46501,7 +45667,7 @@ backíd
 num
 ;i++)
 
-2628 
+2629 
 POOL_CONNECTION
  *
 ˝
@@ -46515,19 +45681,19 @@ i
 c⁄
 ;
 
-2637 
+2638 
 	`poﬁ_wrôe
 (
 ˝
 , "S", 1);
 
-2638 
+2639 
 ªs1
  = 
 	`ht⁄l
 (4);
 
-2639 i‡(
+2640 i‡(
 	`poﬁ_wrôe_™d_Êush
 (
 ˝
@@ -46535,11 +45701,11 @@ c⁄
 ªs1
 , (res1)) < 0)
 
-2641  
+2642  
 POOL_END
 ;
 
-2647 (
+2648 (
 k
  = 
 	`poﬁ_ªad_köd
@@ -46547,25 +45713,25 @@ k
 backíd
 )) != 'Z')
 
-2649 
+2650 
 POOL_STATUS
  
 ªt
 ;
 
-2650 i‡(
+2651 i‡(
 k
  < 0)
 
-2652 
+2653 
 	`poﬁ_îr‹
 ("SimpleForwardToBackend:Öool_read_kindÉrror");
 
-2653  
+2654  
 POOL_ERROR
 ;
 
-2656 
+2657 
 ªt
  = 
 	`Sim∂eF‹w¨dToFr⁄ãnd
@@ -46577,23 +45743,23 @@ k
 backíd
 );
 
-2657 i‡(
+2658 i‡(
 ªt
  !
 POOL_CONTINUE
 )
 
-2658  
+2659  
 ªt
 ;
 
-2659 
+2660 
 	`poﬁ_Êush
 (
 ‰⁄ãnd
 );
 
-2662 
+2663 
 °©us
  = 
 	`poﬁ_ªad
@@ -46605,25 +45771,25 @@ backíd
 ªs1
 , (res1));
 
-2663 i‡(
+2664 i‡(
 °©us
  < 0)
 
-2665 
+2666 
 	`poﬁ_îr‹
 ("SimpleForwardToFrontend:Érror whileÑeading messageÜength");
 
-2666  
+2667  
 POOL_END
 ;
 
-2668 
+2669 
 ªs1
  = 
 	`¡ohl
 (res1) - (res1);
 
-2669 
+2670 
 p1
  = 
 	`poﬁ_ªad2
@@ -46635,25 +45801,25 @@ backíd
 ªs1
 );
 
-2670 i‡(
+2671 i‡(
 p1
  =
 NULL
 )
 
-2671  
+2672  
 POOL_END
 ;
 
-2674  
+2675  
 POOL_CONTINUE
 ;
 
-2675 
+2676 
 	}
 }
 
-2677 
+2678 
 POOL_STATUS
  
 	$Sim∂eF‹w¨dToBackíd
@@ -46669,25 +45835,25 @@ POOL_CONNECTION_POOL
 backíd
 )
 
-2679 
+2680 
 Àn
 ;
 
-2680 
+2681 
 £ndÀn
 ;
 
-2681 *
+2682 *
 p
 ;
 
-2682 *
+2683 *
 «me
  = 
 NULL
 ;
 
-2684 i‡(
+2685 i‡(
 	`poﬁ_wrôe
 (
 	`MASTER
@@ -46697,11 +45863,11 @@ backíd
 köd
 , 1))
 
-2685  
+2686  
 POOL_END
 ;
 
-2687 i‡(
+2688 i‡(
 	`poﬁ_ªad
 (
 ‰⁄ãnd
@@ -46709,11 +45875,11 @@ POOL_END
 £ndÀn
 , (sendlen)))
 
-2689  
+2690  
 POOL_END
 ;
 
-2692 i‡(
+2693 i‡(
 	`poﬁ_wrôe
 (
 	`MASTER
@@ -46723,11 +45889,11 @@ backíd
 £ndÀn
 , (sendlen)))
 
-2693  
+2694  
 POOL_END
 ;
 
-2695 
+2696 
 Àn
  = 
 	`¡ohl
@@ -46735,27 +45901,27 @@ POOL_END
 £ndÀn
 ) - 4;
 
-2697 i‡(
+2698 i‡(
 Àn
  == 0)
 
-2698  
+2699  
 POOL_CONTINUE
 ;
 
-2699 i‡(
+2700 i‡(
 Àn
  < 0)
 
-2701 
+2702 
 	`poﬁ_îr‹
 ("SimpleFowardToBackend: invalid messageÜength");
 
-2702  
+2703  
 POOL_END
 ;
 
-2705 
+2706 
 p
  = 
 	`poﬁ_ªad2
@@ -46765,17 +45931,17 @@ p
 Àn
 );
 
-2706 i‡(
+2707 i‡(
 p
  =
 NULL
 )
 
-2707  
+2708  
 POOL_END
 ;
 
-2709 i‡(
+2710 i‡(
 	`poﬁ_wrôe
 (
 	`MASTER
@@ -46787,33 +45953,33 @@ p
 Àn
 ))
 
-2710  
+2711  
 POOL_END
 ;
 
-2712 i‡(
+2713 i‡(
 köd
  == 'B')
 
-2714 *
+2715 *
 °mt_«me
 , *
 p‹èl_«me
 ;
 
-2715 
+2716 
 Pª∑ªdSèãmít
  *
 °mt
 ;
 
-2717 
+2718 
 p‹èl_«me
  = 
 p
 ;
 
-2718 
+2719 
 °mt_«me
  = 
 p
@@ -46823,7 +45989,7 @@ p
 p‹èl_«me
 ) + 1;
 
-2720 
+2721 
 	`poﬁ_debug
 ("böd mesßge:Ö‹èl_«mê%†°mt_«mê%s", 
 p‹èl_«me
@@ -46831,17 +45997,17 @@ p‹èl_«me
 °mt_«me
 );
 
-2722 i‡(*
+2723 i‡(*
 °mt_«me
  == '\0')
 
-2723 
+2724 
 °mt
  = 
 u¬amed_°©emít
 ;
 
-2726 
+2727 
 «me
  = 
 	`°rdup
@@ -46849,13 +46015,13 @@ u¬amed_°©emít
 °mt_«me
 );
 
-2727 i‡(
+2728 i‡(
 «me
  =
 NULL
 )
 
-2729 
+2730 
 	`poﬁ_îr‹
 ("Sim∂eF‹w¨dToBackíd: sådu∞Áûed: %s", 
 	`°ªº‹
@@ -46863,11 +46029,11 @@ NULL
 î∫o
 ));
 
-2730  
+2731  
 POOL_END
 ;
 
-2733 
+2734 
 °mt
  = 
 	`lookup_¥ï¨ed_°©emít_by_°©emít
@@ -46877,29 +46043,29 @@ POOL_END
 «me
 );
 
-2734 
+2735 
 	`‰ì
 (
 «me
 );
 
-2737 i‡(*
+2738 i‡(*
 p‹èl_«me
  == '\0')
 
-2738 
+2739 
 u¬amed_p‹èl
  = 
 °mt
 ;
 
-2741 i‡(
+2742 i‡(
 °mt
 ->
 p‹èl_«me
 )
 
-2742 
+2743 
 	`‰ì
 (
 °mt
@@ -46907,7 +46073,7 @@ p‹èl_«me
 p‹èl_«me
 );
 
-2743 
+2744 
 °mt
 ->
 p‹èl_«me
@@ -46915,7 +46081,7 @@ p‹èl_«me
 	`°rdup
 (portal_name);
 
-2752 *
+2753 *
 ∑øm
  = 
 p
@@ -46927,7 +46093,7 @@ p‹èl_«me
 °mt_«me
 ) + 1);
 
-2753 
+2754 
 ∑ømÀn
  = 
 	`ht⁄l
@@ -46941,23 +46107,23 @@ p‹èl_«me
 °mt_«me
 ) + 1);
 
-2755 
+2756 
 key
 [
 PQC_MAX_KEY
 ];
 
-2756 
+2757 
 i
 ;
 
-2758 
+2759 
 	`mem£t
 (
 key
 , 0, (key));
 
-2761 
+2762 
 	`°∫ˇt
 (
 key
@@ -46965,23 +46131,23 @@ key
 °mt_«me
 , (key));
 
-2762 
+2763 
 	`°∫ˇt
 (
 key
 , " ", (key));
 
-2764 
+2765 
 i
  = 0 ; i < 
 ∑ømÀn
  ; i++)
 
-2766 
+2767 
 tmp
 [3];
 
-2768 
+2769 
 	`¢¥ötf
 (
 tmp
@@ -46991,7 +46157,7 @@ tmp
 i
 ));
 
-2769 
+2770 
 	`°∫ˇt
 (
 key
@@ -46999,19 +46165,19 @@ key
 tmp
 , (key));
 
-2771 
+2772 
 	`poﬁ_debug
 ("á buûàkey f‹Åhê¥ï-°màˇche: %s", 
 key
 );
 
-2773 i‡–
+2774 i‡–
 °mt
 ->
 böd_∑ømëî_°rög
  )
 
-2775 
+2776 
 	`‰ì
 (
 °mt
@@ -47019,7 +46185,7 @@ böd_∑ømëî_°rög
 böd_∑ømëî_°rög
 );
 
-2776 
+2777 
 °mt
 ->
 böd_∑ømëî_°rög
@@ -47027,7 +46193,7 @@ böd_∑ømëî_°rög
 NULL
 ;
 
-2779 
+2780 
 °mt
 ->
 böd_∑ømëî_°rög
@@ -47037,13 +46203,13 @@ böd_∑ømëî_°rög
 key
 );
 
-2782 i‡(
+2783 i‡(
 köd
  ='C' && *
 p
  == 'S' && *(p + 1))
 
-2784 
+2785 
 «me
  = 
 	`°rdup
@@ -47051,13 +46217,13 @@ p
 p
 +1);
 
-2785 i‡(
+2786 i‡(
 «me
  =
 NULL
 )
 
-2787 
+2788 
 	`poﬁ_îr‹
 ("Sim∂eF‹w¨dToBackíd: sådu∞Áûed: %s", 
 	`°ªº‹
@@ -47065,17 +46231,17 @@ NULL
 î∫o
 ));
 
-2788  
+2789  
 POOL_END
 ;
 
-2790 
+2791 
 ≥ndög_fun˘i⁄
  = 
 dñ_¥ï¨ed_li°
 ;
 
-2791 
+2792 
 ≥ndög_¥ï¨ed_°mt
  = 
 	`mÆloc
@@ -47083,13 +46249,13 @@ dñ_¥ï¨ed_li°
 Pª∑ªdSèãmít
 ));
 
-2792 i‡(
+2793 i‡(
 ≥ndög_¥ï¨ed_°mt
  =
 NULL
 )
 
-2794 
+2795 
 	`poﬁ_îr‹
 ("Sim∂eF‹w¨dToBackíd: mÆlo¯Áûed: %s", 
 	`°ªº‹
@@ -47097,11 +46263,11 @@ NULL
 î∫o
 ));
 
-2795  
+2796  
 POOL_END
 ;
 
-2798 
+2799 
 ≥ndög_¥ï¨ed_°mt
 ->
 °©emít_«me
@@ -47111,7 +46277,7 @@ POOL_END
 «me
 );
 
-2799 
+2800 
 ≥ndög_¥ï¨ed_°mt
 ->
 böd_∑ømëî_°rög
@@ -47119,7 +46285,7 @@ böd_∑ømëî_°rög
 NULL
 ;
 
-2800 i‡(
+2801 i‡(
 ≥ndög_¥ï¨ed_°mt
 ->
 °©emít_«me
@@ -47127,7 +46293,7 @@ NULL
 NULL
 )
 
-2802 
+2803 
 	`poﬁ_îr‹
 ("Sim∂eF‹w¨dToBackíd: mÆlo¯Áûed: %s", 
 	`°ªº‹
@@ -47135,11 +46301,11 @@ NULL
 î∫o
 ));
 
-2803  
+2804  
 POOL_END
 ;
 
-2805 
+2806 
 ≥ndög_¥ï¨ed_°mt
 ->
 ¥ï¨ed_°rög
@@ -47147,19 +46313,19 @@ POOL_END
 NULL
 ;
 
-2808 i‡(
+2809 i‡(
 köd
  == 'B' || kind == 'D' || kind == 'C')
 
-2810 
+2811 
 i
 ;
 
-2811 
+2812 
 köd1
 ;
 
-2813 
+2814 
 i
  = 0;ò< 
 backíd
@@ -47167,7 +46333,7 @@ backíd
 num
 ;i++)
 
-2815 
+2816 
 POOL_CONNECTION
  *
 ˝
@@ -47181,19 +46347,19 @@ i
 c⁄
 ;
 
-2821 
+2822 
 	`poﬁ_wrôe
 (
 ˝
 , "H", 1);
 
-2822 
+2823 
 £ndÀn
  = 
 	`ht⁄l
 (4);
 
-2823 i‡(
+2824 i‡(
 	`poﬁ_wrôe_™d_Êush
 (
 ˝
@@ -47201,17 +46367,17 @@ c⁄
 £ndÀn
 , (sendlen)) < 0)
 
-2825  
+2826  
 POOL_END
 ;
 
-2837 i‡(
+2838 i‡(
 köd
  ='D' && *
 p
  == 'S')
 
-2839 
+2840 
 köd1
  = 
 	`poﬁ_ªad_köd
@@ -47219,19 +46385,19 @@ köd1
 backíd
 );
 
-2840 i‡(
+2841 i‡(
 köd1
  < 0)
 
-2842 
+2843 
 	`poﬁ_îr‹
 ("SimpleForwardToBackend:Öool_read_kindÉrror");
 
-2843  
+2844  
 POOL_ERROR
 ;
 
-2845 
+2846 
 	`Sim∂eF‹w¨dToFr⁄ãnd
 (
 köd1
@@ -47241,13 +46407,13 @@ köd1
 backíd
 );
 
-2846 
+2847 
 	`poﬁ_Êush
 (
 ‰⁄ãnd
 );
 
-2851 
+2852 
 köd1
  = 
 	`poﬁ_ªad_köd
@@ -47255,19 +46421,19 @@ köd1
 backíd
 );
 
-2852 i‡(
+2853 i‡(
 köd1
  < 0)
 
-2854 
+2855 
 	`poﬁ_îr‹
 ("SimpleForwardToBackend:Öool_read_kindÉrror");
 
-2855  
+2856  
 POOL_ERROR
 ;
 
-2857 
+2858 
 	`Sim∂eF‹w¨dToFr⁄ãnd
 (
 köd1
@@ -47277,21 +46443,21 @@ köd1
 backíd
 );
 
-2858 i‡(
+2859 i‡(
 	`poﬁ_Êush
 (
 ‰⁄ãnd
 ) < 0)
 
-2859  
+2860  
 POOL_ERROR
 ;
 
-2865 i‡(
+2866 i‡(
 köd1
  != 'N')
 
-2871 i‡(
+2872 i‡(
 	`poﬁ_Êush
 (
 	`MASTER
@@ -47299,19 +46465,19 @@ köd1
 backíd
 )))
 
-2872  
+2873  
 POOL_END
 ;
 
-2876  
+2877  
 POOL_CONTINUE
 ;
 
-2877 
+2878 
 	}
 }
 
-2879 
+2880 
 POOL_STATUS
  
 	$P¨amëîSètus
@@ -47325,37 +46491,37 @@ POOL_CONNECTION_POOL
 backíd
 )
 
-2881 
+2882 
 Àn
 ;
 
-2882 *
+2883 *
 Àn_¨øy
 ;
 
-2883 
+2884 
 £ndÀn
 ;
 
-2884 *
+2885 *
 p
 ;
 
-2885 *
+2886 *
 «me
 ;
 
-2886 *
+2887 *
 vÆue
 ;
 
-2888 
+2889 
 	`poﬁ_wrôe
 (
 ‰⁄ãnd
 , "S", 1);
 
-2890 
+2891 
 Àn_¨øy
  = 
 	`poﬁ_ªad_mesßge_Àngth2
@@ -47363,23 +46529,23 @@ vÆue
 backíd
 );
 
-2892 i‡(
+2893 i‡(
 Àn_¨øy
  =
 NULL
 )
 
-2894  
+2895  
 POOL_END
 ;
 
-2897 
+2898 
 Àn
  = 
 Àn_¨øy
 [0];
 
-2898 
+2899 
 £ndÀn
  = 
 	`ht⁄l
@@ -47387,7 +46553,7 @@ POOL_END
 Àn
 );
 
-2899 
+2900 
 	`poﬁ_wrôe
 (
 ‰⁄ãnd
@@ -47395,11 +46561,11 @@ POOL_END
 £ndÀn
 , (sendlen));
 
-2901 
+2902 
 Àn
  -= 4;
 
-2903 
+2904 
 p
  = 
 	`poﬁ_ªad2
@@ -47411,23 +46577,23 @@ backíd
 Àn
 );
 
-2904 i‡(
+2905 i‡(
 p
  =
 NULL
 )
 
-2905  
+2906  
 POOL_END
 ;
 
-2907 
+2908 
 «me
  = 
 p
 ;
 
-2908 
+2909 
 vÆue
  = 
 p
@@ -47437,7 +46603,7 @@ p
 «me
 ) + 1;
 
-2910 
+2911 
 	`poﬁ_debug
 ("«me: %†vÆue: %s", 
 «me
@@ -47445,7 +46611,7 @@ p
 vÆue
 );
 
-2912 
+2913 
 	`poﬁ_add_∑øm
 (&
 	`MASTER
@@ -47459,11 +46625,11 @@ backíd
 vÆue
 );
 
-2914 #ifde‡
+2915 #ifde‡
 DEBUG
 
 
-2915 
+2916 
 	`poﬁ_∑øm_debug_¥öt
 (&
 	`MASTER
@@ -47473,15 +46639,15 @@ backíd
 ∑øms
 );
 
-2918 i‡(
+2919 i‡(
 DUAL_MODE
 )
 
-2920 *
+2921 *
 •
 ;
 
-2922 i‡((
+2923 i‡((
 •
  = 
 	`poﬁ_ªad2
@@ -47495,17 +46661,17 @@ backíd
 NULL
 )
 
-2923  
+2924  
 POOL_END
 ;
 
-2925 
+2926 
 «me
  = 
 •
 ;
 
-2926 
+2927 
 vÆue
  = 
 •
@@ -47515,7 +46681,7 @@ vÆue
 «me
 ) + 1;
 
-2928 
+2929 
 	`poﬁ_debug
 ("£c⁄d¨yÇame: %†vÆue: %s", 
 «me
@@ -47523,7 +46689,7 @@ vÆue
 vÆue
 );
 
-2931  
+2932  
 	`poﬁ_wrôe
 (
 ‰⁄ãnd
@@ -47533,11 +46699,11 @@ p
 Àn
 );
 
-2933 
+2934 
 	}
 }
 
-2939 
+2940 
 	$ª£t_backíd
 (
 POOL_CONNECTION_POOL
@@ -47547,15 +46713,15 @@ backíd
 q˙t
 )
 
-2941 *
+2942 *
 quîy
 ;
 
-2942 
+2943 
 qn
 ;
 
-2944 
+2945 
 qn
  = 
 poﬁ_c⁄fig
@@ -47563,13 +46729,13 @@ poﬁ_c⁄fig
 num_ª£t_quîõs
 ;
 
-2946 i‡(
+2947 i‡(
 q˙t
  >
 qn
 )
 
-2948 i‡(
+2949 i‡(
 q˙t
  >
 qn
@@ -47579,13 +46745,13 @@ qn
 ˙t
 )
 
-2950 
+2951 
 	`ª£t_¥ï¨ed_li°
 (&
 ¥ï¨ed_li°
 );
 
-2954 
+2955 
 	`£nd_dóŒoˇã
 (
 backíd
@@ -47597,7 +46763,7 @@ q˙t
 qn
 );
 
-2958 
+2959 
 quîy
  = 
 poﬁ_c⁄fig
@@ -47607,7 +46773,7 @@ poﬁ_c⁄fig
 q˙t
 ];
 
-2961 i‡(
+2962 i‡(
 	`TSTATE
 (
 backíd
@@ -47617,7 +46783,7 @@ backíd
 quîy
 ))
 
-2964 i‡(
+2965 i‡(
 	`Quîy
 (
 NULL
@@ -47629,101 +46795,101 @@ quîy
 POOL_CONTINUE
 )
 
-2968 
+2969 
 	}
 }
 
-2973 
+2974 
 	$is_£À˘_quîy
 (*
 sql
 )
 
-2975 i‡(
+2976 i‡(
 poﬁ_c⁄fig
 .
 ign‹e_Àadög_whôe_•a˚
 )
 
-2978 *
+2979 *
 sql
  && 
 	`is•a˚
 (*sql))
 
-2979 
+2980 
 sql
 ++;
 
-2982  (!
+2983  (!
 	`°∫ˇ£cmp
 (
 sql
 , "SELECT", 6));
 
-2984 
+2985 
 	}
 }
 
-2989 
+2990 
 	$is_£quí˚_quîy
 (*
 sql
 )
 
-2991 i‡(
+2992 i‡(
 poﬁ_c⁄fig
 .
 ign‹e_Àadög_whôe_•a˚
 )
 
-2994 *
+2995 *
 sql
  && 
 	`is•a˚
 (*sql))
 
-2995 
+2996 
 sql
 ++;
 
-2998 i‡(
+2999 i‡(
 	`°∫ˇ£cmp
 (
 sql
 , "SELECT", 6))
 
-3001 
+3002 
 sql
  += 6;
 
-3002 *
+3003 *
 sql
  && 
 	`is•a˚
 (*sql))
 
-3003 
+3004 
 sql
 ++;
 
-3006 i‡(*
+3007 i‡(*
 sql
  && !
 	`°∫ˇ£cmp
 (sql, "NEXTVAL", 7))
 
-3010 i‡(*
+3011 i‡(*
 sql
  && !
 	`°∫ˇ£cmp
 (sql, "SETVAL", 6))
 
-3014 
+3015 
 	}
 }
 
-3019 
+3020 
 	$lﬂd_bÆ™˚_íabÀd
 (
 POOL_CONNECTION_POOL
@@ -47733,17 +46899,17 @@ backíd
 sql
 )
 
-3021  (
+3022  (
 poﬁ_c⁄fig
 .
 lﬂd_bÆ™˚_mode
  &&
 
-3022 
+3023 
 DUAL_MODE
  &&
 
-3023 
+3024 
 	`MAJOR
 (
 backíd
@@ -47751,29 +46917,29 @@ backíd
 PROTO_MAJOR_V3
  &&
 
-3024 
+3025 
 	`TSTATE
 (
 backíd
 ) == 'I' &&
 
-3025 
+3026 
 	`is_£À˘_quîy
 (
 sql
 ) &&
 
-3026 !
+3027 !
 	`is_£quí˚_quîy
 (
 sql
 ));
 
-3027 
+3028 
 	}
 }
 
-3032 
+3033 
 	$°¨t_lﬂd_bÆ™˚
 (
 POOL_CONNECTION_POOL
@@ -47781,15 +46947,15 @@ POOL_CONNECTION_POOL
 backíd
 )
 
-3034 
+3035 
 i
 ;
 
-3035 
+3036 
 ma°î
 ;
 
-3038 
+3039 
 i
 =0;i<
 backíd
@@ -47797,7 +46963,7 @@ backíd
 num
 ;i++)
 
-3040 
+3041 
 ¶Ÿs
 [
 i
@@ -47805,7 +46971,7 @@ i
 backíd
 ->slots[i];
 
-3044 
+3045 
 ma°î
  = (
 	`øndom
@@ -47813,7 +46979,7 @@ ma°î
 weight_ma°î
 )?0:1;
 
-3045 
+3046 
 backíd
 ->
 ¶Ÿs
@@ -47821,21 +46987,21 @@ backíd
 ma°î
 ];
 
-3046 
+3047 
 	`poﬁ_debug
 ("°¨t_lﬂd_bÆ™˚: sñe˘ed ma°î i†%d", 
 ma°î
 );
 
-3049 
+3050 
 ö_lﬂd_bÆ™˚
  = 1;
 
-3050 
+3051 
 	}
 }
 
-3055 
+3056 
 	$íd_lﬂd_bÆ™˚
 (
 POOL_CONNECTION_POOL
@@ -47843,11 +47009,11 @@ POOL_CONNECTION_POOL
 backíd
 )
 
-3057 
+3058 
 i
 ;
 
-3060 
+3061 
 i
 =0;i<
 backíd
@@ -47855,7 +47021,7 @@ backíd
 num
 ;i++)
 
-3062 
+3063 
 backíd
 ->
 ¶Ÿs
@@ -47863,19 +47029,19 @@ backíd
 i
 ] = slots[i];
 
-3065 
+3066 
 ö_lﬂd_bÆ™˚
  = 0;
 
-3067 
+3068 
 	`poﬁ_debug
 ("end_load_balance:ÉndÜoad balance mode");
 
-3068 
+3069 
 	}
 }
 
-3073 
+3074 
 	$poﬁ_£nd_îr‹_mesßge
 (
 POOL_CONNECTION
@@ -47885,55 +47051,55 @@ POOL_CONNECTION
 ¥ŸoMaj‹
 ,
 
-3074 *
+3075 *
 code
 ,
 
-3075 *
+3076 *
 mesßge
 ,
 
-3076 *
+3077 *
 dëaû
 ,
 
-3077 *
+3078 *
 höt
 ,
 
-3078 *
+3079 *
 fûe
 ,
 
-3079 
+3080 
 löe
 )
 
-3081 
+3082 
 	#MAXDATA
  1024
 
 	)
 
-3082 
+3083 
 	#MAXMSGBUF
  128
 
 	)
 
-3083 i‡(
+3084 i‡(
 ¥ŸoMaj‹
  =
 PROTO_MAJOR_V2
 )
 
-3085 
+3086 
 	`poﬁ_wrôe
 (
 ‰⁄ãnd
 , "E", 1);
 
-3086 
+3087 
 	`poﬁ_wrôe_™d_Êush
 (
 ‰⁄ãnd
@@ -47943,47 +47109,47 @@ mesßge
 	`°æí
 (message)+1);
 
-3088 i‡(
+3089 i‡(
 ¥ŸoMaj‹
  =
 PROTO_MAJOR_V3
 )
 
-3090 
+3091 
 d©a
 [
 MAXDATA
 ];
 
-3091 
+3092 
 msgbuf
 [
 MAXMSGBUF
 ];
 
-3092 
-Àn
-;
-
 3093 
-thi¶í
+Àn
 ;
 
 3094 
+thi¶í
+;
+
+3095 
 £ndÀn
 ;
 
-3096 
+3097 
 Àn
  = 0;
 
-3098 
+3099 
 	`poﬁ_wrôe
 (
 ‰⁄ãnd
 , "E", 1);
 
-3101 
+3102 
 thi¶í
  = 
 	`¢¥ötf
@@ -47993,7 +47159,7 @@ msgbuf
 MAXMSGBUF
 , "SERROR");
 
-3102 
+3103 
 	`mem˝y
 (
 d©a
@@ -48005,13 +47171,13 @@ msgbuf
 thi¶í
 +1);
 
-3103 
+3104 
 Àn
  +
 thi¶í
  + 1;
 
-3106 
+3107 
 thi¶í
  = 
 	`¢¥ötf
@@ -48023,7 +47189,7 @@ MAXMSGBUF
 code
 );
 
-3107 
+3108 
 	`mem˝y
 (
 d©a
@@ -48035,13 +47201,13 @@ msgbuf
 thi¶í
 +1);
 
-3108 
+3109 
 Àn
  +
 thi¶í
  + 1;
 
-3111 
+3112 
 thi¶í
  = 
 	`¢¥ötf
@@ -48053,7 +47219,7 @@ MAXMSGBUF
 mesßge
 );
 
-3112 
+3113 
 	`mem˝y
 (
 d©a
@@ -48065,17 +47231,17 @@ msgbuf
 thi¶í
 +1);
 
-3113 
+3114 
 Àn
  +
 thi¶í
  + 1;
 
-3116 i‡(*
+3117 i‡(*
 dëaû
  != '\0')
 
-3118 
+3119 
 thi¶í
  = 
 	`¢¥ötf
@@ -48087,7 +47253,7 @@ MAXMSGBUF
 dëaû
 );
 
-3119 
+3120 
 	`mem˝y
 (
 d©a
@@ -48099,17 +47265,17 @@ msgbuf
 thi¶í
 +1);
 
-3120 
+3121 
 Àn
  +
 thi¶í
  + 1;
 
-3124 i‡(*
+3125 i‡(*
 höt
  != '\0')
 
-3126 
+3127 
 thi¶í
  = 
 	`¢¥ötf
@@ -48121,7 +47287,7 @@ MAXMSGBUF
 höt
 );
 
-3127 
+3128 
 	`mem˝y
 (
 d©a
@@ -48133,13 +47299,13 @@ msgbuf
 thi¶í
 +1);
 
-3128 
+3129 
 Àn
  +
 thi¶í
  + 1;
 
-3132 
+3133 
 thi¶í
  = 
 	`¢¥ötf
@@ -48151,7 +47317,7 @@ MAXMSGBUF
 fûe
 );
 
-3133 
+3134 
 	`mem˝y
 (
 d©a
@@ -48163,13 +47329,13 @@ msgbuf
 thi¶í
 +1);
 
-3134 
+3135 
 Àn
  +
 thi¶í
  + 1;
 
-3137 
+3138 
 thi¶í
  = 
 	`¢¥ötf
@@ -48181,7 +47347,7 @@ MAXMSGBUF
 löe
 );
 
-3138 
+3139 
 	`mem˝y
 (
 d©a
@@ -48193,35 +47359,35 @@ msgbuf
 thi¶í
 +1);
 
-3139 
+3140 
 Àn
  +
 thi¶í
  + 1;
 
-3142 
+3143 
 Àn
 ++;
 
-3143 *(
+3144 *(
 d©a
  + 
 Àn
  - 1) = '\0';
 
-3145 
+3146 
 £ndÀn
  = 
 Àn
 ;
 
-3146 
+3147 
 Àn
  = 
 	`ht⁄l
 (len + 4);
 
-3147 
+3148 
 	`poﬁ_wrôe
 (
 ‰⁄ãnd
@@ -48229,7 +47395,7 @@ d©a
 Àn
 , (len));
 
-3148 
+3149 
 	`poﬁ_wrôe_™d_Êush
 (
 ‰⁄ãnd
@@ -48239,17 +47405,17 @@ d©a
 £ndÀn
 );
 
-3151 
+3152 
 	`poﬁ_îr‹
 ("£nd_îr‹_mesßge: unknow¿¥Ÿocﬁ maj‹ %d", 
 ¥ŸoMaj‹
 );
 
-3152 
+3153 
 	}
 }
 
-3162 
+3163 
 POOL_STATUS
  
 	$do_comm™d
@@ -48263,43 +47429,43 @@ quîy
 ¥ŸoMaj‹
 ,
 
-3163 
+3164 
 no_ªady_f‹_quîy
 )
 
-3165 
+3166 
 Àn
 ;
 
-3166 
+3167 
 °©us
 ;
 
-3167 
+3168 
 köd
 ;
 
-3168 *
+3169 *
 °rög
 ;
 
-3169 
+3170 
 dódlock_dëe˘ed
 ;
 
-3171 
+3172 
 	`poﬁ_debug
 ("do_comm™d: Quîy: %s", 
 quîy
 );
 
-3174 
+3175 
 	`poﬁ_wrôe
 (
 backíd
 , "Q", 1);
 
-3175 
+3176 
 Àn
  = 
 	`°æí
@@ -48307,13 +47473,13 @@ backíd
 quîy
 )+1;
 
-3177 i‡(
+3178 i‡(
 ¥ŸoMaj‹
  =
 PROTO_MAJOR_V3
 )
 
-3179 
+3180 
 £ndÀn
  = 
 	`ht⁄l
@@ -48321,7 +47487,7 @@ PROTO_MAJOR_V3
 Àn
  + 4);
 
-3180 
+3181 
 	`poﬁ_wrôe
 (
 backíd
@@ -48329,7 +47495,7 @@ backíd
 £ndÀn
 , (sendlen));
 
-3183 i‡(
+3184 i‡(
 	`poﬁ_wrôe_™d_Êush
 (
 backíd
@@ -48339,11 +47505,11 @@ quîy
 Àn
 ) < 0)
 
-3185  
+3186  
 POOL_END
 ;
 
-3194 
+3195 
 dódlock_dëe˘ed
  = 
 	`dëe˘_dódlock_îr‹
@@ -48353,15 +47519,15 @@ backíd
 ¥ŸoMaj‹
 );
 
-3195 i‡(
+3196 i‡(
 dódlock_dëe˘ed
  < 0)
 
-3196  
+3197  
 POOL_END
 ;
 
-3201 
+3202 
 °©us
  = 
 	`poﬁ_ªad
@@ -48371,23 +47537,23 @@ backíd
 köd
 , (kind));
 
-3202 i‡(
+3203 i‡(
 °©us
  < 0)
 
-3204 
+3205 
 	`poﬁ_îr‹
 ("do_command:Érror whileÑeading message kind");
 
-3205  
+3206  
 POOL_END
 ;
 
-3208 i‡(
+3209 i‡(
 köd
  != 'C')
 
-3210 
+3211 
 	`poﬁ_log
 ("do_comm™d: backíd d€†nŸ suc˚ssfuŒy com∂ëêcomm™d %†°©u†%c", 
 quîy
@@ -48395,13 +47561,13 @@ quîy
 köd
 );
 
-3217 i‡(
+3218 i‡(
 ¥ŸoMaj‹
  =
 PROTO_MAJOR_V3
 )
 
-3219 i‡(
+3220 i‡(
 	`poﬁ_ªad
 (
 backíd
@@ -48409,17 +47575,17 @@ backíd
 Àn
 , (len)) < 0)
 
-3220  
+3221  
 POOL_END
 ;
 
-3221 
+3222 
 Àn
  = 
 	`¡ohl
 (len) - 4;
 
-3222 
+3223 
 °rög
  = 
 	`poﬁ_ªad2
@@ -48429,23 +47595,23 @@ backíd
 Àn
 );
 
-3223 i‡(
+3224 i‡(
 °rög
  =
 NULL
 )
 
-3224  
+3225  
 POOL_END
 ;
 
-3225 
+3226 
 	`poﬁ_debug
 ("comm™dÅag: %s", 
 °rög
 );
 
-3229 
+3230 
 °rög
  = 
 	`poﬁ_ªad_°rög
@@ -48455,17 +47621,17 @@ backíd
 Àn
 , 0);
 
-3230 i‡(
+3231 i‡(
 °rög
  =
 NULL
 )
 
-3231  
+3232  
 POOL_END
 ;
 
-3237 
+3238 
 °©us
  = 
 	`poﬁ_ªad
@@ -48475,45 +47641,45 @@ backíd
 köd
 , (kind));
 
-3238 i‡(
+3239 i‡(
 °©us
  < 0)
 
-3240 
+3241 
 	`poﬁ_îr‹
 ("do_command:Érror whileÑeading message kind");
 
-3241  
+3242  
 POOL_END
 ;
 
-3244 i‡(
+3245 i‡(
 köd
  != 'Z')
 
-3246 
+3247 
 	`poﬁ_îr‹
 ("do_command: backend doesÇotÑeturn ReadyForQuery");
 
-3247  
+3248  
 POOL_END
 ;
 
-3250 i‡(
+3251 i‡(
 no_ªady_f‹_quîy
 )
 
-3251  
+3252  
 POOL_CONTINUE
 ;
 
-3253 i‡(
+3254 i‡(
 ¥ŸoMaj‹
  =
 PROTO_MAJOR_V3
 )
 
-3255 i‡(
+3256 i‡(
 	`poﬁ_ªad
 (
 backíd
@@ -48521,11 +47687,11 @@ backíd
 Àn
 , (len)) < 0)
 
-3256  
+3257  
 POOL_END
 ;
 
-3258 
+3259 
 °©us
  = 
 	`poﬁ_ªad
@@ -48535,25 +47701,25 @@ backíd
 köd
 , (kind));
 
-3259 i‡(
+3260 i‡(
 °©us
  < 0)
 
-3261 
+3262 
 	`poﬁ_îr‹
 ("do_command:Érror whileÑeadingÅransaction status");
 
-3262  
+3263  
 POOL_END
 ;
 
-3266 
+3267 
 	`poﬁ_debug
 ("RódyF‹Quîy:Åønß˘i⁄ sèã: %c", 
 köd
 );
 
-3267 
+3268 
 backíd
 ->
 t°©e
@@ -48561,7 +47727,7 @@ t°©e
 köd
 ;
 
-3270  
+3271  
 dódlock_dëe˘ed
  ? 
 POOL_DEADLOCK
@@ -48569,11 +47735,11 @@ POOL_DEADLOCK
 POOL_CONTINUE
 ;
 
-3271 
+3272 
 	}
 }
 
-3279 
+3280 
 POOL_STATUS
  
 	$do_îr‹_comm™d
@@ -48585,33 +47751,33 @@ backíd
 ¥ŸoMaj‹
 )
 
-3281 
+3282 
 Àn
 ;
 
-3282 
+3283 
 °©us
 ;
 
-3283 
+3284 
 köd
 ;
 
-3284 *
+3285 *
 °rög
 ;
 
-3285 *
+3286 *
 îr‹_quîy
  = "send invalid query fromÖqcdÅoábortÅransaction";
 
-3288 
+3289 
 	`poﬁ_wrôe
 (
 backíd
 , "Q", 1);
 
-3289 
+3290 
 Àn
  = 
 	`°æí
@@ -48619,13 +47785,13 @@ backíd
 îr‹_quîy
 )+1;
 
-3291 i‡(
+3292 i‡(
 ¥ŸoMaj‹
  =
 PROTO_MAJOR_V3
 )
 
-3293 
+3294 
 £ndÀn
  = 
 	`ht⁄l
@@ -48633,7 +47799,7 @@ PROTO_MAJOR_V3
 Àn
  + 4);
 
-3294 
+3295 
 	`poﬁ_wrôe
 (
 backíd
@@ -48641,7 +47807,7 @@ backíd
 £ndÀn
 , (sendlen));
 
-3297 i‡(
+3298 i‡(
 	`poﬁ_wrôe_™d_Êush
 (
 backíd
@@ -48651,11 +47817,11 @@ backíd
 Àn
 ) < 0)
 
-3299  
+3300  
 POOL_END
 ;
 
-3305 
+3306 
 °©us
  = 
 	`poﬁ_ªad
@@ -48665,25 +47831,25 @@ backíd
 köd
 , (kind));
 
-3306 i‡(
+3307 i‡(
 °©us
  < 0)
 
-3308 
+3309 
 	`poﬁ_îr‹
 ("do_command:Érror whileÑeading message kind");
 
-3309  
+3310  
 POOL_END
 ;
 
-3315 i‡(
+3316 i‡(
 ¥ŸoMaj‹
  =
 PROTO_MAJOR_V3
 )
 
-3317 i‡(
+3318 i‡(
 	`poﬁ_ªad
 (
 backíd
@@ -48691,17 +47857,17 @@ backíd
 Àn
 , (len)) < 0)
 
-3318  
+3319  
 POOL_END
 ;
 
-3319 
+3320 
 Àn
  = 
 	`¡ohl
 (len) - 4;
 
-3320 
+3321 
 °rög
  = 
 	`poﬁ_ªad2
@@ -48711,23 +47877,23 @@ backíd
 Àn
 );
 
-3321 i‡(
+3322 i‡(
 °rög
  =
 NULL
 )
 
-3322  
+3323  
 POOL_END
 ;
 
-3323 
+3324 
 	`poﬁ_debug
 ("comm™dÅag: %s", 
 °rög
 );
 
-3327 
+3328 
 °rög
  = 
 	`poﬁ_ªad_°rög
@@ -48737,25 +47903,25 @@ backíd
 Àn
 , 0);
 
-3328 i‡(
+3329 i‡(
 °rög
  =
 NULL
 )
 
-3329  
+3330  
 POOL_END
 ;
 
-3332  
+3333  
 POOL_CONTINUE
 ;
 
-3333 
+3334 
 	}
 }
 
-3339 
+3340 
 	$√ed_ö£π_lock
 (
 POOL_CONNECTION_POOL
@@ -48765,7 +47931,7 @@ backíd
 quîy
 )
 
-3341 i‡(
+3342 i‡(
 	`MAJOR
 (
 backíd
@@ -48773,7 +47939,7 @@ backíd
 PROTO_MAJOR_V3
 )
 
-3348 i‡((
+3349 i‡((
 poﬁ_c⁄fig
 .
 ö£π_lock
@@ -48787,7 +47953,7 @@ NO_LOCK_COMMENT
 NO_LOCK_COMMENT_SZ
 )) ||
 
-3349 
+3350 
 	`°∫ˇ£cmp
 (
 quîy
@@ -48797,23 +47963,23 @@ LOCK_COMMENT
 LOCK_COMMENT_SZ
 ) == 0)
 
-3352 
+3353 
 quîy
  = 
 	`skù_commít
 (query);
 
-3353 i‡(
+3354 i‡(
 	`°∫ˇ£cmp
 (
 quîy
 , "INSERT", 6) == 0)
 
-3358 
+3359 
 	}
 }
 
-3364 
+3365 
 POOL_STATUS
  
 	$ö£π_lock
@@ -48825,27 +47991,27 @@ backíd
 quîy
 )
 
-3366 *
+3367 *
 èbÀ
 ;
 
-3367 
+3368 
 qbuf
 [1024];
 
-3368 
+3369 
 POOL_STATUS
  
 °©us
 ;
 
-3369 
+3370 
 i
 , 
 dódlock_dëe˘ed
  = 0;
 
-3372 i‡(
+3373 i‡(
 	`MAJOR
 (
 backíd
@@ -48853,11 +48019,11 @@ backíd
 PROTO_MAJOR_V3
 )
 
-3373  
+3374  
 POOL_CONTINUE
 ;
 
-3376 
+3377 
 èbÀ
  = 
 	`gë_ö£π_comm™d_èbÀ_«me
@@ -48865,17 +48031,17 @@ POOL_CONTINUE
 quîy
 );
 
-3379 i‡(
+3380 i‡(
 èbÀ
  =
 NULL
 )
 
-3381  
+3382  
 POOL_CONTINUE
 ;
 
-3384 
+3385 
 	`¢¥ötf
 (
 qbuf
@@ -48883,13 +48049,13 @@ qbuf
 èbÀ
 );
 
-3389 i‡(
+3390 i‡(
 	`TSTATE
 (
 backíd
 ) == 'I')
 
-3391 
+3392 
 i
  = 0;ò< 
 backíd
@@ -48897,7 +48063,7 @@ backíd
 num
 ;i++)
 
-3393 i‡(
+3394 i‡(
 	`do_comm™d
 (
 backíd
@@ -48913,21 +48079,21 @@ PROTO_MAJOR_V3
 POOL_CONTINUE
 )
 
-3394  
+3395  
 POOL_END
 ;
 
-3398 
+3399 
 öã∫Æ_å™ß˘i⁄_°¨ãd
  = 1;
 
-3401 
+3402 
 °©us
  = 
 POOL_CONTINUE
 ;
 
-3404 
+3405 
 i
  = 0;ò< 
 backíd
@@ -48935,11 +48101,11 @@ backíd
 num
 ;i++)
 
-3406 i‡(
+3407 i‡(
 dódlock_dëe˘ed
 )
 
-3407 
+3408 
 °©us
  = 
 	`do_comm™d
@@ -48957,7 +48123,7 @@ POOL_ERROR_QUERY
 PROTO_MAJOR_V3
 , 0);
 
-3409 
+3410 
 °©us
  = 
 	`do_comm™d
@@ -48975,111 +48141,111 @@ qbuf
 PROTO_MAJOR_V3
 , 0);
 
-3411 i‡(
+3412 i‡(
 °©us
  =
 POOL_DEADLOCK
 )
 
-3412 
+3413 
 dódlock_dëe˘ed
  = 1;
 
-3415  
+3416  
 °©us
 ;
 
-3416 
+3417 
 	}
 }
 
-3421 *
+3422 *
 	$gë_ö£π_comm™d_èbÀ_«me
 (*
 quîy
 )
 
-3423 
+3424 
 èbÀ
 [1024];
 
-3424 *
+3425 *
 qbuf
 ;
 
-3425 *
+3426 *
 tokí
 ;
 
-3427 
+3428 
 èbÀ
 [0] = '\0';
 
-3430 
+3431 
 quîy
  = 
 	`skù_commít
 (query);
 
-3432 i‡(*
+3433 i‡(*
 quîy
  == '\0')
 
-3433  
+3434  
 èbÀ
 ;
 
-3436 *
+3437 *
 quîy
  && 
 	`is•a˚
 (*query))
 
-3437 
+3438 
 quîy
 ++;
 
-3440 *
+3441 *
 quîy
  && !
 	`is•a˚
 (*query))
 
-3441 
+3442 
 quîy
 ++;
 
-3444 *
+3445 *
 quîy
  && 
 	`is•a˚
 (*query))
 
-3445 
+3446 
 quîy
 ++;
 
-3448 *
+3449 *
 quîy
  && !
 	`is•a˚
 (*query))
 
-3449 
+3450 
 quîy
 ++;
 
-3452 *
+3453 *
 quîy
  && 
 	`is•a˚
 (*query))
 
-3453 
+3454 
 quîy
 ++;
 
-3456 
+3457 
 qbuf
  = 
 	`°rdup
@@ -49087,7 +48253,7 @@ qbuf
 quîy
 );
 
-3457 
+3458 
 tokí
  = 
 	`°πok
@@ -49095,21 +48261,21 @@ tokí
 qbuf
 , "\r\n\t (");
 
-3459 i‡(
+3460 i‡(
 tokí
  =
 NULL
 )
 
-3461 
+3462 
 	`poﬁ_îr‹
 ("get_insert_command_table_name: couldÇot getÅableÇame");
 
-3462  
+3463  
 NULL
 ;
 
-3465 
+3466 
 	`°∫˝y
 (
 èbÀ
@@ -49117,93 +48283,93 @@ NULL
 tokí
 , (table));
 
-3466 
+3467 
 	`‰ì
 (
 qbuf
 );
 
-3468 
+3469 
 	`poﬁ_debug
 ("gë_ö£π_comm™d_èbÀ_«me:Éxåa˘edÅabÀÇame: %s", 
 èbÀ
 );
 
-3470  
+3471  
 èbÀ
 ;
 
-3471 
+3472 
 	}
 }
 
-3476 *
+3477 *
 	$gë_execuã_comm™d_p‹èl_«me
 (*
 quîy
 )
 
-3478 
+3479 
 p‹èl
 [1024];
 
-3479 *
+3480 *
 qbuf
 ;
 
-3480 *
+3481 *
 tokí
 ;
 
-3482 
+3483 
 p‹èl
 [0] = '\0';
 
-3485 
+3486 
 quîy
  = 
 	`skù_commít
 (query);
 
-3487 i‡(*
+3488 i‡(*
 quîy
  == '\0')
 
-3488  
+3489  
 p‹èl
 ;
 
-3491 *
+3492 *
 quîy
  && 
 	`is•a˚
 (*query))
 
-3492 
+3493 
 quîy
 ++;
 
-3495 *
+3496 *
 quîy
  && !
 	`is•a˚
 (*query))
 
-3496 
+3497 
 quîy
 ++;
 
-3499 *
+3500 *
 quîy
  && 
 	`is•a˚
 (*query))
 
-3500 
+3501 
 quîy
 ++;
 
-3503 
+3504 
 qbuf
  = 
 	`°rdup
@@ -49211,7 +48377,7 @@ qbuf
 quîy
 );
 
-3504 
+3505 
 tokí
  = 
 	`°πok
@@ -49219,21 +48385,21 @@ tokí
 qbuf
 , "\r\n\t (");
 
-3506 i‡(
+3507 i‡(
 tokí
  =
 NULL
 )
 
-3508 
+3509 
 	`poﬁ_îr‹
 ("get_execute_command_portal_name: couldÇot getÖortalÇame");
 
-3509  
+3510  
 NULL
 ;
 
-3512 
+3513 
 	`°∫˝y
 (
 p‹èl
@@ -49241,27 +48407,27 @@ p‹èl
 tokí
 , (portal));
 
-3513 
+3514 
 	`‰ì
 (
 qbuf
 );
 
-3515 
+3516 
 	`poﬁ_debug
 ("gë_execuã_comm™d_p‹èl_«me:Éxåa˘edÖ‹è»«me: %s", 
 p‹èl
 );
 
-3517  
+3518  
 p‹èl
 ;
 
-3518 
+3519 
 	}
 }
 
-3523 
+3524 
 Pª∑ªdSèãmít
  *
 	$gë_¥ï¨ed_comm™d_p‹èl_™d_°©emít
@@ -49269,83 +48435,83 @@ Pª∑ªdSèãmít
 quîy
 )
 
-3525 
+3526 
 Pª∑ªdSèãmít
  *
 °mt
 ;
 
-3526 
+3527 
 p‹èl
 [1024];
 
-3527 *
+3528 *
 °rög
  = 
 NULL
 ;
 
-3528 *
+3529 *
 qbuf
 ;
 
-3529 *
+3530 *
 tokí
 ;
 
-3530 
+3531 
 Àn
 ;
 
-3532 
+3533 
 p‹èl
 [0] = '\0';
 
-3535 
+3536 
 quîy
  = 
 	`skù_commít
 (query);
 
-3537 i‡(*
+3538 i‡(*
 quîy
  == '\0')
 
-3538  
+3539  
 NULL
 ;
 
-3541 *
+3542 *
 quîy
  && 
 	`is•a˚
 (*query))
 
-3542 
+3543 
 quîy
 ++;
 
-3545 *
+3546 *
 quîy
  && !
 	`is•a˚
 (*query))
 
-3546 
+3547 
 quîy
 ++;
 
-3549 *
+3550 *
 quîy
  && 
 	`is•a˚
 (*query))
 
-3550 
+3551 
 quîy
 ++;
 
-3553 
+3554 
 qbuf
  = 
 	`°rdup
@@ -49353,7 +48519,7 @@ qbuf
 quîy
 );
 
-3554 
+3555 
 tokí
  = 
 	`°πok
@@ -49361,21 +48527,21 @@ tokí
 qbuf
 , "\r\n\t (");
 
-3556 i‡(
+3557 i‡(
 tokí
  =
 NULL
 )
 
-3558 
+3559 
 	`poﬁ_debug
 ("get_prepared_command_portal_and_statement: couldÇot getÖortalÇame");
 
-3559  
+3560  
 NULL
 ;
 
-3562 
+3563 
 	`°∫˝y
 (
 p‹èl
@@ -49383,79 +48549,79 @@ p‹èl
 tokí
 , (portal));
 
-3563 
+3564 
 	`‰ì
 (
 qbuf
 );
 
-3566 *
+3567 *
 quîy
  && *query != ')')
 
-3567 
+3568 
 quîy
 ++;
 
-3569 i‡(!*
+3570 i‡(!*
 quîy
 )
 
-3571 
+3572 
 	`poﬁ_debug
 ("get_prepared_command_portal_and_statement: couldÇot get statement");
 
-3572  
+3573  
 NULL
 ;
 
-3574 
+3575 
 quîy
 ++;
 
-3577 *
+3578 *
 quîy
  && 
 	`is•a˚
 (*query))
 
-3578 
+3579 
 quîy
 ++;
 
-3581 *
+3582 *
 quîy
  && !
 	`is•a˚
 (*query))
 
-3582 
+3583 
 quîy
 ++;
 
-3585 *
+3586 *
 quîy
  && 
 	`is•a˚
 (*query))
 
-3586 
+3587 
 quîy
 ++;
 
-3588 i‡(!*
+3589 i‡(!*
 quîy
 )
 
-3590 
+3591 
 	`poﬁ_debug
 ("get_prepared_command_portal_and_statement: couldÇot get statement");
 
-3591  
+3592  
 NULL
 ;
 
-3594 
+3595 
 Àn
  = 
 	`°æí
@@ -49463,7 +48629,7 @@ NULL
 quîy
 ) + 1;
 
-3595 
+3596 
 °rög
  = 
 	`mÆloc
@@ -49471,13 +48637,13 @@ quîy
 Àn
 );
 
-3596 i‡(
+3597 i‡(
 °rög
  =
 NULL
 )
 
-3598 
+3599 
 	`poﬁ_îr‹
 ("gë_¥ï¨ed_comm™d_p‹èl_™d_°©emít: mÆlo¯Áûed: %s", 
 	`°ªº‹
@@ -49485,11 +48651,11 @@ NULL
 î∫o
 ));
 
-3599  
+3600  
 NULL
 ;
 
-3601 
+3602 
 	`mem˝y
 (
 °rög
@@ -49499,7 +48665,7 @@ quîy
 Àn
 );
 
-3603 
+3604 
 °mt
  = 
 	`mÆloc
@@ -49507,7 +48673,7 @@ quîy
 Pª∑ªdSèãmít
 ));
 
-3604 
+3605 
 °mt
 ->
 °©emít_«me
@@ -49517,7 +48683,7 @@ Pª∑ªdSèãmít
 p‹èl
 );
 
-3605 
+3606 
 °mt
 ->
 p‹èl_«me
@@ -49525,7 +48691,7 @@ p‹èl_«me
 NULL
 ;
 
-3606 
+3607 
 °mt
 ->
 ¥ï¨ed_°rög
@@ -49533,129 +48699,129 @@ NULL
 °rög
 ;
 
-3608  
+3609  
 °mt
 ;
 
-3609 
+3610 
 	}
 }
 
-3613 
+3614 
 	$is_dr›_d©aba£
 (*
 quîy
 )
 
-3616 
+3617 
 quîy
  = 
 	`skù_commít
 (query);
 
-3618 i‡(*
+3619 i‡(*
 quîy
  == '\0')
 
-3622 *
+3623 *
 quîy
  && 
 	`is•a˚
 (*query))
 
-3623 
+3624 
 quîy
 ++;
 
-3626 i‡(
+3627 i‡(
 	`°∫ˇ£cmp
 ("DROP", 
 quîy
 , 4))
 
-3630 *
+3631 *
 quîy
  && !
 	`is•a˚
 (*query))
 
-3631 
+3632 
 quîy
 ++;
 
-3634 *
+3635 *
 quîy
  && 
 	`is•a˚
 (*query))
 
-3635 
+3636 
 quîy
 ++;
 
-3638 i‡(
+3639 i‡(
 	`°∫ˇ£cmp
 ("DATABASE", 
 quîy
 , 8))
 
-3642 
+3643 
 	}
 }
 
-3645 *
+3646 *
 	$skù_commít
 (*
 quîy
 )
 
-3647 i‡(
+3648 i‡(
 	`°∫cmp
 (
 quîy
 , "/*", 2) == 0)
 
-3649 
+3650 
 quîy
  += 2;
 
-3650 
+3651 
 quîy
 )
 
-3652 i‡(
+3653 i‡(
 	`°∫cmp
 (
 quîy
 , "*/", 2) == 0)
 
-3654 
+3655 
 quîy
  += 2;
 
-3657 
+3658 
 quîy
 ++;
 
-3660  
+3661  
 quîy
 ;
 
-3661 
+3662 
 	}
 }
 
-3663 
+3664 
 	$öô_¥ï¨ed_li°
 ()
 
-3665 
+3666 
 ¥ï¨ed_li°
 .
 ˙t
  = 0;
 
-3666 
+3667 
 ¥ï¨ed_li°
 .
 size
@@ -49663,7 +48829,7 @@ size
 INIT_STATEMENT_LIST_SIZE
 ;
 
-3667 
+3668 
 ¥ï¨ed_li°
 .
 °mt_li°
@@ -49673,7 +48839,7 @@ INIT_STATEMENT_LIST_SIZE
 size
 );
 
-3668 i‡(
+3669 i‡(
 ¥ï¨ed_li°
 .
 °mt_li°
@@ -49681,7 +48847,7 @@ size
 NULL
 )
 
-3670 
+3671 
 	`poﬁ_îr‹
 ("öô_¥ï¨ed_li°: mÆlo¯Áûed: %s", 
 	`°ªº‹
@@ -49689,15 +48855,15 @@ NULL
 î∫o
 ));
 
-3671 
+3672 
 	`exô
 (1);
 
-3673 
+3674 
 	}
 }
 
-3675 
+3676 
 	$add_¥ï¨ed_li°
 (
 Pª∑ªdSèãmítLi°
@@ -49709,7 +48875,7 @@ Pª∑ªdSèãmít
 °mt
 )
 
-3677 i‡(
+3678 i‡(
 p
 ->
 ˙t
@@ -49717,13 +48883,13 @@ p
 size
 )
 
-3679 
+3680 
 p
 ->
 size
  *= 2;
 
-3680 
+3681 
 p
 ->
 °mt_li°
@@ -49733,7 +48899,7 @@ p
 size
 );
 
-3681 i‡(
+3682 i‡(
 p
 ->
 °mt_li°
@@ -49741,7 +48907,7 @@ p
 NULL
 )
 
-3683 
+3684 
 	`poﬁ_îr‹
 ("add_¥ï¨ed_li°:ÑóŒo¯Áûed: %s", 
 	`°ªº‹
@@ -49749,11 +48915,11 @@ NULL
 î∫o
 ));
 
-3684 
+3685 
 	`exô
 (1);
 
-3688 
+3689 
 p
 ->
 °mt_li°
@@ -49763,11 +48929,11 @@ p
 °mt
 ;
 
-3689 
+3690 
 	}
 }
 
-3691 
+3692 
 	$add_u¬amed_p‹èl
 (
 Pª∑ªdSèãmítLi°
@@ -49779,7 +48945,7 @@ Pª∑ªdSèãmít
 °mt
 )
 
-3693 i‡(
+3694 i‡(
 u¬amed_°©emít
  && u¬amed_°©emít->
 °©emít_«me
@@ -49787,7 +48953,7 @@ u¬amed_°©emít
 NULL
 )
 
-3695 
+3696 
 	`‰ì
 (
 u¬amed_°©emít
@@ -49795,29 +48961,29 @@ u¬amed_°©emít
 ¥ï¨ed_°rög
 );
 
-3696 
+3697 
 	`‰ì
 (
 u¬amed_°©emít
 );
 
-3699 
+3700 
 u¬amed_p‹èl
  = 
 NULL
 ;
 
-3700 
+3701 
 u¬amed_°©emít
  = 
 °mt
 ;
 
-3701 
+3702 
 	}
 }
 
-3703 
+3704 
 	$dñ_¥ï¨ed_li°
 (
 Pª∑ªdSèãmítLi°
@@ -49829,11 +48995,11 @@ Pª∑ªdSèãmít
 °mt
 )
 
-3705 
+3706 
 i
 ;
 
-3707 
+3708 
 i
  = 0; i < 
 p
@@ -49841,7 +49007,7 @@ p
 ˙t
 ; i++)
 
-3709 i‡(
+3710 i‡(
 	`°rcmp
 (
 p
@@ -49855,7 +49021,7 @@ i
 °mt
 ->statement_name) == 0)
 
-3713 
+3714 
 	`‰ì
 (
 °mt
@@ -49863,31 +49029,19 @@ i
 °©emít_«me
 );
 
-3714 
+3715 
 	`‰ì
 (
 °mt
 );
 
-3716 i‡(
+3717 i‡(
 i
  =
 p
 ->
 ˙t
 )
-
-3719 
-	`‰ì
-(
-p
-->
-°mt_li°
-[
-i
-]->
-°©emít_«me
-);
 
 3720 
 	`‰ì
@@ -49898,7 +49052,7 @@ p
 [
 i
 ]->
-p‹èl_«me
+°©emít_«me
 );
 
 3721 
@@ -49910,7 +49064,7 @@ p
 [
 i
 ]->
-¥ï¨ed_°rög
+p‹èl_«me
 );
 
 3722 
@@ -49921,9 +49075,21 @@ p
 °mt_li°
 [
 i
+]->
+¥ï¨ed_°rög
+);
+
+3723 
+	`‰ì
+(
+p
+->
+°mt_li°
+[
+i
 ]);
 
-3723 i‡(
+3724 i‡(
 i
  !
 p
@@ -49931,7 +49097,7 @@ p
 ˙t
  - 1)
 
-3725 
+3726 
 	`memmove
 (&
 p
@@ -49941,7 +49107,7 @@ p
 i
 ], &p->stmt_list[i+1],
 
-3726 (
+3727 (
 Pª∑ªdSèãmít
  *Ë* (
 p
@@ -49951,17 +49117,17 @@ p
 i
  - 1));
 
-3728 
+3729 
 p
 ->
 ˙t
 --;
 
-3729 
+3730 
 	}
 }
 
-3731 
+3732 
 	$ª£t_¥ï¨ed_li°
 (
 Pª∑ªdSèãmítLi°
@@ -49969,29 +49135,17 @@ Pª∑ªdSèãmítLi°
 p
 )
 
-3733 
+3734 
 i
 ;
 
-3735 
+3736 
 i
  = 0; i < 
 p
 ->
 ˙t
 ; i++)
-
-3737 
-	`‰ì
-(
-p
-->
-°mt_li°
-[
-i
-]->
-°©emít_«me
-);
 
 3738 
 	`‰ì
@@ -50002,7 +49156,7 @@ p
 [
 i
 ]->
-p‹èl_«me
+°©emít_«me
 );
 
 3739 
@@ -50014,7 +49168,7 @@ p
 [
 i
 ]->
-¥ï¨ed_°rög
+p‹èl_«me
 );
 
 3740 
@@ -50025,19 +49179,31 @@ p
 °mt_li°
 [
 i
+]->
+¥ï¨ed_°rög
+);
+
+3741 
+	`‰ì
+(
+p
+->
+°mt_li°
+[
+i
 ]);
 
-3742 
+3743 
 p
 ->
 ˙t
  = 0;
 
-3743 
+3744 
 	}
 }
 
-3745 
+3746 
 Pª∑ªdSèãmít
  *
 	$lookup_¥ï¨ed_°©emít_by_°©emít
@@ -50049,21 +49215,21 @@ p
 «me
 )
 
-3747 
+3748 
 i
 ;
 
-3750 i‡(
+3751 i‡(
 «me
  =
 NULL
  ||Çame[0] == '\0' || (name[0] == '\"' &&Çame[1] == '\"'))
 
-3751  
+3752  
 u¬amed_°©emít
 ;
 
-3753 
+3754 
 i
  = 0; i < 
 p
@@ -50071,7 +49237,7 @@ p
 ˙t
 ; i++)
 
-3755 i‡(
+3756 i‡(
 	`°rcmp
 (
 p
@@ -50085,7 +49251,7 @@ i
 «me
 ) == 0)
 
-3756  
+3757  
 p
 ->
 °mt_li°
@@ -50093,15 +49259,15 @@ p
 i
 ];
 
-3759  
+3760  
 NULL
 ;
 
-3760 
+3761 
 	}
 }
 
-3762 
+3763 
 Pª∑ªdSèãmít
  *
 	$lookup_¥ï¨ed_°©emít_by_p‹èl
@@ -50113,21 +49279,21 @@ p
 «me
 )
 
-3764 
+3765 
 i
 ;
 
-3767 i‡(
+3768 i‡(
 «me
  =
 NULL
  ||Çame[0] == '\0' || (name[0] == '\"' &&Çame[1] == '\"'))
 
-3768  
+3769  
 u¬amed_p‹èl
 ;
 
-3770 
+3771 
 i
  = 0; i < 
 p
@@ -50135,7 +49301,7 @@ p
 ˙t
 ; i++)
 
-3772 i‡(
+3773 i‡(
 p
 ->
 °mt_li°
@@ -50145,7 +49311,7 @@ i
 p‹èl_«me
  &&
 
-3773 
+3774 
 	`°rcmp
 (
 p
@@ -50159,7 +49325,7 @@ p‹èl_«me
 «me
 ) == 0)
 
-3774  
+3775  
 p
 ->
 °mt_li°
@@ -50167,15 +49333,15 @@ p
 i
 ];
 
-3777  
+3778  
 NULL
 ;
 
-3778 
+3779 
 	}
 }
 
-3780 
+3781 
 	$£nd_dóŒoˇã
 (
 POOL_CONNECTION_POOL
@@ -50187,19 +49353,19 @@ Pª∑ªdSèãmítLi°
 p
 ,
 
-3781 
+3782 
 n
 )
 
-3783 *
+3784 *
 quîy
 ;
 
-3784 
+3785 
 Àn
 ;
 
-3786 i‡(
+3787 i‡(
 p
 ->
 ˙t
@@ -50207,7 +49373,7 @@ p
 n
 )
 
-3789 
+3790 
 Àn
  = 
 	`°æí
@@ -50221,7 +49387,7 @@ n
 °©emít_«me
 ) + 14;
 
-3790 
+3791 
 quîy
  = 
 	`mÆloc
@@ -50229,13 +49395,13 @@ quîy
 Àn
 );
 
-3791 i‡(
+3792 i‡(
 quîy
  =
 NULL
 )
 
-3793 
+3794 
 	`poﬁ_îr‹
 ("£nd_dóŒoˇã: mÆlo¯Áûed: %s", 
 	`°ªº‹
@@ -50243,11 +49409,11 @@ NULL
 î∫o
 ));
 
-3794 
+3795 
 	`exô
 (1);
 
-3796 
+3797 
 	`•rötf
 (
 quîy
@@ -50261,7 +49427,7 @@ n
 °©emít_«me
 );
 
-3797 i‡(
+3798 i‡(
 	`Quîy
 (
 NULL
@@ -50273,39 +49439,39 @@ quîy
 POOL_CONTINUE
 )
 
-3799 
+3800 
 	`‰ì
 (
 quîy
 );
 
-3802 
+3803 
 	`‰ì
 (
 quîy
 );
 
-3805 
+3806 
 	}
 }
 
-3807 *
+3808 *
 	$n‹mÆize_¥ï¨ed_°mt_«me
 (c⁄° *
 «me
 )
 
-3809 *
+3810 *
 ªsu…
 ;
 
-3810 
+3811 
 i
 , 
 Àn
 ;
 
-3812 
+3813 
 Àn
  = 
 	`°æí
@@ -50313,13 +49479,13 @@ i
 «me
 );
 
-3814 i‡(
+3815 i‡(
 «me
 [0] !'"' &&Çame[
 Àn
 -1] != '"')
 
-3816 
+3817 
 ªsu…
  = 
 	`°rdup
@@ -50327,23 +49493,23 @@ i
 «me
 );
 
-3817 i‡(
+3818 i‡(
 ªsu…
  =
 NULL
 )
 
-3818  
+3819  
 ªsu…
 ;
 
-3819 
+3820 
 i
  = 0; i < 
 Àn
 ; i++)
 
-3821 i‡(
+3822 i‡(
 	`isuµî
 (
 ªsu…
@@ -50351,13 +49517,13 @@ i
 i
 ]))
 
-3823 
+3824 
 ªsu…
 [
 i
 ] += 32;
 
-3829 
+3830 
 ªsu…
  = 
 	`mÆloc
@@ -50365,17 +49531,17 @@ i
 Àn
  - 1);
 
-3830 i‡(
+3831 i‡(
 ªsu…
  =
 NULL
 )
 
-3831  
+3832  
 ªsu…
 ;
 
-3833 
+3834 
 ªsu…
  = 
 	`mem˝y
@@ -50385,21 +49551,21 @@ NULL
 Àn
 -2);
 
-3834 
+3835 
 ªsu…
 [
 Àn
 -1] = '\0';
 
-3837  
+3838  
 ªsu…
 ;
 
-3838 
+3839 
 	}
 }
 
-3840 
+3841 
 	$quîy_ps_°©us
 (*
 quîy
@@ -50409,31 +49575,31 @@ POOL_CONNECTION_POOL
 backíd
 )
 
-3842 
+3843 
 SèπupPackë
  *
 •
 ;
 
-3843 
+3844 
 psbuf
 [1024];
 
-3844 
+3845 
 i
 ;
 
-3847 
+3848 
 quîy
  = 
 	`skù_commít
 (query);
 
-3849 i‡(*
+3850 i‡(*
 quîy
  == '\0')
 
-3852 
+3853 
 •
  = 
 	`MASTER_CONNECTION
@@ -50441,7 +49607,7 @@ quîy
 backíd
 )->sp;
 
-3853 
+3854 
 i
  = 
 	`¢¥ötf
@@ -50449,7 +49615,7 @@ i
 psbuf
 , (psbuf), "%s %s %s ",
 
-3854 
+3855 
 •
 ->
 u£r
@@ -50459,29 +49625,29 @@ d©aba£
 ªmŸe_ps_d©a
 );
 
-3857 *
+3858 *
 quîy
  && 
 	`is•a˚
 (*query))
 
-3858 
+3859 
 quîy
 ++;
 
-3860 ; 
+3861 ; 
 i
 < (
 psbuf
 ); i++)
 
-3862 i‡(!*
+3863 i‡(!*
 quîy
  || 
 	`is•a˚
 (*query))
 
-3865 
+3866 
 psbuf
 [
 i
@@ -50491,13 +49657,13 @@ i
 quîy
 ++);
 
-3867 
+3868 
 psbuf
 [
 i
 ] = '\0';
 
-3869 
+3870 
 	`£t_ps_di•œy
 (
 psbuf
@@ -50505,11 +49671,11 @@ psbuf
 Ál£
 );
 
-3870 
+3871 
 	}
 }
 
-3872 
+3873 
 POOL_STATUS
  
 	$îr‹_köd_mism©ch
@@ -50527,21 +49693,21 @@ köd
 köd1
 )
 
-3874 
+3875 
 °s
 ;
 
-3876 
+3877 
 	`poﬁ_îr‹
 ("pool_process_query: kind doesÇot match between backends master(%c) secondary(%c)",
 
-3877 
+3878 
 köd
 , 
 köd1
 );
 
-3878 
+3879 
 	`poﬁ_£nd_îr‹_mesßge
 (
 ‰⁄ãnd
@@ -50551,61 +49717,61 @@ köd1
 backíd
 ), "XX000",
 
-3880 "check d©®c⁄si°ícy bëwì¿ma°îánd sec⁄d¨y", 
+3881 "check d©®c⁄si°ícy bëwì¿ma°îánd sec⁄d¨y", 
 __FILE__
 , 
 __LINE__
 );
 
-3883 
+3884 
 °s
  = 
 	`hó…h_check
 ();
 
-3884 i‡(
+3885 i‡(
 °s
  == -1)
 
-3886 
+3887 
 	`nŸi˚_backíd_îr‹
 (1);
 
-3887 
+3888 
 	`exô
 (1);
 
-3889 i‡(
+3890 i‡(
 °s
  == -2)
 
-3891 
+3892 
 	`nŸi˚_backíd_îr‹
 (0);
 
-3892 
+3893 
 	`exô
 (1);
 
-3895 i‡(
+3896 i‡(
 poﬁ_c⁄fig
 .
 ª∂iˇti⁄_°›_⁄_mism©ch
 )
 
-3896  
+3897  
 POOL_FATAL
 ;
 
-3898  
+3899  
 POOL_ERROR
 ;
 
-3899 
+3900 
 	}
 }
 
-3901 
+3902 
 	$dëe˘_dódlock_îr‹
 (
 POOL_CONNECTION
@@ -50615,31 +49781,31 @@ ma°î
 maj‹
 )
 
-3903 
+3904 
 dódlock
  = 0;
 
-3904 
+3905 
 köd
 ;
 
-3905 
+3906 
 ªadÀn
  = 0, 
 Àn
 ;
 
-3906 *
+3907 *
 buf
 ;
 
-3907 *
+3908 *
 p
 , *
 °r
 ;
 
-3909 i‡((
+3910 i‡((
 buf
  = 
 	`mÆloc
@@ -50647,11 +49813,11 @@ buf
 NULL
 )
 
-3911 
+3912 
 	`poﬁ_îr‹
 ("detect_deadlock_error: malloc failed");
 
-3915 i‡(
+3916 i‡(
 	`poﬁ_ªad
 (
 ma°î
@@ -50659,23 +49825,23 @@ ma°î
 köd
 , (kind)))
 
-3916  
+3917  
 POOL_END
 ;
 
-3917 
+3918 
 ªadÀn
  +(
 köd
 );
 
-3918 
+3919 
 p
  = 
 buf
 ;
 
-3919 
+3920 
 	`mem˝y
 (
 p
@@ -50683,27 +49849,27 @@ p
 köd
 , (kind));
 
-3920 
+3921 
 p
  +(
 köd
 );
 
-3922 i‡(
+3923 i‡(
 köd
  == 'E')
 
-3925 i‡(
+3926 i‡(
 maj‹
  =
 PROTO_MAJOR_V3
 )
 
-3927 *
+3928 *
 îr‹_code
 ;
 
-3929 i‡(
+3930 i‡(
 	`poﬁ_ªad
 (
 ma°î
@@ -50711,17 +49877,17 @@ ma°î
 Àn
 , (len)) < 0)
 
-3930  
+3931  
 POOL_END
 ;
 
-3931 
+3932 
 ªadÀn
  +(
 Àn
 );
 
-3932 
+3933 
 	`mem˝y
 (
 p
@@ -50729,19 +49895,19 @@ p
 Àn
 , (len));
 
-3933 
+3934 
 p
  +(
 Àn
 );
 
-3935 
+3936 
 Àn
  = 
 	`¡ohl
 (len) - 4;
 
-3936 
+3937 
 °r
  = 
 	`mÆloc
@@ -50749,7 +49915,7 @@ p
 Àn
 );
 
-3937 
+3938 
 	`poﬁ_ªad
 (
 ma°î
@@ -50759,17 +49925,17 @@ ma°î
 Àn
 );
 
-3938 
+3939 
 ªadÀn
  +
 Àn
 ;
 
-3939 i‡(
+3940 i‡(
 ªadÀn
  > 1024)
 
-3941 
+3942 
 buf
  = 
 	`ªÆloc
@@ -50777,17 +49943,17 @@ buf
 ªadÀn
 );
 
-3942 i‡(
+3943 i‡(
 buf
  =
 NULL
 )
 
-3944 
+3945 
 	`poﬁ_îr‹
 ("detect_deadlock_error: malloc failed");
 
-3948 
+3949 
 	`mem˝y
 (
 p
@@ -50797,21 +49963,21 @@ p
 Àn
 );
 
-3950 
+3951 
 îr‹_code
  = 
 °r
 ;
 
-3951 *
+3952 *
 îr‹_code
 )
 
-3953 i‡(*
+3954 i‡(*
 îr‹_code
  == 'C')
 
-3955 i‡(
+3956 i‡(
 	`°rcmp
 (
 îr‹_code
@@ -50819,27 +49985,27 @@ p
 DEADLOCK_ERROR_CODE
 ) == 0)
 
-3957 
+3958 
 	`poﬁ_debug
 ("SimpleQuery:Ñeceive deadlockÉrror from masterÇode.");
 
-3958 
+3959 
 dódlock
  = 1;
 
-3963 
+3964 
 îr‹_code
  =Éº‹_codê+ 
 	`°æí
 (error_code) + 1;
 
-3965 
+3966 
 	`‰ì
 (
 °r
 );
 
-3969 
+3970 
 °r
  = 
 	`poﬁ_ªad_°rög
@@ -50849,17 +50015,17 @@ ma°î
 Àn
 , 0);
 
-3970 
+3971 
 ªadÀn
  +
 Àn
 ;
 
-3971 i‡(
+3972 i‡(
 ªadÀn
  > 1024)
 
-3973 
+3974 
 buf
  = 
 	`ªÆloc
@@ -50867,17 +50033,17 @@ buf
 ªadÀn
 );
 
-3974 i‡(
+3975 i‡(
 buf
  =
 NULL
 )
 
-3976 
+3977 
 	`poﬁ_îr‹
 ("detect_deadlock_error: malloc failed");
 
-3980 
+3981 
 	`mem˝y
 (
 p
@@ -50887,7 +50053,7 @@ p
 Àn
 );
 
-3983 i‡(
+3984 i‡(
 	`poﬁ_uƒód
 (
 ma°î
@@ -50897,21 +50063,21 @@ buf
 ªadÀn
 ) != 0)
 
-3984 
+3985 
 dódlock
  = -1;
 
-3985 
+3986 
 	`‰ì
 (
 buf
 );
 
-3986  
+3987  
 dódlock
 ;
 
-3987 
+3988 
 	}
 }
 
@@ -54237,43 +53403,57 @@ pqc_°¨t_memˇched
 pqc_°›_memˇched
 ();
 
-30 *
+29 *
 ícode_key
 (c⁄° *, *, 
 POOL_CONNECTION
  *);
 
-39 
+31 
+memˇched_°
+ *
+gë_memc
+();
+
+32 
+memˇched_°
+ *
+	gmemc_f‹_öva
+ = 
+NULL
+;
+
+41 
 	gIsQuîyCacheE«bÀd
  = 1;
 
-40 
+42 
 	gU£QuîyCache
  = 1;
 
-42 
+44 
 	gFoundInQuîyCache
  = 0;
 
-52 
+47 
 	$pqc_öô
 (
 run_as_d´m⁄
 )
 
-54 
+49 
 	`pqc_°¨t_memˇched
 (
 run_as_d´m⁄
 );
 
-63 i‡–
+51 i‡–
 memc
 !=
 NULL
  )
 
-69 
+57 
 memc
  = 
 	`memˇched_¸óã
@@ -54281,13 +53461,13 @@ memc
 NULL
 );
 
-70 i‡–
+58 i‡–
 memc
 ==
 NULL
  )
 
-75 
+63 
 £rvîs
  = 
 	`memˇched_£rvî_li°_≠≥nd
@@ -54297,17 +53477,17 @@ NULL
 rc
 );
 
-76 i‡(
+64 i‡(
 rc
  !
 MEMCACHED_SUCCESS
 )
 
-78 
+66 
 	`poﬁ_debug
 ("pqc_init: memcached_server_list_append() failed.");
 
-81 
+69 
 rc
  = 
 	`memˇched_£rvî_push
@@ -54317,17 +53497,17 @@ memc
 £rvîs
 );
 
-82 i‡(
+70 i‡(
 rc
  !
 MEMCACHED_SUCCESS
 )
 
-84 
+72 
 	`poﬁ_debug
 ("pqc_init: memcached_server_push() failed.");
 
-87 
+75 
 rc
  = 
 	`memˇched_behavi‹_£t
@@ -54337,13 +53517,13 @@ memc
 MEMCACHED_BEHAVIOR_BINARY_PROTOCOL
 , 0);
 
-88 i‡(
+76 i‡(
 rc
  !
 MEMCACHED_SUCCESS
 )
 
-90 
+78 
 	`poﬁ_îr‹
 ("pqc_öô: %s", 
 	`memˇched_°ªº‹
@@ -54353,11 +53533,11 @@ memc
 rc
 ));
 
-94 
+82 
 	`poﬁ_debug
 ("pqc_init: memcached has been successfully initialized.");
 
-95 
+83 
 	`poﬁ_debug
 ("pqc_öô: Quîy CachêModê%d", 
 poﬁ_c⁄fig
@@ -54365,31 +53545,51 @@ poﬁ_c⁄fig
 quîy_ˇche_mode
 );
 
-98 
+85 
+memc_f‹_öva
+ = 
+memc
+;
+
+88 
 	}
 }
 
-101 
+90 
+memˇched_°
+ *
+	$gë_memc
+()
+
+92  
+memc_f‹_öva
+;
+
+93 
+	}
+}
+
+96 
 	$pqc_°¨t_memˇched
 (
 run_as_d´m⁄
 )
 
-103 *
+98 *
 ¨gv
 [16];
 
-104 
+99 
 ¨gc
  = 0;
 
-105 
+100 
 pid_t
  
 pid
 ;
 
-107 
+102 
 ¨gv
 [
 ¨gc
@@ -54399,65 +53599,65 @@ poﬁ_c⁄fig
 memˇched_bö
 ;
 
-108 
+103 
 ¨gv
 [
 ¨gc
 ++] = "-l";
 
-109 
+104 
 ¨gv
 [
 ¨gc
 ++] = "127.0.0.1";
 
-110 
+105 
 ¨gv
 [
 ¨gc
 ++] = "-p";
 
-111 
+106 
 ¨gv
 [
 ¨gc
 ++] = "11211";
 
-112 
+107 
 ¨gv
 [
 ¨gc
 ++] = "-vv";
 
-113 
+108 
 ¨gv
 [
 ¨gc
 ++] = "-I";
 
-114 
+109 
 ¨gv
 [
 ¨gc
 ++] = "10M";
 
-116 i‡(
+111 i‡(
 run_as_d´m⁄
 )
 
-118 
+113 
 ¨gv
 [
 ¨gc
 ++] = "-d";
 
-119 
+114 
 ¨gv
 [
 ¨gc
 ++] = "-P";
 
-120 
+115 
 ¨gv
 [
 ¨gc
@@ -54465,7 +53665,7 @@ run_as_d´m⁄
 MEMCACHED_PID_FILE
 ;
 
-123 
+118 
 ¨gv
 [
 ¨gc
@@ -54473,25 +53673,25 @@ MEMCACHED_PID_FILE
 NULL
 ;
 
-125 
+120 
 pid
  = 
 	`f‹k
 ();
 
-127 i‡(
+122 i‡(
 pid
  < 0)
 
-129 
+124 
 	`poﬁ_îr‹
 ("fork() failed.");
 
-133 i‡(
+128 i‡(
 pid
  == 0)
 
-135 
+130 
 	`execv
 (
 poﬁ_c⁄fig
@@ -54501,7 +53701,7 @@ memˇched_bö
 ¨gv
 );
 
-138 
+133 
 	`poﬁ_îr‹
 ("FaûedÅÿ°¨à\"%s\".", 
 poﬁ_c⁄fig
@@ -54509,35 +53709,35 @@ poﬁ_c⁄fig
 memˇched_bö
 );
 
-139 
+134 
 	`exô
 (-1);
 
-142 
+137 
 	`poﬁ_debug
 ("pqc_start_memcached: memcachedÜaunched.");
 
-145 
+140 
 	}
 }
 
-148 
+143 
 	$pqc_°›_memˇched
 ()
 
-150 
+145 
 pid_t
  
 pid
 ;
 
-151 
+146 
 FILE
  *
 Â
 ;
 
-153 
+148 
 Â
  = 
 	`f›í
@@ -54545,19 +53745,19 @@ FILE
 MEMCACHED_PID_FILE
 , "r");
 
-154 i‡(
+149 i‡(
 Â
  =
 NULL
 )
 
-156 
+151 
 	`poﬁ_îr‹
 ("PID fûêˇn'àbê›íed. - %s", 
 MEMCACHED_PID_FILE
 );
 
-160 
+155 
 	`fsˇnf
 (
 Â
@@ -54565,19 +53765,19 @@ MEMCACHED_PID_FILE
 pid
 );
 
-161 
+156 
 	`f˛o£
 (
 Â
 );
 
-163 
+158 
 	`poﬁ_debug
 ("Sídög SIGTERMÅÿPID %d...", 
 pid
 );
 
-165 
+160 
 	`kûl
 (
 pid
@@ -54585,39 +53785,39 @@ pid
 SIGTERM
 );
 
-167 
+162 
 	`Ârötf
 (
 °dîr
 , "stopÑequest sentÅo memcached. waiting forÅermination...");
 
-169 
+164 
 	`kûl
 (
 pid
 , 0) == 0)
 
-171 
+166 
 	`Ârötf
 (
 °dîr
 , ".");
 
-172 
+167 
 	`¶ìp
 (1);
 
-174 
+169 
 	`Ârötf
 (
 °dîr
 , "done from Nagayasu.\n");
 
-177 
+172 
 	}
 }
 
-180 
+175 
 	$pqc_check_ˇche_avaû
 (
 POOL_CONNECTION
@@ -54627,35 +53827,35 @@ POOL_CONNECTION
 quîy
 )
 
-182 
+177 
 buf
 [
 PQC_MAX_VALUE
 ];
 
-183 
+178 
 size_t
  
 Àn
 ;
 
-185 i‡(!
+180 i‡(!
 U£QuîyCache
 )
 
-188 
+183 
 	`mem£t
 (
 buf
 , 0, (buf));
 
-190 
+185 
 	`poﬁ_debug
 ("pqc_check_ˇche_avaû: %s", 
 quîy
 );
 
-192 i‡–!
+187 i‡–!
 	`pqc_gë_ˇche
 (
 ‰⁄ãnd
@@ -54667,17 +53867,17 @@ buf
 Àn
 ) )
 
-196 
+191 
 	}
 }
 
-199 
+194 
 	$pqc_push_cuºít_quîy
 (c⁄° *
 quîy
 )
 
-201 
+196 
 	`°∫˝y
 (
 ˇche_key
@@ -54685,43 +53885,43 @@ quîy
 quîy
 , (cache_key));
 
-204 
+199 
 	}
 }
 
-207 
+202 
 	$pqc_p›_cuºít_quîy
 ()
 
-209  
+204  
 ˇche_key
 ;
 
-210 
+205 
 	}
 }
 
-213 
+208 
 	$pqc_buf_öô
 ()
 
-215 
+210 
 buÊí
  = 0;
 
-216 i‡(
+211 i‡(
 buf
  =
 NULL
 )
 
-218 
+213 
 bufsize
  = 
 PQC_MAX_VALUE
 ;
 
-219 
+214 
 buf
  = (*)
 	`mÆloc
@@ -54729,7 +53929,7 @@ buf
 bufsize
 );
 
-221 
+216 
 	`mem£t
 (
 buf
@@ -54737,11 +53937,11 @@ buf
 bufsize
 );
 
-222 
+217 
 	}
 }
 
-225 
+220 
 	$pqc_buf_add
 (c⁄° *
 s
@@ -54751,15 +53951,15 @@ size_t
 Àn
 )
 
-227 
+222 
 pos
 =0;
 
-229 i‡–!
+224 i‡–!
 IsQuîyCacheE«bÀd
  )
 
-233 i‡–
+228 i‡–
 buf
 ==
 NULL
@@ -54767,7 +53967,7 @@ NULL
 buÊí
 <0 )
 
-240 i‡–
+235 i‡–
 buÊí
  + 
 Àn
@@ -54775,7 +53975,7 @@ buÊí
 PQC_MAX_CACHELEN
  )
 
-242 
+237 
 	`poﬁ_log
 ("Thêªsu… sëÅoÿœrgêtÿ°‹êötÿthêˇche. (Àn=%d)", 
 buÊí
@@ -54783,23 +53983,23 @@ buÊí
 Àn
 );
 
-243 
+238 
 	`‰ì
 (
 buf
 );
 
-244 
+239 
 buf
  = 
 NULL
 ;
 
-245 
+240 
 buÊí
  = -1;
 
-250 i‡(
+245 i‡(
 buÊí
  + 
 Àn
@@ -54807,7 +54007,7 @@ buÊí
 bufsize
 )
 
-253 
+248 
 size_t
  
 √wbufsize
@@ -54819,7 +54019,7 @@ buÊí
 PQC_MAX_VALUE
  + 1 ) * PQC_MAX_VALUE;
 
-254 
+249 
 	`poﬁ_debug
 ("pqc_buf_add:ÑóŒo¯bu‡bufsize=%dÇewbufsize=%d", 
 bufsize
@@ -54827,13 +54027,13 @@ bufsize
 √wbufsize
 );
 
-255 
+250 
 bufsize
  = 
 √wbufsize
 ;
 
-256 
+251 
 buf
  = (*)
 	`ªÆloc
@@ -54841,13 +54041,13 @@ buf
 bufsize
 );
 
-259 
+254 
 pos
 =0 ;Öos<
 Àn
  ;Öos++)
 
-261 
+256 
 buf
 [
 buÊí
@@ -54857,13 +54057,13 @@ pos
 s
 [pos];
 
-263 
+258 
 buÊí
  +
 pos
 ;
 
-265 
+260 
 	`poﬁ_debug
 ("pqc_buf_add:Üí=%d,ÅŸÆ=%d bufsize=%d", 
 Àn
@@ -54873,39 +54073,39 @@ buÊí
 bufsize
 );
 
-267  
+262  
 buÊí
 ;
 
-268 
+263 
 	}
 }
 
-271 
+266 
 	$pqc_buf_Àn
 ()
 
-273  
+268  
 buÊí
 ;
 
-274 
+269 
 	}
 }
 
-277 
+272 
 	$pqc_buf_gë
 ()
 
-279  
+274  
 buf
 ;
 
-280 
+275 
 	}
 }
 
-308 
+278 
 	$dump_ˇche_d©a
 (c⁄° *
 d©a
@@ -54915,11 +54115,11 @@ size_t
 Àn
 )
 
-331 
+301 
 	}
 }
 
-337 * 
+307 * 
 	$ícode_key
 (c⁄° *
 s
@@ -54931,89 +54131,7 @@ POOL_CONNECTION
 backíd
 )
 
-339 * 
-°rkey
-;
-
-340 
-u_Àngth
-;
-
-341 
-d_Àngth
-;
-
-342 
-q_Àngth
-;
-
-343 
-Àngth
-;
-
-345 
-u_Àngth
- = 
-	`°æí
-(
-backíd
-->
-u£∫ame
-);
-
-350 
-d_Àngth
- = 
-	`°æí
-(
-backíd
-->
-d©aba£
-);
-
-352 
-q_Àngth
- = 
-	`°æí
-(
-s
-);
-
-357 
-Àngth
- = 
-u_Àngth
- + 
-d_Àngth
- + 
-q_Àngth
- + 1;
-
-359 
-°rkey
- = (*)
-	`mÆloc
-((Ë* 
-Àngth
-);
-
-361 
-	`¢¥ötf
-(
-°rkey
-, 
-Àngth
-, "%s%s%s", 
-backíd
-->
-u£∫ame
-, 
-s
-, backíd->
-d©aba£
-);
-
-363 
+309 
 	`pg_md5_hash
 (
 s
@@ -55023,27 +54141,15 @@ s
 buf
 );
 
-365 
-	`‰ì
-(
-°rkey
-);
-
-366 
-°rkey
- = 
-NULL
-;
-
-367  
+310  
 buf
 ;
 
-368 
+311 
 	}
 }
 
-371 
+314 
 	$pqc_£t_ˇche
 (
 POOL_CONNECTION
@@ -55059,27 +54165,27 @@ size_t
 d©Æí
 )
 
-373 
+316 
 tmpkey
 [33];
 
-375 i‡–!
+318 i‡–!
 IsQuîyCacheE«bÀd
  )
 
-378 i‡–
+321 i‡–
 	`°æí
 (
 quîy
 )<=0 )
 
-381 
+324 
 	`poﬁ_debug
 ("pqc_£t_ˇche: Quîy=%s", 
 quîy
 );
 
-382 
+325 
 	`dump_ˇche_d©a
 (
 d©a
@@ -55087,7 +54193,7 @@ d©a
 d©Æí
 );
 
-384 
+327 
 	`ícode_key
 (
 quîy
@@ -55097,7 +54203,7 @@ tmpkey
 ‰⁄ãnd
 );
 
-398 
+329 
 rc
  = 
 	`memˇched_£t
@@ -55117,13 +54223,13 @@ poﬁ_c⁄fig
 quîy_ˇche_expú©i⁄
 , 0);
 
-400 i‡(
+331 i‡(
 rc
  !
 MEMCACHED_SUCCESS
 )
 
-402 
+333 
 	`poﬁ_îr‹
 ("pqc_£t_ˇche: %s", 
 	`memˇched_°ªº‹
@@ -55133,507 +54239,23 @@ memc
 rc
 ));
 
-411 
+339 
+	`add_èbÀ_oid
+(
+‰⁄ãnd
+, 
+tmpkey
+);
+
+343 
 	`poﬁ_debug
 ("pqc_set_cache: succeeded.");
 
-414 
+346 
 	}
 }
 
-416 
-	$poﬁ_add_èbÀ_oid_m≠
-(
-POOL_CONNECTION
- *
-‰⁄ãnd
-, 
-tmpkey
-[33])
-
-418 
-db_«me
-[50];
-
-419 
-∑th
-[1024];
-
-420 
-i
-;
-
-421 
-Àn
-;
-
-423 *
-dú
- = "/tmp/mypqcd";
-
-425 i‡(
-	`mkdú
-(
-dú
-, 
-S_IRWXU
-|
-S_IRWXO
-) == -1)
-
-427 i‡(
-î∫o
- !
-EEXIST
-)
-
-429 
-	`≥º‹
-("\tCREATION of directory1 failed in my_server.c\n");
-
-434 *
-dú1
- = "/tmp/mypqcd/oiddir";
-
-436 i‡(
-	`mkdú
-(
-dú1
-, 
-S_IRWXU
-|
-S_IRWXO
-) == -1)
-
-438 i‡(
-î∫o
- !
-EEXIST
-)
-
-441 
-	`≥º‹
-("\tCREATION of directory2 failed in my_server.c\n");
-
-444 
-	`≥º‹
-("\tDIRECTORY \"%s\"áÃódyÉxi°s!\n", 
-dú1
-);
-
-449 
-	`¢¥ötf
-(
-∑th
-, (path), "/tmp/mypqcd/oiddir");
-
-451 
-	`°r˝y
-(
-db_«me
-, 
-‰⁄ãnd
-->
-d©aba£
-);
-
-453 
-	`¢¥ötf
-(
-∑th
-, ’©h), "%s/%s", 
-dú
-, 
-db_«me
-);
-
-454 i‡(
-	`mkdú
-(
-∑th
-, 
-S_IRWXU
-|
-S_IRWXO
-) == -1)
-
-456 i‡(
-î∫o
- !
-EEXIST
-)
-
-458 
-	`≥º‹
-("\tDB directory\n");
-
-462 *
-löe
- = 
-NULL
-;
-
-463 
-size_t
- 
-Àn
- = 0;
-
-464 
-ªad_byãs
-, 
-fd
-, 
-fd_ﬁd
-, 
-°s
-;
-
-465 
-tmpkey_‰om_fûe
-[33];
-
-466 
-Êock
- 
-Ê
-;
-
-468 
-Ê
-.
-l_ty≥
- = 
-F_WRLCK
-;
-
-469 
-Ê
-.
-l_whí˚
- = 
-SEEK_SET
-;
-
-470 
-Ê
-.
-l_°¨t
- = 0;
-
-471 
-Ê
-.
-l_Àn
- = 0;
-
-473 
-	`¢¥ötf
-(
-∑th
-, (path), "/%s", "ext_info");
-
-474 i‡((
-fd_ﬁd
- = 
-	`›í
-(
-∑th
-, 
-O_CREAT
-|
-O_RDONLY
-, 
-S_IRWXU
-|
-S_IRWXO
- )Ë=
-NULL
-)
-
-476 
-	`≥º‹
-("\tFailedÅo openÉxtracted file \n");
-
-479 i‡(
-	`f˙é
-(
-fd_ﬁd
-, 
-F_SETLKW
-, &
-Ê
-) == -1)
-
-481 
-	`≥º‹
-("\tProblemÜocking inÖqc.c\n");
-
-482 
-	`exô
-(1);
-
-487 i‡((
-ªad_byãs
- = 
-	`ªad
-(
-fd_ﬁd
-, &
-tmpkey_‰om_fûe
-, 32)) != -1)
-
-489 i‡(
-	`memcmp
-(
-tmpkey
-, 
-tmpkey_‰om_fûe
-, 33) == 0)
-
-493 
-c
-;
-
-496 i‡(
-	`ªad
-(
-fd_ﬁd
-, &
-c
-, 1) == -1)
-
-498 
-	`≥º‹
-("\tReadingÅillÇewÜine char fromÉxt info file inÖqc.c\n");
-
-499 
-	`exô
-(1);
-
-501 i‡(
-c
- == '\n')
-
-507 i‡(
-ªad_byãs
- == -1)
-
-509 
-	`≥º‹
-("\tReading 2 fromÉxtracted info file inÖqc.c\n");
-
-510 
-	`exô
-(1);
-
-512 if(
-ªad_byãs
- == 0)
-
-514 
-	`poﬁ_debug
-("\tFinishedÑeading file!!!\n");
-
-518 
-	`poﬁ_debug
-("\tThis shouldÇot beÉxecuted! OMG! :\(\n");
-
-527 
-	`¢¥ötf
-(
-∑th
-, ’©h), "%s/%d/%d", 
-dú
-, 
-dboid
-, 
-oid
-);
-
-528 i‡((
-fd
- = 
-	`›í
-(
-∑th
-, 
-O_CREAT
-|
-O_RDONLY
-, 
-S_IRUSR
-)) == -1)
-
-530 
-	`≥º‹
-("\tCreating oid file\n");
-
-548 
-°s
- = 
-	`ªad
-(
-fd
-, (*)&
-buf
-, 
-Àn
-);
-
-549 i‡(
-°s
- == -1)
-
-551 
-	`îï‹t
-(
-WARNING
-,
-
-552 (
-	`îrmsg
-("memˇche:áddögÅabÀ oid m≠s, faûedÅÿªad fûe:\"%s\".Éº‹:\"%s\"", 
-∑th
-, 
-	`°ªº‹
-(
-î∫o
-))));
-
-553 
-	`˛o£
-(
-fd
-);
-
-556 i‡(
-°s
- =
-Àn
-)
-
-558 i‡(
-	`memcmp
-(
-ˇchekey
-, &
-buf
-, 
-Àn
-) == 0)
-
-561 
-	`˛o£
-(
-fd
-);
-
-569 i‡(
-°s
- != 0)
-
-571 
-	`îï‹t
-(
-WARNING
-,
-
-572 (
-	`îrmsg
-("memˇche:áddögÅabÀ oid m≠s, invÆid d©®Àngth:%d i¿fûe:\"%s\".Éº‹:\"%s\"",
-°s
-, 
-∑th
-)));
-
-573 
-	`˛o£
-(
-fd
-);
-
-580 i‡(
-	`l£ek
-(
-fd
-, 0, 
-SEEK_END
-) == -1)
-
-582 
-	`îï‹t
-(
-WARNING
-,
-
-583 (
-	`îrmsg
-("memˇche:áddögÅabÀ oid m≠s, faûed sìk o¿fûe:\"%s\".Éº‹:\"%s\"", 
-∑th
-, 
-	`°ªº‹
-(
-î∫o
-))));
-
-584 
-	`˛o£
-(
-fd
-);
-
-591 
-°s
- = 
-	`wrôe
-(
-fd
-, (*)
-ˇchekey
-, 
-Àn
-);
-
-592 i‡(
-°s
- =-1 || st†!
-Àn
-)
-
-594 
-	`îï‹t
-(
-WARNING
-,
-
-595 (
-	`îrmsg
-("memˇche:áddögÅabÀ oid m≠s, faûedÅÿwrôêfûe:\"%s\".Éº‹:\"%s\"", 
-∑th
-, 
-	`°ªº‹
-(
-î∫o
-))));
-
-596 
-	`˛o£
-(
-fd
-);
-
-599 
-	`˛o£
-(
-fd
-);
-
-601 
-	}
-}*/
-
-605 
+349 
 	$pqc_gë_ˇche
 (
 POOL_CONNECTION
@@ -55649,33 +54271,33 @@ size_t
 Àn
 )
 
-607 
+351 
 uöt32_t
  
 Êags2
 ;
 
-608 *
+352 *
 ±r
 ;
 
-609 
+353 
 tmpkey
 [
 PQC_MAX_KEY
 ];
 
-611 i‡–!
+355 i‡–!
 IsQuîyCacheE«bÀd
  )
 
-614 i‡–
+358 i‡–
 	`°æí
 (
 quîy
 )<=0 )
 
-628 
+372 
 	`ícode_key
 (
 quîy
@@ -55685,7 +54307,7 @@ tmpkey
 ‰⁄ãnd
 );
 
-630 
+374 
 ±r
  = 
 	`memˇched_gë
@@ -55703,13 +54325,13 @@ tmpkey
 rc
 );
 
-632 i‡(
+376 i‡(
 rc
  !
 MEMCACHED_SUCCESS
 )
 
-634 
+378 
 	`poﬁ_îr‹
 ("pqc_gë_ˇche: %s", 
 	`memˇched_°ªº‹
@@ -55719,7 +54341,7 @@ memc
 rc
 ));
 
-638 
+382 
 	`mem˝y
 (
 buf
@@ -55729,19 +54351,19 @@ buf
 Àn
 );
 
-639 
+383 
 	`‰ì
 (
 ±r
 );
 
-641 
+385 
 	`poﬁ_debug
 ("pqc_gë_ˇche: Quîy=%s", 
 quîy
 );
 
-642 
+386 
 	`dump_ˇche_d©a
 (
 buf
@@ -55749,11 +54371,11 @@ buf
 Àn
 );
 
-645 
+389 
 	}
 }
 
-648 
+392 
 	$pqc_check_ˇche_höt
 (c⁄° *
 °mt
@@ -55765,93 +54387,93 @@ u£
 höt_off£t
 )
 
-654 i‡(
+398 i‡(
 	`°∫cmp
 ("/* cache:of‡*/", 
 °mt
 , 15) == 0)
 
-657 *
+401 *
 íabÀd
  = 
 Ál£
 ;
 
-658 *
+402 *
 u£
  = 
 Ál£
 ;
 
-659 *
+403 *
 höt_off£t
  = 15;
 
-661 
+405 
 	`poﬁ_debug
 ("Query Cache Hint: cache:off");
 
-663 i‡(
+407 i‡(
 	`°∫cmp
 ("/* cache:⁄ */", 
 °mt
 , 14) == 0)
 
-666 *
+410 *
 íabÀd
  = 
 åue
 ;
 
-667 *
+411 *
 u£
  = 
 åue
 ;
 
-668 *
+412 *
 höt_off£t
  = 14;
 
-670 
+414 
 	`poﬁ_debug
 ("Query Cache Hint: cache:on");
 
-672 i‡(
+416 i‡(
 	`°∫cmp
 ("/* cache:ª‰esh */", 
 °mt
 , 19) == 0)
 
-674 *
+418 *
 íabÀd
  = 
 åue
 ;
 
-675 *
+419 *
 u£
  = 
 Ál£
 ;
 
-676 *
+420 *
 höt_off£t
  = 19;
 
-678 
+422 
 	`poﬁ_debug
 ("Query Cache Hint: cache:refresh");
 
-681  *
+425  *
 höt_off£t
 ;
 
-682 
+426 
 	}
 }
 
-685 
+429 
 	$pqc_£nd_mesßge
 (
 POOL_CONNECTION
@@ -55865,7 +54487,7 @@ köd
 d©a
 )
 
-688 
+432 
 	`poﬁ_debug
 ("pqc_£nd_mesßge: köd=%c,Üí=%d, d©a=%p", 
 köd
@@ -55875,7 +54497,7 @@ köd
 d©a
 );
 
-690 
+434 
 	`poﬁ_wrôe
 (
 c⁄n
@@ -55883,13 +54505,13 @@ c⁄n
 köd
 , 1);
 
-692 
+436 
 Àn
  = 
 	`ht⁄l
 (len);
 
-693 
+437 
 	`poﬁ_wrôe
 (
 c⁄n
@@ -55897,13 +54519,13 @@ c⁄n
 Àn
 , (len));
 
-695 
+439 
 Àn
  = 
 	`¡ohl
 (len);
 
-696 
+440 
 	`poﬁ_wrôe
 (
 c⁄n
@@ -55913,17 +54535,17 @@ d©a
 Àn
 -(len));
 
-698 i‡(
+442 i‡(
 	`poﬁ_Êush
 (
 c⁄n
 ))
 
-702 
+446 
 	}
 }
 
-705 
+449 
 	$pqc_£nd_ˇched_mesßges
 (
 POOL_CONNECTION
@@ -55935,39 +54557,39 @@ qˇche
 qˇchñí
 )
 
-707 
+451 
 msg
  = 0;
 
-708 
+452 
 i
  = 0;
 
-709 
+453 
 is_¥ï¨ed_°mt
  = 0;
 
-711 
+455 
 i
  < 
 qˇchñí
 )
 
-713 
+457 
 tmpköd
 ;
 
-714 
+458 
 tm∂í
 ;
 
-715 
+459 
 tmpbuf
 [
 PQC_MAX_VALUE
 ];
 
-717 
+461 
 tmpköd
  = 
 qˇche
@@ -55975,11 +54597,11 @@ qˇche
 i
 ];
 
-718 
+462 
 i
  += 1;
 
-720 
+464 
 	`mem˝y
 (&
 tm∂í
@@ -55989,19 +54611,19 @@ qˇche
 i
 , (tmplen));
 
-721 
+465 
 i
  +(
 tm∂í
 );
 
-723 
+467 
 tm∂í
  = 
 	`¡ohl
 (tmplen);
 
-725 
+469 
 	`mem˝y
 (
 tmpbuf
@@ -56013,27 +54635,27 @@ i
 tm∂í
  - (tmplen));
 
-726 
+470 
 i
  +
 tm∂í
  - (tmplen);
 
-729 i‡(
+473 i‡(
 tmpköd
  == '1' ||Åmpkind == '2')
 
-731 
+475 
 is_¥ï¨ed_°mt
  = 1;
 
-739 i‡(
+483 i‡(
 is_¥ï¨ed_°mt
  && 
 tmpköd
  == 'T')
 
-742 
+486 
 	`pqc_£nd_mesßge
 (
 ‰⁄ãnd
@@ -56045,43 +54667,43 @@ tm∂í
 tmpbuf
 );
 
-744 
+488 
 msg
 ++;
 
-747  
+491  
 msg
 ;
 
-748 
+492 
 	}
 }
 
-751 
+495 
 	$pqc_de°roy
 ()
 
-753 
+497 
 	`pqc_°›_memˇched
 ();
 
-755 i‡–
+499 i‡–
 memc
 ==
 NULL
  )
 
-761 
+505 
 	`memˇched_‰ì
 (
 memc
 );
 
-763 
+507 
 	`poﬁ_debug
 ("pqc_destroy: memcached has been destroyed.");
 
-766 
+510 
 	}
 }
 
@@ -56249,7 +54871,7 @@ sbuf
 fdö
  = 
 	`›í
-("mm≠fûe.txt", 
+("/tmp/mypqcd/mm≠fûe.txt", 
 O_RDWR
  | 
 O_CREAT
@@ -56389,7 +55011,7 @@ i
 Â
  = 
 	`f›í
-("mmapfile.txt","r");
+("/tmp/mypqcd/mmapfile.txt","r");
 
 50 if–
 Â
@@ -59207,96 +57829,6 @@ __îr‹_t_deföed
 
 71 #unde‡
 __√ed_îr‹_t
-
-
-	@/usr/include/error.h
-
-19 #i‚de‡
-_ERROR_H
-
-
-20 
-	#_ERROR_H
- 1
-
-	)
-
-22 
-	~<„©uªs.h
->
-
-25 
-__BEGIN_DECLS
-
-
-31 
-	$îr‹
- (
-__°©us
-, 
-__î∫um
-, c⁄° *
-__f‹m©
-, ...)
-
-32 
-	`__©åibuã__
- ((
-	`__f‹m©__
- (
-__¥ötf__
-, 3, 4)));
-
-34 
-	$îr‹_©_löe
- (
-__°©us
-, 
-__î∫um
-, c⁄° *
-__‚ame
-,
-
-35 
-__löío
-, c⁄° *
-__f‹m©
-, ...)
-
-36 
-	`__©åibuã__
- ((
-	`__f‹m©__
- (
-__¥ötf__
-, 5, 6)));
-
-41 (*
-îr‹_¥öt_¥og«me
-) ();
-
-44 
-îr‹_mesßge_cou¡
-;
-
-48 
-îr‹_⁄e_≥r_löe
-;
-
-51 #i‡
-deföed
- 
-__exã∫_Æways_ölöe
- && deföed 
-__va_¨g_∑ck
-
-
-52 
-	~<bôs/îr‹.h
->
-
-55 
-__END_DECLS
 
 
 	@/usr/include/fcntl.h
@@ -84857,8 +83389,12 @@ FILE_OIDS_H
 
 	)
 
-4 
-poﬁ_add_èbÀ_oid_m≠
+4 
+	~"poﬁ.h
+"
+
+6 
+add_èbÀ_oid
 (
 POOL_CONNECTION
  *, []);
@@ -104922,8 +103458,8 @@ __END_DECLS
 .
 1
 /usr/include
-137
-4083
+136
+4062
 child.c
 config.h
 ext_info_hash.c
@@ -104961,7 +103497,6 @@ version.h
 /usr/include/arpa/inet.h
 /usr/include/ctype.h
 /usr/include/errno.h
-/usr/include/error.h
 /usr/include/fcntl.h
 /usr/include/getopt.h
 /usr/include/inttypes.h

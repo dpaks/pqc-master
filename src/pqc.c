@@ -26,8 +26,9 @@ static char *buf = NULL;
 
 static int pqc_start_memcached(int);
 static int pqc_stop_memcached();
-//static char *encode_key(const char *, char *, size_t);
 static char *encode_key(const char *, char *, POOL_CONNECTION *);
+
+memcached_st *memc_for_inva = NULL;
 
 /*
  * State flags combination:
@@ -41,24 +42,10 @@ int UseQueryCache = 1;
 
 int FoundInQueryCache = 0;
 
-/********************************************************DEEPAK***********************************************************/
-
-//htable *h;
-//usedlist *l;
-
-/********************************************************DEEPAK***********************************************************/
-
 int
 pqc_init(int run_as_daemon)
 {
     pqc_start_memcached(run_as_daemon);
-
-    /********************************************************DEEPAK***********************************************************/
-
-    // h = init_htable();
-//l = init_list();
-
-    /********************************************************DEEPAK***********************************************************/
 
     if ( memc!=NULL )
     {
@@ -94,7 +81,16 @@ pqc_init(int run_as_daemon)
     pool_debug("pqc_init: memcached has been successfully initialized.");
     pool_debug("pqc_init: Query Cache Mode = %d", pool_config.query_cache_mode);
 
+    memc_for_inva = memc;
+    pool_debug("\tMEMC memc_for_inva is %d & memc is %d\n",memc_for_inva, memc);
+
     return 1;
+}
+
+memcached_st *get_memc()
+{
+    pool_debug("\tMEMC inside function is %d\n",memc_for_inva);
+    return memc_for_inva;
 }
 
 static int
@@ -279,31 +275,6 @@ pqc_buf_get(void)
     return buf;
 }
 
-
-/*static char *
-encode_key(const char *s, char *buf, size_t buflen)
-{
-    int i;
-
-    memset(buf, 0, buflen);
-
-     //replace ' ' to '_'.
-    for (i=0 ; i<strlen(s) ; i++)
-    {
-        if (i>=buflen)
-            break;
-
-        if ( s[i]==' ' || iscntrl(s[i]) )
-            buf[i] = '_';
-        else
-            buf[i] = s[i];
-    }
-
-    pool_debug("encode_key: `%s' -> `%s'", s, buf);
-
-    return buf;
-}*/
-
 static void
 dump_cache_data(const char *data, size_t len)
 {
@@ -336,34 +307,7 @@ dump_cache_data(const char *data, size_t len)
  */
 static char* encode_key(const char *s, char *buf, POOL_CONNECTION *backend)
 {
-    char* strkey;
-    int u_length;
-    int d_length;
-    int q_length;
-    int length;
-
-    u_length = strlen(backend->username);
-    /*ereport(DEBUG1,
-            (errmsg("memcache encode key"),
-                     errdetail("username: \"%s\" database_name: \"%s\"", backend->info->user,backend->info->database)));*/
-
-    d_length = strlen(backend->database);
-
-    q_length = strlen(s);
-    /* ereport(DEBUG1,
-             (errmsg("memcache encode key"),
-                      errdetail("query: \"%s\"", s))); */
-
-    length = u_length + d_length + q_length + 1;
-
-    strkey = (char*)malloc(sizeof(char) * length);
-
-    snprintf(strkey, length, "%s%s%s", backend->username, s, backend->database);
-
     pg_md5_hash(s, strlen(s), buf);
-
-    free(strkey);
-    strkey = NULL;
     return buf;
 }
 
@@ -383,18 +327,6 @@ pqc_set_cache(POOL_CONNECTION *frontend, const char *query, const char *data, si
 
     encode_key(query, tmpkey, frontend);
 
-    /*  if ( frontend!=NULL && frontend->database!=NULL )
-      {
-          char tmp[PQC_MAX_KEY];
-
-          snprintf(tmp, sizeof(tmp), "%s %s", frontend->database, query);
-          encode_key(tmp, tmpkey, sizeof(tmpkey));
-      }
-      else
-      {
-          encode_key(query, tmpkey, sizeof(tmpkey));
-      }*/
-
     rc = memcached_set(memc, tmpkey, strlen(tmpkey), data, datalen, pool_config.query_cache_expiration, 0);
 
     if (rc != MEMCACHED_SUCCESS)
@@ -405,7 +337,7 @@ pqc_set_cache(POOL_CONNECTION *frontend, const char *query, const char *data, si
 
     /********************************************************DEEPAK***********************************************************/
 
-    pool_add_table_oid_map(frontend, tmpkey);
+    add_table_oid(frontend, tmpkey);
 
     /********************************************************DEEPAK***********************************************************/
 

@@ -24,14 +24,9 @@ void *get_in_addr(struct sockaddr *sa)
     return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
-void *recv_info(void *eh_from_main)
+void *recv_info(void *arg)
 {
-    e_htable **eh = ((e_htable **)eh_from_main);
-    init_e_htable(eh);
-
     char *dir = "/tmp/mypqcd";
-    char *prev_query = malloc(sizeof(char) * 250);      //size of query is assumed to be max 250
-    strcpy(prev_query, " ");
 
     if (mkdir(dir, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
     {
@@ -69,7 +64,6 @@ void *recv_info(void *eh_from_main)
     struct sigaction sa;
     int yes=1;
     char s[INET6_ADDRSTRLEN];
-    void *src;
     int rv, numbytes, c_status;
     char buf[MAXDATASIZE];
     char *new_buf = NULL;
@@ -82,7 +76,7 @@ void *recv_info(void *eh_from_main)
     if ((rv = getaddrinfo(NULL, PORT, &hints, &servinfo)) != 0)
     {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-        return 1;
+        return (void *)1;
     }
 
     // loop through all the results and bind to the first we can
@@ -115,7 +109,7 @@ void *recv_info(void *eh_from_main)
     if (p == NULL)
     {
         fprintf(stderr, "server: failed to bind\n");
-        return 2;
+        return (void *)2;
     }
 
     freeaddrinfo(servinfo); // all done with this structure
@@ -163,10 +157,10 @@ void *recv_info(void *eh_from_main)
             pool_debug("\tSize of %s using strlen is %d\n", buf, strlen(buf));
             buf[numbytes] = '\0';
 
-            if (buf[0] == 't' && numbytes > 2)      //t: cacheable query ; >2: in the called fn, we shift elements of array to left by two positions
+            if ((buf[0] == 't' || buf[0] == 'f') && numbytes > 2)      //t: cacheable query ; >2: in the called fn, we shift elements of array to left by two positions
             {
                 pool_debug("\tserver: received '%s' of size %d\n",buf, numbytes);
-                src = send_to_mmap(buf, numbytes);          //invoking shared memory
+                send_to_mmap(buf, numbytes);          //invoking shared memory
             }
             close(new_fd);
             exit(0);
@@ -183,12 +177,8 @@ void *recv_info(void *eh_from_main)
 
         numbytes = 0;
         new_buf = get_from_mmap(&numbytes);
-        pool_debug("\tPrev_query BEFORE is %s", prev_query);
-        store_extracted_info(eh, new_buf, numbytes, prev_query);
-        pool_debug("\tPrev_query AFTER is %s", prev_query);
-
+        store_extracted_info(new_buf, numbytes);
         pool_debug("\tBUF RETRIEVED FROM MMAP: %s", new_buf);
-
         pthread_mutex_unlock(&lock_ll);         //mutex unlock
 
     }

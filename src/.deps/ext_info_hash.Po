@@ -1,6 +1,7 @@
 ext_info_hash.o: ext_info_hash.c /usr/include/stdc-predef.h \
- invalidation/ext_info_hash.h /usr/include/stdio.h \
- /usr/include/features.h /usr/include/i386-linux-gnu/sys/cdefs.h \
+ invalidation/ext_info_hash.h invalidation/md5.h invalidation/c.h \
+ /usr/include/stdio.h /usr/include/features.h \
+ /usr/include/i386-linux-gnu/sys/cdefs.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
@@ -31,8 +32,25 @@ ext_info_hash.o: ext_info_hash.c /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdlib.h /usr/include/string.h \
  /usr/include/i386-linux-gnu/bits/string.h \
  /usr/include/i386-linux-gnu/bits/string2.h \
- /usr/include/i386-linux-gnu/bits/string3.h \
- /usr/include/i386-linux-gnu/bits/timex.h pool.h config.h pool_signal.h \
+ /usr/include/i386-linux-gnu/bits/string3.h /usr/include/errno.h \
+ /usr/include/i386-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
+ /usr/include/i386-linux-gnu/asm/errno.h /usr/include/asm-generic/errno.h \
+ /usr/include/asm-generic/errno-base.h /usr/include/locale.h \
+ /usr/include/i386-linux-gnu/bits/locale.h invalidation/main_headers.h \
+ /usr/include/ctype.h /usr/include/unistd.h \
+ /usr/include/i386-linux-gnu/bits/posix_opt.h \
+ /usr/include/i386-linux-gnu/bits/environments.h \
+ /usr/include/i386-linux-gnu/bits/confname.h /usr/include/getopt.h \
+ /usr/include/i386-linux-gnu/bits/unistd.h /usr/include/pthread.h \
+ /usr/include/sched.h /usr/include/i386-linux-gnu/bits/sched.h \
+ /usr/include/i386-linux-gnu/bits/timex.h \
+ /usr/include/i386-linux-gnu/bits/setjmp.h \
+ /usr/include/i386-linux-gnu/sys/stat.h \
+ /usr/include/i386-linux-gnu/bits/stat.h /usr/include/fcntl.h \
+ /usr/include/i386-linux-gnu/bits/fcntl.h \
+ /usr/include/i386-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/i386-linux-gnu/bits/uio.h \
+ /usr/include/i386-linux-gnu/bits/fcntl2.h pool.h config.h pool_signal.h \
  /usr/include/signal.h /usr/include/i386-linux-gnu/bits/signum.h \
  /usr/include/i386-linux-gnu/bits/siginfo.h \
  /usr/include/i386-linux-gnu/bits/sigaction.h \
@@ -42,7 +60,6 @@ ext_info_hash.o: ext_info_hash.c /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/sigthread.h pool_type.h \
  /usr/include/i386-linux-gnu/sys/socket.h \
  /usr/include/i386-linux-gnu/sys/uio.h \
- /usr/include/i386-linux-gnu/bits/uio.h \
  /usr/include/i386-linux-gnu/bits/socket.h \
  /usr/include/i386-linux-gnu/bits/socket_type.h \
  /usr/include/i386-linux-gnu/bits/sockaddr.h \
@@ -54,27 +71,15 @@ ext_info_hash.o: ext_info_hash.c /usr/include/stdc-predef.h \
  /usr/include/netinet/in.h \
  /usr/lib/gcc/i686-linux-gnu/4.8/include/stdint.h /usr/include/stdint.h \
  /usr/include/i386-linux-gnu/bits/wchar.h \
- /usr/include/i386-linux-gnu/bits/in.h /usr/include/error.h \
- /usr/include/i386-linux-gnu/bits/error.h invalidation/md5.h \
- invalidation/main_headers.h /usr/include/ctype.h /usr/include/unistd.h \
- /usr/include/i386-linux-gnu/bits/posix_opt.h \
- /usr/include/i386-linux-gnu/bits/environments.h \
- /usr/include/i386-linux-gnu/bits/confname.h /usr/include/getopt.h \
- /usr/include/i386-linux-gnu/bits/unistd.h /usr/include/errno.h \
- /usr/include/i386-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
- /usr/include/i386-linux-gnu/asm/errno.h /usr/include/asm-generic/errno.h \
- /usr/include/asm-generic/errno-base.h /usr/include/pthread.h \
- /usr/include/sched.h /usr/include/i386-linux-gnu/bits/sched.h \
- /usr/include/i386-linux-gnu/bits/setjmp.h \
- /usr/include/i386-linux-gnu/sys/stat.h \
- /usr/include/i386-linux-gnu/bits/stat.h /usr/include/fcntl.h \
- /usr/include/i386-linux-gnu/bits/fcntl.h \
- /usr/include/i386-linux-gnu/bits/fcntl-linux.h \
- /usr/include/i386-linux-gnu/bits/fcntl2.h
+ /usr/include/i386-linux-gnu/bits/in.h
 
 /usr/include/stdc-predef.h:
 
 invalidation/ext_info_hash.h:
+
+invalidation/md5.h:
+
+invalidation/c.h:
 
 /usr/include/stdio.h:
 
@@ -160,7 +165,61 @@ invalidation/ext_info_hash.h:
 
 /usr/include/i386-linux-gnu/bits/string3.h:
 
+/usr/include/errno.h:
+
+/usr/include/i386-linux-gnu/bits/errno.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/i386-linux-gnu/asm/errno.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/usr/include/locale.h:
+
+/usr/include/i386-linux-gnu/bits/locale.h:
+
+invalidation/main_headers.h:
+
+/usr/include/ctype.h:
+
+/usr/include/unistd.h:
+
+/usr/include/i386-linux-gnu/bits/posix_opt.h:
+
+/usr/include/i386-linux-gnu/bits/environments.h:
+
+/usr/include/i386-linux-gnu/bits/confname.h:
+
+/usr/include/getopt.h:
+
+/usr/include/i386-linux-gnu/bits/unistd.h:
+
+/usr/include/pthread.h:
+
+/usr/include/sched.h:
+
+/usr/include/i386-linux-gnu/bits/sched.h:
+
 /usr/include/i386-linux-gnu/bits/timex.h:
+
+/usr/include/i386-linux-gnu/bits/setjmp.h:
+
+/usr/include/i386-linux-gnu/sys/stat.h:
+
+/usr/include/i386-linux-gnu/bits/stat.h:
+
+/usr/include/fcntl.h:
+
+/usr/include/i386-linux-gnu/bits/fcntl.h:
+
+/usr/include/i386-linux-gnu/bits/fcntl-linux.h:
+
+/usr/include/i386-linux-gnu/bits/uio.h:
+
+/usr/include/i386-linux-gnu/bits/fcntl2.h:
 
 pool.h:
 
@@ -190,8 +249,6 @@ pool_type.h:
 
 /usr/include/i386-linux-gnu/sys/uio.h:
 
-/usr/include/i386-linux-gnu/bits/uio.h:
-
 /usr/include/i386-linux-gnu/bits/socket.h:
 
 /usr/include/i386-linux-gnu/bits/socket_type.h:
@@ -219,57 +276,3 @@ pool_list.h:
 /usr/include/i386-linux-gnu/bits/wchar.h:
 
 /usr/include/i386-linux-gnu/bits/in.h:
-
-/usr/include/error.h:
-
-/usr/include/i386-linux-gnu/bits/error.h:
-
-invalidation/md5.h:
-
-invalidation/main_headers.h:
-
-/usr/include/ctype.h:
-
-/usr/include/unistd.h:
-
-/usr/include/i386-linux-gnu/bits/posix_opt.h:
-
-/usr/include/i386-linux-gnu/bits/environments.h:
-
-/usr/include/i386-linux-gnu/bits/confname.h:
-
-/usr/include/getopt.h:
-
-/usr/include/i386-linux-gnu/bits/unistd.h:
-
-/usr/include/errno.h:
-
-/usr/include/i386-linux-gnu/bits/errno.h:
-
-/usr/include/linux/errno.h:
-
-/usr/include/i386-linux-gnu/asm/errno.h:
-
-/usr/include/asm-generic/errno.h:
-
-/usr/include/asm-generic/errno-base.h:
-
-/usr/include/pthread.h:
-
-/usr/include/sched.h:
-
-/usr/include/i386-linux-gnu/bits/sched.h:
-
-/usr/include/i386-linux-gnu/bits/setjmp.h:
-
-/usr/include/i386-linux-gnu/sys/stat.h:
-
-/usr/include/i386-linux-gnu/bits/stat.h:
-
-/usr/include/fcntl.h:
-
-/usr/include/i386-linux-gnu/bits/fcntl.h:
-
-/usr/include/i386-linux-gnu/bits/fcntl-linux.h:
-
-/usr/include/i386-linux-gnu/bits/fcntl2.h:

@@ -125,8 +125,7 @@ pqc.o: pqc.c /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdio.h \
  /usr/include/i386-linux-gnu/bits/stdio2.h \
  /usr/include/i386-linux-gnu/bits/timex.h pqc.h \
- invalidation/ext_info_hash.h pool.h /usr/include/error.h \
- /usr/include/i386-linux-gnu/bits/error.h invalidation/main_headers.h \
+ invalidation/ext_info_hash.h invalidation/main_headers.h \
  /usr/include/ctype.h /usr/include/unistd.h \
  /usr/include/i386-linux-gnu/bits/posix_opt.h \
  /usr/include/i386-linux-gnu/bits/environments.h \
@@ -143,7 +142,9 @@ pqc.o: pqc.c /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/fcntl-linux.h \
  /usr/include/i386-linux-gnu/bits/fcntl2.h invalidation/my_server.h \
  /usr/include/i386-linux-gnu/sys/wait.h invalidation/md5.h \
- invalidation/file_oids.h
+ invalidation/c.h /usr/include/strings.h /usr/include/locale.h \
+ /usr/include/i386-linux-gnu/bits/locale.h invalidation/file_oids.h \
+ pool.h
 
 /usr/include/stdc-predef.h:
 
@@ -449,12 +450,6 @@ pqc.h:
 
 invalidation/ext_info_hash.h:
 
-pool.h:
-
-/usr/include/error.h:
-
-/usr/include/i386-linux-gnu/bits/error.h:
-
 invalidation/main_headers.h:
 
 /usr/include/ctype.h:
@@ -509,4 +504,14 @@ invalidation/my_server.h:
 
 invalidation/md5.h:
 
+invalidation/c.h:
+
+/usr/include/strings.h:
+
+/usr/include/locale.h:
+
+/usr/include/i386-linux-gnu/bits/locale.h:
+
 invalidation/file_oids.h:
+
+pool.h:

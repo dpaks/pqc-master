@@ -62,7 +62,7 @@ pool_process_query.o: pool_process_query.c /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h \
  /usr/include/i386-linux-gnu/bits/stdio.h \
  /usr/include/i386-linux-gnu/bits/stdio2.h \
- /usr/include/i386-linux-gnu/bits/timex.h pqc.h \
+ /usr/include/i386-linux-gnu/bits/timex.h invalidation/file_oids.h pool.h \
  /usr/include/libmemcached/memcached.h \
  /usr/include/libmemcached-1.0/memcached.h /usr/include/inttypes.h \
  /usr/lib/gcc/i686-linux-gnu/4.8/include/stdbool.h \
@@ -133,9 +133,8 @@ pool_process_query.o: pool_process_query.c /usr/include/stdc-predef.h \
  /usr/include/libmemcached-1.0/verbosity.h \
  /usr/include/libmemcached-1.0/version.h \
  /usr/include/libmemcached-1.0/sasl.h \
- /usr/include/libmemcached-1.0/deprecated_types.h \
- invalidation/ext_info_hash.h pool.h /usr/include/error.h \
- /usr/include/i386-linux-gnu/bits/error.h
+ /usr/include/libmemcached-1.0/deprecated_types.h pqc.h \
+ invalidation/ext_info_hash.h
 
 /usr/include/stdc-predef.h:
 
@@ -311,7 +310,9 @@ pool_list.h:
 
 /usr/include/i386-linux-gnu/bits/timex.h:
 
-pqc.h:
+invalidation/file_oids.h:
+
+pool.h:
 
 /usr/include/libmemcached/memcached.h:
 
@@ -467,10 +468,6 @@ pqc.h:
 
 /usr/include/libmemcached-1.0/deprecated_types.h:
 
+pqc.h:
+
 invalidation/ext_info_hash.h:
-
-pool.h:
-
-/usr/include/error.h:
-
-/usr/include/i386-linux-gnu/bits/error.h:

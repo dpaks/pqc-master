@@ -16,6 +16,8 @@
 #ifndef PG_MD5_H
 #define PG_MD5_H
 
+#include "invalidation/c.h"
+
 #define MD5_PASSWD_LEN	35
 
 #define isMD5(passwd)	(strncmp(passwd, "md5", 3) == 0 && \

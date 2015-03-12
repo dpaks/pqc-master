@@ -141,10 +141,8 @@ my_server.o: my_server.c /usr/include/stdc-predef.h \
  /usr/include/libmemcached-1.0/verbosity.h \
  /usr/include/libmemcached-1.0/version.h \
  /usr/include/libmemcached-1.0/sasl.h \
- /usr/include/libmemcached-1.0/deprecated_types.h \
- invalidation/ext_info_hash.h pool.h config.h pool_signal.h pool_type.h \
- pool_list.h /usr/include/error.h \
- /usr/include/i386-linux-gnu/bits/error.h pool.h \
+ /usr/include/libmemcached-1.0/deprecated_types.h pool.h config.h \
+ pool_signal.h pool_type.h pool_list.h invalidation/ext_info_hash.h \
  invalidation/main_headers.h /usr/include/ctype.h
 
 /usr/include/stdc-predef.h:
@@ -495,8 +493,6 @@ pqc.h:
 
 /usr/include/libmemcached-1.0/deprecated_types.h:
 
-invalidation/ext_info_hash.h:
-
 pool.h:
 
 config.h:
@@ -507,11 +503,7 @@ pool_type.h:
 
 pool_list.h:
 
-/usr/include/error.h:
-
-/usr/include/i386-linux-gnu/bits/error.h:
-
-pool.h:
+invalidation/ext_info_hash.h:
 
 invalidation/main_headers.h:
 

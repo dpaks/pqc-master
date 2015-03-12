@@ -7,7 +7,7 @@
 #define PQC_H
 
 #include <libmemcached/memcached.h>
-
+#include "pool.h"
 //#include "invalidation/hashtable.h"
 //#include "invalidation/pqcd_inva.h"
 #include "invalidation/ext_info_hash.h"
