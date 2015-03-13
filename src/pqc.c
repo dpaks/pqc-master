@@ -304,7 +304,11 @@ dump_cache_data(const char *data, size_t len)
  */
 static char* encode_key(const char *s, char *buf, POOL_CONNECTION *backend)
 {
-    pg_md5_hash(s, strlen(s), buf);
+    char to_hash[256];
+
+    strcpy(to_hash, backend->database);
+    strcat(to_hash, s);
+    pg_md5_hash(to_hash, strlen(to_hash), buf);
     return buf;
 }
 

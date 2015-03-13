@@ -12,7 +12,7 @@ void store_extracted_info(char buf[EMAXDATASIZE], int numbytes)
 {
     int i, j;
     char *query_from_buf = (char *)malloc((numbytes-2-5) * sizeof(char));      //-2-shifting, -6-relid, +1-NULL char
-    char oid_from_buf[6];
+    char oid_from_buf[6], dbname_from_buf[10], to_hash[EMAXDATASIZE];
 
     char *checksum = malloc(sizeof(char) *MAX_KEY);
     int fd, oid_size;
@@ -54,14 +54,29 @@ void store_extracted_info(char buf[EMAXDATASIZE], int numbytes)
 
     while (buf[i] != ';')
     {
-        query_from_buf[i] = buf[i];
+        dbname_from_buf[i] = buf[i];
         i++;
     }
-    query_from_buf[i] = ';';
-    query_from_buf[++i] = '\0';
-    pool_debug("\tEXTRACTED QUERY FROM BUF: %s of size: %d", query_from_buf, strlen(query_from_buf));
+    dbname_from_buf[i] = '\0';
+    ++i;
 
-    pg_md5_hash(query_from_buf, strlen(query_from_buf), checksum);
+    while (buf[i] != ';')
+    {
+        query_from_buf[j] = buf[i];
+        i++;
+        j++;
+    }
+    query_from_buf[j] = ';';
+    query_from_buf[++j] = '\0';
+    ++i;
+    j=0;
+
+    pool_debug("\tEXTRACTED QUERY: %s from DATABASE '%s' of size: %d from BUF", query_from_buf, dbname_from_buf, strlen(query_from_buf));
+
+
+    strcpy(to_hash, dbname_from_buf);
+    strcat(to_hash, query_from_buf);
+    pg_md5_hash(to_hash, strlen(to_hash), checksum);
 
     if (fcntl(fd, F_SETLKW, &fl) == -1)     //locking ext info file
     {
