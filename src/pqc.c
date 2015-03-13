@@ -82,14 +82,11 @@ pqc_init(int run_as_daemon)
     pool_debug("pqc_init: Query Cache Mode = %d", pool_config.query_cache_mode);
 
     memc_for_inva = memc;
-    pool_debug("\tMEMC memc_for_inva is %d & memc is %d\n",memc_for_inva, memc);
-
     return 1;
 }
 
 memcached_st *get_memc()
 {
-    pool_debug("\tMEMC inside function is %d\n",memc_for_inva);
     return memc_for_inva;
 }
 

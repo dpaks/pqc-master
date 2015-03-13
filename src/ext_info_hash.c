@@ -11,13 +11,9 @@
 void store_extracted_info(char buf[EMAXDATASIZE], int numbytes)
 {
     int i, j;
-    time_t cur_time;
     char *query_from_buf = (char *)malloc((numbytes-2-5) * sizeof(char));      //-2-shifting, -6-relid, +1-NULL char
     char oid_from_buf[6];
-    time(&cur_time);
 
-    char *dir = "/tmp/mypqcd";
-    char path[100];
     char *checksum = malloc(sizeof(char) *MAX_KEY);
     int fd, oid_size;
     struct flock fl;

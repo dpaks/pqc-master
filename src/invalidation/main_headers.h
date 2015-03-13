@@ -13,4 +13,7 @@
 #include <string.h>
 #include <unistd.h>
 
+static char path[512];
+static char *dir = "/tmp/mypqcd";
+
 #endif

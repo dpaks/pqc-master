@@ -8,9 +8,6 @@
 void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[33])
 {
     char db_name[50];
-    char path[1024];
-
-    char *dir = "/tmp/mypqcd";
 
     if (mkdir(dir, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
     {
@@ -21,9 +18,9 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[33])
         }
     }
 
-    char *dir1 = "/tmp/mypqcd/oiddir";
+    snprintf(path, sizeof(path), "%s/%s", dir, "oiddir");
 
-    if (mkdir(dir1, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
+    if (mkdir(path, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
     {
         if (errno != EEXIST)
         {
@@ -36,7 +33,7 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[33])
 
     strcpy(db_name, frontend->database);
 
-    snprintf(path, sizeof(path), "%s/%s", dir1, db_name);        // Create database_oid folder
+    snprintf(path, sizeof(path), "%s/%s/%s", dir, "oiddir", db_name);        // Create database_oid folder
     if (mkdir(path, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
     {
         if (errno != EEXIST)
@@ -45,8 +42,8 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[33])
         }
     }
 
-    int read_bytes, fd, fd_old;
-    char tmpkey_from_file[33], oid_from_file[6], c;
+    int read_bytes, fd, fd_old, flag = 0;
+    char tmpkey_from_file[33], oid_from_file[6], tmpkey_from_oid_file[33], c;
     struct flock fl, fl_new;
 
     fl.l_type   = F_WRLCK;
@@ -112,7 +109,7 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[33])
                     {
                         oid_from_file[5] = '\0';
                         pool_debug("\tREAD oid %s of size %zd from file in file_oids\n",oid_from_file, strlen(oid_from_file));
-                        snprintf(path, sizeof(path), "%s/%s/%s", dir1, db_name, oid_from_file);      //create oid file
+                        snprintf(path, sizeof(path), "%s/%s/%s/%s", dir, "oiddir", db_name, oid_from_file);      //create oid file
                         if ((fd = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|S_IROTH)) == -1)
                         {
                             perror("\tCreating or opening oid file\n");
@@ -130,9 +127,36 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[33])
                                 pool_debug("\tOID file locked in file_oids!\n");
                             }
 
-                            if (write(fd, tmpkey_from_file, strlen(tmpkey_from_file)) == -1)
+                            while (1)       //if already an entry exists in oid file, then do not append again
                             {
-                                perror("\tError writing to oid file\n");
+                                if ((read_bytes = read(fd, &tmpkey_from_oid_file, 32)) != -1)
+                                {
+                                    if (read_bytes == 0)
+                                    {
+                                        pool_debug("\tFinished reading file!!!\n");
+                                        break;
+                                    }
+                                    tmpkey_from_oid_file[32] = '\0';
+                                    if (memcmp(tmpkey_from_file, tmpkey_from_oid_file, 33) == 0)
+                                    {
+                                        flag = 1;
+                                        lseek(fd, 0, SEEK_END);
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    perror("\tOID file in file_oids for match checking ");
+                                    break;
+                                }
+                            }
+
+                            if (flag == 0)
+                            {
+                                if (write(fd, tmpkey_from_file, strlen(tmpkey_from_file)) == -1)
+                                {
+                                    perror("\tError writing to oid file\n");
+                                }
                             }
 
                             fl_new.l_type = F_UNLCK;        //Unlocking the file
@@ -157,7 +181,7 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[33])
                     if (c == '\n')
                         break;
                 }
-                continue;
+                break;      //if the checksum matches in ext_info, process that line and break
             }
             else
             {
@@ -198,15 +222,11 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[33])
 
 void invalidate_query_cache(POOL_CONNECTION *frontend, char query[256])         //max query length is assumed to be 256
 {
-    char path[1024];
     memcached_return rc;
-
     char *tmpkey = malloc(sizeof(char) *33);      //size of md5 is 32
+    char db_name[50];
 
     pg_md5_hash(query, strlen(query), tmpkey);
-
-    char db_name[50];
-    char *dir = "/tmp/mypqcd";
 
     if (mkdir(dir, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
     {
@@ -217,9 +237,9 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query[256])         
         }
     }
 
-    char *dir1 = "/tmp/mypqcd/oiddir";
+    snprintf(path, sizeof(path), "%s/%s", dir, "oiddir");
 
-    if (mkdir(dir1, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
+    if (mkdir(path, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
     {
         if (errno != EEXIST)
         {
@@ -234,7 +254,7 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query[256])         
 
     strcpy(db_name, frontend->database);
 
-    snprintf(path, sizeof(path), "%s/%s", dir1, db_name);        // Create database_oid folder
+    snprintf(path, sizeof(path), "%s/%s/%s", dir, "oiddir", db_name);        // Create database_oid folder
     if (mkdir(path, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
     {
         if (errno != EEXIST)
@@ -310,7 +330,7 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query[256])         
                     {
                         oid_from_file[5] = '\0';
                         pool_debug("\tREAD oid %s of size %zd from file in file_oids in inva part\n",oid_from_file, strlen(oid_from_file));
-                        snprintf(path, sizeof(path), "%s/%s/%s", dir1, db_name, oid_from_file);      //create oid file
+                        snprintf(path, sizeof(path), "%s/%s/%s/%s", dir, "oiddir", db_name, oid_from_file);      //create oid file
                         if ((fd = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|S_IROTH)) == -1)
                         {
                             perror("\tCreating or opening oid file\n");
@@ -319,16 +339,6 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query[256])         
                             * been issued since the table has been created or since
                             * pgpool-II started up.
                             */
-
-                            /*  if (read(fd_old, &c, 1) == -1)
-                              {
-                                  perror("\tReading till new line char from ext info file in file_oids");
-                                  exit(1);
-                              }
-                              if (c == '\n')
-                              {
-                                  break;      //move to next line
-                              }*/
 
                             continue;       //if more oids to be read
                         }
@@ -342,7 +352,7 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query[256])         
                             }
                             else
                             {
-                                pool_debug("\tOID file locked in file_oids in inva part!\n");
+                                pool_debug("\tOID file %s locked for reading file_oids in inva part!\n", oid_from_file);
                             }
 
                             //retrieve hash n delete them
@@ -364,19 +374,19 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query[256])         
                                     tmpkey_to_be_inva[32] = '\0';
                                     pool_debug("\tREAD key %s of size %zd from file in file_oids in inva part\n",tmpkey_to_be_inva, strlen(tmpkey_to_be_inva));
                                     memcached_st *memc = get_memc();
-                                    pool_debug("\tMEMC in inva part is %d\n",memc);
+                                    //pool_debug("\tMEMC in inva part is %d\n",memc);
                                     pool_debug("\tJust before MEMCACHED DELETE\n");
                                     rc= memcached_delete(memc, (char *)tmpkey_to_be_inva, 32, (time_t)0);
 
                                     if (rc == MEMCACHED_SUCCESS)
                                     {
                                         pool_debug("\tMEMCACHED ENTRY DELETED!!!\n");
+                                        //continue;
                                     }
                                     else if (rc != MEMCACHED_SUCCESS && rc != MEMCACHED_BUFFERED)
                                     {
                                         perror("\tFAILED to delete from memcached! ");
-                                        //pool_debug("\tMemcached Return Value is %s\n",rc);
-                                        continue;
+                                        //continue;
                                     }
                                     pool_debug("\tJust after MEMCACHED DELETE\n");
                                 }
@@ -395,7 +405,7 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query[256])         
                             }
                             else
                             {
-                                pool_debug("\tFile unlocked in file_oids! ");
+                                pool_debug("\tFile oid unlocked in file_oids! ");
                             }
 
                             close(fd);
@@ -411,7 +421,7 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query[256])         
                         break;      //move to next line
                     }
                 }
-                continue;
+                break;
             }
 
             else
@@ -446,7 +456,7 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query[256])         
     }
     else
     {
-        pool_debug("\tFile unlocked in file_oids! ");
+        pool_debug("\tFile ext_info_inva unlocked in file_oids! ");
     }
     close(fd_old);
 }

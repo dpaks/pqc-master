@@ -26,8 +26,6 @@ void *get_in_addr(struct sockaddr *sa)
 
 void *recv_info(void *arg)
 {
-    char *dir = "/tmp/mypqcd";
-
     if (mkdir(dir, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
     {
         if (errno != EEXIST)
@@ -36,9 +34,9 @@ void *recv_info(void *arg)
         }
     }
 
-    char *dir1 = "/tmp/mypqcd/oiddir";
+    snprintf(path, sizeof(path), "%s/%s", dir, "oiddir");
 
-    if (mkdir(dir1, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
+    if (mkdir(path, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
     {
         if (errno != EEXIST)
         {
@@ -46,10 +44,8 @@ void *recv_info(void *arg)
             perror("\tCREATION of directory2 failed in my_server.c ");
         }
         else
-            pool_debug("\tDIRECTORY \"%s\" already exists!\n", dir1);
+            pool_debug("\tDIRECTORY \"%s\" already exists!\n", path);
     }
-//free(dir);
-//free(dir1);
 
     if (pthread_mutex_init(&lock_ll, NULL) != 0)
     {
