@@ -224,9 +224,11 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query[256])         
 {
     memcached_return rc;
     char *tmpkey = malloc(sizeof(char) *33);      //size of md5 is 32
-    char db_name[50];
+    char db_name[50], to_hash[256];
 
-    pg_md5_hash(query, strlen(query), tmpkey);
+    strcpy(to_hash, frontend->database);
+    strcat(to_hash, query);
+    pg_md5_hash(to_hash, strlen(to_hash), tmpkey);
 
     if (mkdir(dir, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
     {
