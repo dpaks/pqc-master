@@ -104,7 +104,7 @@ am_pqcd_OBJECTS = main.$(OBJEXT) child.$(OBJEXT) pool_auth.$(OBJEXT) \
 	pool_connection_pool.$(OBJEXT) pool_params.$(OBJEXT) \
 	pool_signal.$(OBJEXT) ps_status.$(OBJEXT) strlcpy.$(OBJEXT) \
 	pool_hba.$(OBJEXT) pool_list.$(OBJEXT) pool_path.$(OBJEXT) \
-	pqc.$(OBJEXT) my_server.$(OBJEXT) pqcd_inva.$(OBJEXT) \
+	pqc.$(OBJEXT) my_server.$(OBJEXT) mmap_store.$(OBJEXT) \
 	file_oids.$(OBJEXT) ext_info_hash.$(OBJEXT) md5.$(OBJEXT) \
 	pool_ip.$(OBJEXT)
 pqcd_OBJECTS = $(am_pqcd_OBJECTS)
@@ -322,7 +322,7 @@ pqcd_SOURCES = pool.h version.h pqcd.conf.sample \
 	pool_signal.h pool_signal.c ps_status.c strlcpy.c \
 	pool_hba.c pool_list.h pool_list.c pool_path.h pool_path.c \
 	pqc.c pqc.h \
-	my_server.c invalidation/my_server.h pqcd_inva.c invalidation/pqcd_inva.h file_oids.c invalidation/file_oids.h \
+	my_server.c invalidation/my_server.h mmap_store.c invalidation/mmap_store.h file_oids.c invalidation/file_oids.h \
 	ext_info_hash.c invalidation/ext_info_hash.h md5.c invalidation/md5.h invalidation/c.h invalidation/main_headers.h \
 	pool_type.h pool_ip.h pool_ip.c pqcd_hba.conf.sample pgpool.pam
 
@@ -446,6 +446,7 @@ include ./$(DEPDIR)/ext_info_hash.Po
 include ./$(DEPDIR)/file_oids.Po
 include ./$(DEPDIR)/main.Po
 include ./$(DEPDIR)/md5.Po
+include ./$(DEPDIR)/mmap_store.Po
 include ./$(DEPDIR)/my_server.Po
 include ./$(DEPDIR)/pool_auth.Po
 include ./$(DEPDIR)/pool_config.Po
@@ -460,7 +461,6 @@ include ./$(DEPDIR)/pool_process_query.Po
 include ./$(DEPDIR)/pool_signal.Po
 include ./$(DEPDIR)/pool_stream.Po
 include ./$(DEPDIR)/pqc.Po
-include ./$(DEPDIR)/pqcd_inva.Po
 include ./$(DEPDIR)/ps_status.Po
 include ./$(DEPDIR)/strlcpy.Po
 

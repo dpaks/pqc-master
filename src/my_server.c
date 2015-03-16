@@ -1,20 +1,30 @@
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include <pthread.h>
+
 #include "invalidation/my_server.h"
-#include "invalidation/pqcd_inva.h"
+#include "invalidation/mmap_store.h"
 #include "pqc.h"
 #include "invalidation/ext_info_hash.h"
 #include "pool.h"
-
 #include "invalidation/main_headers.h"
 
-pthread_mutex_t lock_ll;
+#define PORT "3490"  // the port users will be connecting to
+#define BACKLOG 10     // how many pending connections queue will hold
+
+char *dir = "/tmp/mypqcd";
 
 void sigchld_handler(int s)
 {
     while(waitpid(-1, NULL, WNOHANG) > 0);
 }
 
-// get sockaddr, IPv4 or IPv6:
-void *get_in_addr(struct sockaddr *sa)
+void *get_in_addr(struct sockaddr *sa)              /* get socket addr */
 {
     if (sa->sa_family == AF_INET)
     {
@@ -26,11 +36,26 @@ void *get_in_addr(struct sockaddr *sa)
 
 void *recv_info(void *arg)
 {
+    char path[PATHLENGTH], s[INET6_ADDRSTRLEN], buf[MAXDATASIZE];
+    /* listen on sock_fd, new connection on new_fd */
+    int yes=1, rv, numbytes, c_status, sockfd, new_fd, fd;
+    struct addrinfo hints, *servinfo, *p;
+    struct sockaddr_storage their_addr;     /* connector's address information */
+    socklen_t sin_size;
+    struct sigaction sa;
+    char *new_buf = NULL;
+
+    pthread_mutex_t lock_ll;
+
     if (mkdir(dir, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
     {
         if (errno != EEXIST)
         {
             perror("\tCREATION of directory1 failed in my_server.c ");
+        }
+        else
+        {
+            pool_debug("\tDIRECTORY \"%s\" already exists!\n", path);
         }
     }
 
@@ -44,30 +69,21 @@ void *recv_info(void *arg)
             perror("\tCREATION of directory2 failed in my_server.c ");
         }
         else
+        {
             pool_debug("\tDIRECTORY \"%s\" already exists!\n", path);
+        }
     }
 
     if (pthread_mutex_init(&lock_ll, NULL) != 0)
     {
         perror("\n mutex init failed\n");
-        //return 1;
+        exit(EXIT_FAILURE);
     }
-
-    int sockfd, new_fd, fd;  // listen on sock_fd, new connection on new_fd
-    struct addrinfo hints, *servinfo, *p;
-    struct sockaddr_storage their_addr; // connector's address information
-    socklen_t sin_size;
-    struct sigaction sa;
-    int yes=1;
-    char s[INET6_ADDRSTRLEN];
-    int rv, numbytes, c_status;
-    char buf[MAXDATASIZE];
-    char *new_buf = NULL;
 
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_PASSIVE; // use my IP
+    hints.ai_flags = AI_PASSIVE;            /* use my IP */
 
     if ((rv = getaddrinfo(NULL, PORT, &hints, &servinfo)) != 0)
     {
@@ -75,7 +91,6 @@ void *recv_info(void *arg)
         return (void *)1;
     }
 
-    // loop through all the results and bind to the first we can
     for(p = servinfo; p != NULL; p = p->ai_next)
     {
         if ((sockfd = socket(p->ai_family, p->ai_socktype,
@@ -108,7 +123,7 @@ void *recv_info(void *arg)
         return (void *)2;
     }
 
-    freeaddrinfo(servinfo); // all done with this structure
+    freeaddrinfo(servinfo);             /* all done with this structure */
 
     if (listen(sockfd, BACKLOG) == -1)
     {
@@ -116,7 +131,7 @@ void *recv_info(void *arg)
         exit(1);
     }
 
-    sa.sa_handler = sigchld_handler; // reap all dead processes
+    sa.sa_handler = sigchld_handler;            /* reap all dead processes */
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = SA_RESTART;
     if (sigaction(SIGCHLD, &sa, NULL) == -1)
@@ -127,7 +142,7 @@ void *recv_info(void *arg)
 
     pool_debug("\tserver: waiting for connections...\n");
 
-    while(1)            //concurrent server
+    while(1)                                                    /*concurrent server */
     {
         sin_size = sizeof their_addr;
         new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &sin_size);
@@ -141,9 +156,9 @@ void *recv_info(void *arg)
                   s, sizeof s);
         pool_debug("\tserver: got connection from %s\n", s);
 
-        if (!fork())   // this is the child process
+        if (!fork())
         {
-            close(sockfd); // child doesn't need the listener
+            close(sockfd);                          /* child doesn't need the listener */
 
             if ((numbytes = recv(new_fd, buf, MAXDATASIZE-1, 0)) == -1)
             {
@@ -152,11 +167,13 @@ void *recv_info(void *arg)
             }
             pool_debug("\tSize of %s using strlen is %d\n", buf, strlen(buf));
             buf[numbytes] = '\0';
-
-            if ((buf[0] == 't' || buf[0] == 'f') && numbytes > 2)      //t: cacheable query ; >2: in the called fn, we shift elements of array to left by two positions
+            /*
+             *   t:cacheable, f:invalidateable; >2: in the called fn, we
+             *     shift elements of array to left by two positions
+             */
+            if ((buf[0] == 't' || buf[0] == 'f') && numbytes > 2)
             {
-                pool_debug("\tserver: received '%s' of size %d\n",buf, numbytes);
-                send_to_mmap(buf, numbytes);          //invoking shared memory
+                send_to_mmap(buf, numbytes);                /* invoking shared memory */
             }
             close(new_fd);
             exit(0);
@@ -167,15 +184,16 @@ void *recv_info(void *arg)
             perror("waitpid");
             exit(EXIT_FAILURE);
         }
-        close(new_fd);  // parent doesn't need this
+        close(new_fd);              /* parent doesn't need this */
 
-        pthread_mutex_lock(&lock_ll);           //mutex lock
+        pthread_mutex_lock(&lock_ll);               /* mutex lock */
 
         numbytes = 0;
         new_buf = get_from_mmap(&numbytes);
-        store_extracted_info(new_buf, numbytes);
+        store_extracted_info(new_buf, numbytes);        /* extracting and storing */
         pool_debug("\tBUF RETRIEVED FROM MMAP: %s", new_buf);
-        pthread_mutex_unlock(&lock_ll);         //mutex unlock
+        free(new_buf);
+        pthread_mutex_unlock(&lock_ll);               /* mutex unlock */
 
     }
     close(fd);

@@ -1,19 +1,21 @@
 #ifndef MAIN_HEADERS_H
 #define MAIN_HEADERS_H
 
-#include <ctype.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <errno.h>
-#include <pthread.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
+#include <stdlib.h>
 
-static char path[512];
-static char *dir = "/tmp/mypqcd";
+#define MAXDATASIZE 250     /* max number of bytes we can get at once */
+#define MD5KEYSIZE 33
+#define PATHLENGTH 150
+#define DBLENGTH 20
+#define OIDLENGTH 6
+
+extern char *dir;       /* path where files have to be created & is
+                                defined in my_server.c */
 
 #endif

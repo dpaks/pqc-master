@@ -4,13 +4,14 @@
  * Copyright(C) 2010 Uptime Technologies, LLC.
  */
 #include <libmemcached/memcached.h>
+#include <ctype.h>
 
+#include "invalidation/file_oids.h"
 #include "pool.h"
 #include "pqc.h"
 #include "invalidation/main_headers.h"
 #include "invalidation/my_server.h"
 #include "invalidation/md5.h"
-#include "invalidation/file_oids.h"
 
 #define MEMCACHED_PID_FILE "/tmp/memcached.pid"
 
@@ -27,6 +28,7 @@ static char *buf = NULL;
 static int pqc_start_memcached(int);
 static int pqc_stop_memcached();
 static char *encode_key(const char *, char *, POOL_CONNECTION *);
+static char *skip_comment_space(const char *);
 
 memcached_st *memc_for_inva = NULL;
 
@@ -304,10 +306,10 @@ dump_cache_data(const char *data, size_t len)
  */
 static char* encode_key(const char *s, char *buf, POOL_CONNECTION *backend)
 {
-    char to_hash[256];
+    char to_hash[MAXDATASIZE];
 
     strcpy(to_hash, backend->database);
-    strcat(to_hash, s);
+    strncat(to_hash, s, (MAXDATASIZE-strlen(backend->database)-1) );
     pg_md5_hash(to_hash, strlen(to_hash), buf);
     return buf;
 }
@@ -315,13 +317,15 @@ static char* encode_key(const char *s, char *buf, POOL_CONNECTION *backend)
 int
 pqc_set_cache(POOL_CONNECTION *frontend, const char *query, const char *data, size_t datalen)
 {
-    char tmpkey[33];
+    char tmpkey[MD5KEYSIZE];
 
     if ( !IsQueryCacheEnabled )
         return 0;
 
     if ( strlen(query)<=0 )
         return 0;
+
+    query = skip_comment_space(query);
 
     pool_debug("pqc_set_cache: Query=%s", query);
     dump_cache_data(data, datalen);
@@ -336,15 +340,37 @@ pqc_set_cache(POOL_CONNECTION *frontend, const char *query, const char *data, si
         return 0;
     }
 
-    /********************************************************DEEPAK***********************************************************/
-
     add_table_oid(frontend, tmpkey);
-
-    /********************************************************DEEPAK***********************************************************/
 
     pool_debug("pqc_set_cache: succeeded.");
 
     return 1;
+}
+
+/*
+ *Skipping comments of a query
+ */
+
+char *skip_comment_space(const char *query)
+{
+    if (strncmp(query, "/*", 2) == 0)
+    {
+        query += 2;
+        while (query)
+        {
+            if (strncmp(query, "*/", 2) == 0)
+            {
+                query += 2;
+                break;
+            }
+            query++;
+        }
+    }
+
+    /* skip spaces */
+    while (isspace(*query))
+        query++;
+    return (char *)query;
 }
 
 int
@@ -371,6 +397,7 @@ pqc_get_cache(POOL_CONNECTION *frontend, const char *query, char **buf, size_t *
      {
          encode_key(query, tmpkey, sizeof(tmpkey));
      }*/
+    query = skip_comment_space(query);
     encode_key(query, tmpkey, frontend);
 
     ptr = memcached_get(memc, tmpkey, strlen(tmpkey), len, &flags2, &rc);

@@ -110,9 +110,9 @@ pqc.o: pqc.c /usr/include/stdc-predef.h \
  /usr/include/libmemcached-1.0/verbosity.h \
  /usr/include/libmemcached-1.0/version.h \
  /usr/include/libmemcached-1.0/sasl.h \
- /usr/include/libmemcached-1.0/deprecated_types.h pool.h config.h \
- pool_signal.h /usr/include/signal.h \
- /usr/include/i386-linux-gnu/bits/signum.h \
+ /usr/include/libmemcached-1.0/deprecated_types.h /usr/include/ctype.h \
+ invalidation/file_oids.h pool.h config.h pool_signal.h \
+ /usr/include/signal.h /usr/include/i386-linux-gnu/bits/signum.h \
  /usr/include/i386-linux-gnu/bits/sigaction.h \
  /usr/include/i386-linux-gnu/bits/sigcontext.h \
  /usr/include/i386-linux-gnu/bits/sigstack.h \
@@ -124,27 +124,22 @@ pqc.o: pqc.c /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h \
  /usr/include/i386-linux-gnu/bits/stdio.h \
  /usr/include/i386-linux-gnu/bits/stdio2.h \
- /usr/include/i386-linux-gnu/bits/timex.h pqc.h \
+ /usr/include/i386-linux-gnu/bits/timex.h pool.h pqc.h \
  invalidation/ext_info_hash.h invalidation/main_headers.h \
- /usr/include/ctype.h /usr/include/unistd.h \
+ /usr/include/errno.h /usr/include/i386-linux-gnu/bits/errno.h \
+ /usr/include/linux/errno.h /usr/include/i386-linux-gnu/asm/errno.h \
+ /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
+ /usr/include/fcntl.h /usr/include/i386-linux-gnu/bits/fcntl.h \
+ /usr/include/i386-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/i386-linux-gnu/bits/stat.h \
+ /usr/include/i386-linux-gnu/bits/fcntl2.h \
+ /usr/include/i386-linux-gnu/sys/stat.h /usr/include/unistd.h \
  /usr/include/i386-linux-gnu/bits/posix_opt.h \
  /usr/include/i386-linux-gnu/bits/environments.h \
  /usr/include/i386-linux-gnu/bits/confname.h /usr/include/getopt.h \
- /usr/include/i386-linux-gnu/bits/unistd.h /usr/include/errno.h \
- /usr/include/i386-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
- /usr/include/i386-linux-gnu/asm/errno.h /usr/include/asm-generic/errno.h \
- /usr/include/asm-generic/errno-base.h /usr/include/pthread.h \
- /usr/include/sched.h /usr/include/i386-linux-gnu/bits/sched.h \
- /usr/include/i386-linux-gnu/bits/setjmp.h \
- /usr/include/i386-linux-gnu/sys/stat.h \
- /usr/include/i386-linux-gnu/bits/stat.h /usr/include/fcntl.h \
- /usr/include/i386-linux-gnu/bits/fcntl.h \
- /usr/include/i386-linux-gnu/bits/fcntl-linux.h \
- /usr/include/i386-linux-gnu/bits/fcntl2.h invalidation/my_server.h \
- /usr/include/i386-linux-gnu/sys/wait.h invalidation/md5.h \
- invalidation/c.h /usr/include/strings.h /usr/include/locale.h \
- /usr/include/i386-linux-gnu/bits/locale.h invalidation/file_oids.h \
- pool.h
+ /usr/include/i386-linux-gnu/bits/unistd.h invalidation/my_server.h \
+ invalidation/md5.h invalidation/c.h /usr/include/strings.h \
+ /usr/include/locale.h /usr/include/i386-linux-gnu/bits/locale.h
 
 /usr/include/stdc-predef.h:
 
@@ -402,6 +397,10 @@ pqc.o: pqc.c /usr/include/stdc-predef.h \
 
 /usr/include/libmemcached-1.0/deprecated_types.h:
 
+/usr/include/ctype.h:
+
+invalidation/file_oids.h:
+
 pool.h:
 
 config.h:
@@ -446,25 +445,13 @@ pool_list.h:
 
 /usr/include/i386-linux-gnu/bits/timex.h:
 
+pool.h:
+
 pqc.h:
 
 invalidation/ext_info_hash.h:
 
 invalidation/main_headers.h:
-
-/usr/include/ctype.h:
-
-/usr/include/unistd.h:
-
-/usr/include/i386-linux-gnu/bits/posix_opt.h:
-
-/usr/include/i386-linux-gnu/bits/environments.h:
-
-/usr/include/i386-linux-gnu/bits/confname.h:
-
-/usr/include/getopt.h:
-
-/usr/include/i386-linux-gnu/bits/unistd.h:
 
 /usr/include/errno.h:
 
@@ -478,29 +465,31 @@ invalidation/main_headers.h:
 
 /usr/include/asm-generic/errno-base.h:
 
-/usr/include/pthread.h:
-
-/usr/include/sched.h:
-
-/usr/include/i386-linux-gnu/bits/sched.h:
-
-/usr/include/i386-linux-gnu/bits/setjmp.h:
-
-/usr/include/i386-linux-gnu/sys/stat.h:
-
-/usr/include/i386-linux-gnu/bits/stat.h:
-
 /usr/include/fcntl.h:
 
 /usr/include/i386-linux-gnu/bits/fcntl.h:
 
 /usr/include/i386-linux-gnu/bits/fcntl-linux.h:
 
+/usr/include/i386-linux-gnu/bits/stat.h:
+
 /usr/include/i386-linux-gnu/bits/fcntl2.h:
 
-invalidation/my_server.h:
+/usr/include/i386-linux-gnu/sys/stat.h:
 
-/usr/include/i386-linux-gnu/sys/wait.h:
+/usr/include/unistd.h:
+
+/usr/include/i386-linux-gnu/bits/posix_opt.h:
+
+/usr/include/i386-linux-gnu/bits/environments.h:
+
+/usr/include/i386-linux-gnu/bits/confname.h:
+
+/usr/include/getopt.h:
+
+/usr/include/i386-linux-gnu/bits/unistd.h:
+
+invalidation/my_server.h:
 
 invalidation/md5.h:
 
@@ -511,7 +500,3 @@ invalidation/c.h:
 /usr/include/locale.h:
 
 /usr/include/i386-linux-gnu/bits/locale.h:
-
-invalidation/file_oids.h:
-
-pool.h:

@@ -1,21 +1,20 @@
+#include <ctype.h>
+
 #include "invalidation/ext_info_hash.h"
 #include "invalidation/md5.h"
 #include "invalidation/main_headers.h"
 #include "pool.h"
 
-#define EMAXDATASIZE 100
-#define MAX_KEY 256
-
-/***********************************************Extracting and Storing****************************************************/
-
-void store_extracted_info(char buf[EMAXDATASIZE], int numbytes)
+/* Extracting and storing the info received */
+void store_extracted_info(char buf[MAXDATASIZE], int numbytes)
 {
-    int i, j;
-    char *query_from_buf = (char *)malloc((numbytes-2-5) * sizeof(char));      //-2-shifting, -6-relid, +1-NULL char
-    char oid_from_buf[6], dbname_from_buf[10], to_hash[EMAXDATASIZE];
+    int i, j;                   /* -2-shifting, -6-relid, +1-NULL char */
+    char *query_from_buf = malloc((numbytes-7) * sizeof(char));
+    char oid_from_buf[OIDLENGTH], dbname_from_buf[DBLENGTH], to_hash[MAXDATASIZE];
 
-    char *checksum = malloc(sizeof(char) *MAX_KEY);
+    char *checksum = malloc(sizeof(char) *MD5KEYSIZE);
     int fd, oid_size;
+    char path[PATHLENGTH];
     struct flock fl;
 
     fl.l_type = F_WRLCK;
@@ -34,13 +33,11 @@ void store_extracted_info(char buf[EMAXDATASIZE], int numbytes)
     if ((fd = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|S_IRWXO|S_IRWXG)) == -1)
     {
         perror("\tFailed to open file in ext_info_hash ");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
-    fchmod(fd, S_IRWXU|S_IRWXO|S_IRWXG);
 
-    pool_debug("Numbytes in store_extracted_info is %d", numbytes);
-
-    for (i = 0; i < 2; i++)                     //shifting buf by two to the left to ignore flag value eg: t;
+    /* shifting buf by two to the left to ignore flag value */
+    for (i = 0; i < 2; i++)
     {
         for (j = 0; j < numbytes; j++)
         {
@@ -54,7 +51,7 @@ void store_extracted_info(char buf[EMAXDATASIZE], int numbytes)
 
     while (buf[i] != ';')
     {
-        dbname_from_buf[i] = buf[i];
+        dbname_from_buf[i] = buf[i];        /* extracting db name */
         i++;
     }
     dbname_from_buf[i] = '\0';
@@ -62,7 +59,7 @@ void store_extracted_info(char buf[EMAXDATASIZE], int numbytes)
 
     while (buf[i] != ';')
     {
-        query_from_buf[j] = buf[i];
+        query_from_buf[j] = buf[i];         /* extracting query */
         i++;
         j++;
     }
@@ -71,17 +68,28 @@ void store_extracted_info(char buf[EMAXDATASIZE], int numbytes)
     ++i;
     j=0;
 
-    pool_debug("\tEXTRACTED QUERY: %s from DATABASE '%s' of size: %d from BUF", query_from_buf, dbname_from_buf, strlen(query_from_buf));
+#if TRIGGER_ON_DROP
+    if (is_drop_command(query_from_buf))
+    {
+        char dbname[DBLENGTH];
+        get_dbname(dbname, query_from_buf);
+        snprintf(path, sizeof(path), "rm -rf %s/%s/%s", dir, "oiddir", dbname);
+        system(path);
+        return;
+    }
+#endif // TRIGGER_ON_DROP
 
+    pool_debug("\tEXTRACTED QUERY: %s from DATABASE '%s' of size: %d from BUF",
+               query_from_buf, dbname_from_buf, strlen(query_from_buf));
 
     strcpy(to_hash, dbname_from_buf);
     strcat(to_hash, query_from_buf);
     pg_md5_hash(to_hash, strlen(to_hash), checksum);
 
-    if (fcntl(fd, F_SETLKW, &fl) == -1)     //locking ext info file
+    if (fcntl(fd, F_SETLKW, &fl) == -1)     /* locking ext info file */
     {
         perror("fcntl");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
     else
     {
@@ -91,6 +99,7 @@ void store_extracted_info(char buf[EMAXDATASIZE], int numbytes)
     if (write(fd, checksum, strlen(checksum)) == -1)
     {
         perror("\tWrite error for Checksum! ");
+        exit(EXIT_FAILURE);
     }
 
     pool_debug("\tWROTE checksum\n");
@@ -105,7 +114,8 @@ void store_extracted_info(char buf[EMAXDATASIZE], int numbytes)
         }
         oid_from_buf[j] = '\0';
         j = 0;
-        pool_debug("\tEXTRACTED OID FROM BUF: %s of size: %d", oid_from_buf, strlen(oid_from_buf));
+        pool_debug("\tEXTRACTED OID FROM BUF: %s of size: %d", oid_from_buf,
+                   strlen(oid_from_buf));
 
         if ((write(fd, " ", 1) == -1) | (write(fd, oid_from_buf, 5) == -1))
         {
@@ -118,14 +128,16 @@ void store_extracted_info(char buf[EMAXDATASIZE], int numbytes)
     }
 
     if (write(fd, "\n", 1) == -1)
+    {
         perror("\tWriting newline char in ext_info_hash ");
+    }
 
-    fl.l_type = F_UNLCK;        //Unlocking the file
+    fl.l_type = F_UNLCK;                 /* Unlocking the file */
     if (fcntl(fd, F_SETLK, &fl) == -1)
     {
         perror("\tUnlocking in ext_info_hash ");
         close(fd);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
     else
     {
@@ -135,3 +147,38 @@ void store_extracted_info(char buf[EMAXDATASIZE], int numbytes)
     close(fd);
 }
 
+#if TRIGGER_ON_DROP
+/*
+ *Checking if it is a select query
+ */
+int is_drop_command(char *query)
+{
+    if (*query == '\0')
+        return 0;
+
+    /* skip spaces */
+    while (*query && isspace(*query))
+        query++;
+
+    /* DROP? */
+    if (strncasecmp("DROP", query, 4))	/* returns 0 if not a match */
+        return 0;
+
+    return 1;				/* returns 1 if it is a drop command */
+}
+
+/*
+ * Extract db name from DROP command
+ */
+ void get_dbname(char dbname[DBLENGTH], char query_from_buf[MAXDATASIZE])
+ {
+    int i = 14, j = 0;
+    while (buf[i] != ';')
+    {
+        dbname[j] = buf[i];         /* extracting dbname */
+        i++;
+        j++;
+    }
+    dbname[j] = '\0';
+ }
+ #endif // TRIGGER_ON_DROP
