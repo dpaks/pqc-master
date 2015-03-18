@@ -262,14 +262,47 @@ void write_to_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH],
     }       /* end of outermost else */
 }
 
+char *skip_comment_space(char *query)
+{
+    if (strncmp(query, "/*", 2) == 0)
+    {
+        query += 2;
+        while (query)
+        {
+            if (strncmp(query, "*/", 2) == 0)
+            {
+                query += 2;
+                break;
+            }
+            query++;
+        }
+    }
+
+    /* skip spaces */
+    while (isspace(*query))
+        query++;
+    return (char *)query;
+}
+
 /* read checksum from oid file and invalidate memcached entry */
-void invalidate_query_cache(POOL_CONNECTION *frontend, char query[MAXDATASIZE])
+void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
 {
     char *tmpkey = malloc(sizeof(char) *MD5KEYSIZE);
     char db_name[DBLENGTH], to_hash[MAXDATASIZE], path[PATHLENGTH];
+    char *query = malloc(sizeof(char) * MAXDATASIZE);
+
+    strncpy(query, query1, MAXDATASIZE);
+    query[MAXDATASIZE-1] = '\0';
+
+    query = skip_comment_space(query);
+    if (strlen(query) == (MAXDATASIZE-1))
+    {
+        query[MAXDATASIZE-2] = ';';
+        query[MAXDATASIZE-1] = '\0';
+    }
 
     strcpy(to_hash, frontend->database);
-    strcat(to_hash, query);
+    strncat(to_hash, query, (MAXDATASIZE-strlen(frontend->database)-1) );
     pg_md5_hash(to_hash, strlen(to_hash), tmpkey);
 
     if (mkdir(dir, S_IRWXU|S_IRWXO|S_IRWXG) == -1)
