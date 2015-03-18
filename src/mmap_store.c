@@ -21,7 +21,7 @@ void send_to_mmap(char *str, int numbytes)
         exit(EXIT_FAILURE);
     }
 
-    lseek(fdin, MAXDATASIZE, SEEK_SET);
+    lseek(fdin, numbytes, SEEK_SET);    /* area used by received data */
     if (write(fdin, "", 1) == -1)
     {
         perror("Writing into mmap file error");
@@ -58,7 +58,7 @@ char *get_from_mmap(int *numbytes)
 
     snprintf(path, sizeof(path), "%s/%s", dir, "mmapfile.txt");
 
-    char *buf = malloc(sizeof(char) * MAXDATASIZE);
+    char *buf = malloc(sizeof(char) * BUFSIZE);
     if(!buf)
     {
         perror("Malloc failed!");

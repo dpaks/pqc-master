@@ -1,4 +1,4 @@
-cscope 15 $HOME/Project Source Codes/Postgres/pqc-master/src               0000607345
+cscope 15 $HOME/Project Source Codes/Postgres/pqc-master/src               0000608472
 	@child.c
 
 24 
@@ -4086,22 +4086,26 @@ size_t
 	@ext_info_hash.c
 
 1 
+	~<˘y≥.h
+>
+
+3 
 	~"övÆid©i⁄/ext_öfo_hash.h
 "
 
-2 
+4 
 	~"övÆid©i⁄/md5.h
 "
 
-3 
+5 
 	~"övÆid©i⁄/maö_hódîs.h
 "
 
-4 
+6 
 	~"poﬁ.h
 "
 
-7 
+9 
 	$°‹e_exåa˘ed_öfo
 (
 buf
@@ -4111,13 +4115,13 @@ MAXDATASIZE
 numbyãs
 )
 
-9 
+11 
 i
 , 
 j
 ;
 
-10 *
+12 *
 quîy_‰om_buf
  = 
 	`mÆloc
@@ -4125,7 +4129,7 @@ quîy_‰om_buf
 numbyãs
 -7) * ());
 
-11 
+13 
 oid_‰om_buf
 [
 OIDLENGTH
@@ -4139,7 +4143,7 @@ to_hash
 MAXDATASIZE
 ];
 
-13 *
+15 *
 checksum
  = 
 	`mÆloc
@@ -4147,25 +4151,25 @@ checksum
 MD5KEYSIZE
 );
 
-14 
+16 
 fd
 , 
 oid_size
 ;
 
-15 
+17 
 ∑th
 [
 PATHLENGTH
 ];
 
-16 
+18 
 Êock
  
 Ê
 ;
 
-18 
+20 
 Ê
 .
 l_ty≥
@@ -4173,7 +4177,7 @@ l_ty≥
 F_WRLCK
 ;
 
-19 
+21 
 Ê
 .
 l_whí˚
@@ -4181,23 +4185,23 @@ l_whí˚
 SEEK_SET
 ;
 
-20 
+22 
 Ê
 .
 l_°¨t
  = 0;
 
-21 
+23 
 Ê
 .
 l_Àn
  = 0;
 
-23 i‡(
+25 i‡(
 buf
 [0] == 't')
 
-25 
+27 
 	`¢¥ötf
 (
 ∑th
@@ -4205,7 +4209,7 @@ buf
 dú
 , "ext_info");
 
-29 
+31 
 	`¢¥ötf
 (
 ∑th
@@ -4213,7 +4217,7 @@ dú
 dú
 , "ext_info_inva");
 
-31 i‡((
+33 i‡((
 fd
  = 
 	`›í
@@ -4233,51 +4237,51 @@ S_IRWXO
 S_IRWXG
 )) == -1)
 
-33 
+35 
 	`≥º‹
 ("\tFailedÅo open file inÉxt_info_hash ");
 
-34 
+36 
 	`exô
 (
 EXIT_FAILURE
 );
 
-38 
+40 
 i
  = 0; i < 2; i++)
 
-40 
+42 
 j
  = 0; j < 
 numbyãs
 ; j++)
 
-42 
+44 
 buf
 [
 j
 ] = buf[j+1];
 
-44 --
+46 --
 numbyãs
 ;
 
-47 
+49 
 i
  = 0;
 
-48 
+50 
 j
  = 0;
 
-50 
+52 
 buf
 [
 i
 ] != ';')
 
-52 
+54 
 db«me_‰om_buf
 [
 i
@@ -4285,27 +4289,27 @@ i
 buf
 [i];
 
-53 
+55 
 i
 ++;
 
-55 
+57 
 db«me_‰om_buf
 [
 i
 ] = '\0';
 
-56 ++
+58 ++
 i
 ;
 
-58 
+60 
 buf
 [
 i
 ] != ';')
 
-60 
+62 
 quîy_‰om_buf
 [
 j
@@ -4315,39 +4319,79 @@ buf
 i
 ];
 
-61 
+63 
 i
 ++;
 
-62 
+64 
 j
 ++;
 
-64 
+66 
 quîy_‰om_buf
 [
 j
 ] = ';';
 
-65 
+67 
 quîy_‰om_buf
 [++
 j
 ] = '\0';
 
-66 ++
+68 ++
 i
 ;
 
-67 
+69 
 j
 =0;
 
-69 
+71 #i‡
+TRIGGER_ON_DROP
+
+
+72 i‡(
+	`is_dr›_comm™d
+(
+quîy_‰om_buf
+))
+
+74 
+db«me
+[
+DBLENGTH
+];
+
+75 
+	`gë_db«me
+(
+db«me
+, 
+quîy_‰om_buf
+);
+
+76 
+	`¢¥ötf
+(
+∑th
+, ’©h), "rm -r‡%s/%s/%s", 
+dú
+, "oiddú", 
+db«me
+);
+
+77 
+	`sy°em
+(
+∑th
+);
+
+82 
 	`poﬁ_debug
 ("\tEXTRACTED QUERY: %s from DATABASE '%s' of size: %d from BUF",
 
-70 
+83 
 quîy_‰om_buf
 , 
 db«me_‰om_buf
@@ -4355,7 +4399,7 @@ db«me_‰om_buf
 	`°æí
 (query_from_buf));
 
-72 
+85 
 	`°r˝y
 (
 to_hash
@@ -4363,7 +4407,7 @@ to_hash
 db«me_‰om_buf
 );
 
-73 
+86 
 	`°rˇt
 (
 to_hash
@@ -4371,7 +4415,7 @@ to_hash
 quîy_‰om_buf
 );
 
-74 
+87 
 	`pg_md5_hash
 (
 to_hash
@@ -4381,7 +4425,7 @@ to_hash
 checksum
 );
 
-76 i‡(
+89 i‡(
 	`f˙é
 (
 fd
@@ -4391,21 +4435,21 @@ F_SETLKW
 Ê
 ) == -1)
 
-78 
+91 
 	`≥º‹
 ("fcntl");
 
-79 
+92 
 	`exô
 (
 EXIT_FAILURE
 );
 
-83 
+96 
 	`poﬁ_debug
 ("\tFILEÜocked inÉxt_info_hash!\n");
 
-86 i‡(
+99 i‡(
 	`wrôe
 (
 fd
@@ -4415,35 +4459,35 @@ checksum
 	`°æí
 (checksum)) == -1)
 
-88 
+101 
 	`≥º‹
 ("\tWriteÉrror for Checksum! ");
 
-89 
+102 
 	`exô
 (
 EXIT_FAILURE
 );
 
-92 
+105 
 	`poﬁ_debug
 ("\tWROTE checksum\n");
 
-94 
+107 
 buf
 [
 i
 ] != '\0')
 
-96 
+109 
 oid_size
  = 5;
 
-97 
+110 
 oid_size
  > 0)
 
-99 
+112 
 oid_‰om_buf
 [
 j
@@ -4453,33 +4497,33 @@ buf
 i
 ++];
 
-100 
+113 
 oid_size
 --;
 
-102 
+115 
 oid_‰om_buf
 [
 j
 ] = '\0';
 
-103 
+116 
 j
  = 0;
 
-104 
+117 
 	`poﬁ_debug
 ("\tEXTRACTED OID FROM BUF: %†o‡size: %d", 
 oid_‰om_buf
 ,
 
-105 
+118 
 	`°æí
 (
 oid_‰om_buf
 ));
 
-107 i‡((
+120 i‡((
 	`wrôe
 (
 fd
@@ -4487,27 +4531,27 @@ fd
 oid_‰om_buf
 , 5) == -1))
 
-109 
+122 
 	`≥º‹
 ("\tWriteÉrror for OID! ");
 
-113 
+126 
 	`poﬁ_debug
 ("\tWROTE oid: %s\n", 
 oid_‰om_buf
 );
 
-117 i‡(
+130 i‡(
 	`wrôe
 (
 fd
 , "\n", 1) == -1)
 
-119 
+132 
 	`≥º‹
 ("\tWritingÇewline char inÉxt_info_hash ");
 
-122 
+135 
 Ê
 .
 l_ty≥
@@ -4515,7 +4559,7 @@ l_ty≥
 F_UNLCK
 ;
 
-123 i‡(
+136 i‡(
 	`f˙é
 (
 fd
@@ -4525,33 +4569,119 @@ F_SETLK
 Ê
 ) == -1)
 
-125 
+138 
 	`≥º‹
 ("\tUnlocking inÉxt_info_hash ");
 
-126 
+139 
 	`˛o£
 (
 fd
 );
 
-127 
+140 
 	`exô
 (
 EXIT_FAILURE
 );
 
-131 
+144 
 	`poﬁ_debug
 ("\tFILE unlocked inÉxt_info_hash!\n");
 
-134 
+147 
 	`˛o£
 (
 fd
 );
 
-135 
+148 
+	}
+}
+
+150 #i‡
+TRIGGER_ON_DROP
+
+
+154 
+	$is_dr›_comm™d
+(*
+quîy
+)
+
+156 i‡(*
+quîy
+ == '\0')
+
+160 *
+quîy
+ && 
+	`is•a˚
+(*query))
+
+161 
+quîy
+++;
+
+164 i‡(
+	`°∫ˇ£cmp
+("DROP", 
+quîy
+, 4))
+
+168 
+	}
+}
+
+173 
+	$gë_db«me
+(
+db«me
+[
+DBLENGTH
+], 
+quîy_‰om_buf
+[
+MAXDATASIZE
+])
+
+175 
+i
+ = 14, 
+j
+ = 0;
+
+176 
+buf
+[
+i
+] != ';')
+
+178 
+db«me
+[
+j
+] = 
+buf
+[
+i
+];
+
+179 
+i
+++;
+
+180 
+j
+++;
+
+182 
+db«me
+[
+j
+] = '\0';
+
+183 
 	}
 }
 
@@ -4567,9 +4697,21 @@ EXT_INFO_HASH_H
 
 	)
 
-4 
+4 
 °‹e_exåa˘ed_öfo
 ([], );
+
+6 #i‡
+TRIGGER_ON_DROP
+
+
+7 
+is_dr›_comm™d
+(*);
+
+9 
+gë_db«me
+([], []);
 
 	@invalidation/my_server.h
 
@@ -53249,37 +53391,41 @@ USE_PAM
 	~<libmemˇched/memˇched.h
 >
 
-8 
+7 
+	~<˘y≥.h
+>
+
+9 
 	~"övÆid©i⁄/fûe_oids.h
 "
 
-9 
+10 
 	~"poﬁ.h
 "
 
-10 
+11 
 	~"pqc.h
 "
 
-11 
+12 
 	~"övÆid©i⁄/maö_hódîs.h
 "
 
-12 
+13 
 	~"övÆid©i⁄/my_£rvî.h
 "
 
-13 
+14 
 	~"övÆid©i⁄/md5.h
 "
 
-15 
+16 
 	#MEMCACHED_PID_FILE
  "/tmp/memˇched.pid"
 
 	)
 
-17 
+18 
 memˇched_°
  *
 	gmemc
@@ -53287,7 +53433,7 @@ memˇched_°
 NULL
 ;
 
-18 
+19 
 memˇched_£rvî_°
  *
 	g£rvîs
@@ -53295,51 +53441,55 @@ memˇched_£rvî_°
 NULL
 ;
 
-19 
+20 
 memˇched_ªtu∫
  
 	grc
 ;
 
-21 
+22 
 	gˇche_key
 [
 PQC_MAX_KEY
 ];
 
-23 
+24 
 size_t
  
 	gbuÊí
  = 0;
 
-24 
+25 
 size_t
  
 	gbufsize
  = 0;
 
-25 *
+26 *
 	gbuf
  = 
 NULL
 ;
 
-27 
+28 
 pqc_°¨t_memˇched
 ();
 
-28 
+29 
 pqc_°›_memˇched
 ();
 
-29 *
+30 *
 ícode_key
 (c⁄° *, *, 
 POOL_CONNECTION
  *);
 
-31 
+31 *
+skù_commít_•a˚
+(const *);
+
+33 
 memˇched_°
  *
 	gmemc_f‹_öva
@@ -53347,37 +53497,37 @@ memˇched_°
 NULL
 ;
 
-40 
+42 
 	gIsQuîyCacheE«bÀd
  = 1;
 
-41 
+43 
 	gU£QuîyCache
  = 1;
 
-43 
+45 
 	gFoundInQuîyCache
  = 0;
 
-46 
+48 
 	$pqc_öô
 (
 run_as_d´m⁄
 )
 
-48 
+50 
 	`pqc_°¨t_memˇched
 (
 run_as_d´m⁄
 );
 
-50 i‡–
+52 i‡–
 memc
 !=
 NULL
  )
 
-56 
+58 
 memc
  = 
 	`memˇched_¸óã
@@ -53385,13 +53535,13 @@ memc
 NULL
 );
 
-57 i‡–
+59 i‡–
 memc
 ==
 NULL
  )
 
-62 
+64 
 £rvîs
  = 
 	`memˇched_£rvî_li°_≠≥nd
@@ -53401,17 +53551,17 @@ NULL
 rc
 );
 
-63 i‡(
+65 i‡(
 rc
  !
 MEMCACHED_SUCCESS
 )
 
-65 
+67 
 	`poﬁ_debug
 ("pqc_init: memcached_server_list_append() failed.");
 
-68 
+70 
 rc
  = 
 	`memˇched_£rvî_push
@@ -53421,17 +53571,17 @@ memc
 £rvîs
 );
 
-69 i‡(
+71 i‡(
 rc
  !
 MEMCACHED_SUCCESS
 )
 
-71 
+73 
 	`poﬁ_debug
 ("pqc_init: memcached_server_push() failed.");
 
-74 
+76 
 rc
  = 
 	`memˇched_behavi‹_£t
@@ -53441,13 +53591,13 @@ memc
 MEMCACHED_BEHAVIOR_BINARY_PROTOCOL
 , 0);
 
-75 i‡(
+77 i‡(
 rc
  !
 MEMCACHED_SUCCESS
 )
 
-77 
+79 
 	`poﬁ_îr‹
 ("pqc_öô: %s", 
 	`memˇched_°ªº‹
@@ -53457,11 +53607,11 @@ memc
 rc
 ));
 
-81 
+83 
 	`poﬁ_debug
 ("pqc_init: memcached has been successfully initialized.");
 
-82 
+84 
 	`poﬁ_debug
 ("pqc_öô: Quîy CachêModê%d", 
 poﬁ_c⁄fig
@@ -53469,51 +53619,51 @@ poﬁ_c⁄fig
 quîy_ˇche_mode
 );
 
-84 
+86 
 memc_f‹_öva
  = 
 memc
 ;
 
-86 
+88 
 	}
 }
 
-88 
+90 
 memˇched_°
  *
 	$gë_memc
 ()
 
-90  
+92  
 memc_f‹_öva
 ;
 
-91 
+93 
 	}
 }
 
-94 
+96 
 	$pqc_°¨t_memˇched
 (
 run_as_d´m⁄
 )
 
-96 *
+98 *
 ¨gv
 [16];
 
-97 
+99 
 ¨gc
  = 0;
 
-98 
+100 
 pid_t
  
 pid
 ;
 
-100 
+102 
 ¨gv
 [
 ¨gc
@@ -53523,65 +53673,65 @@ poﬁ_c⁄fig
 memˇched_bö
 ;
 
-101 
+103 
 ¨gv
 [
 ¨gc
 ++] = "-l";
 
-102 
+104 
 ¨gv
 [
 ¨gc
 ++] = "127.0.0.1";
 
-103 
+105 
 ¨gv
 [
 ¨gc
 ++] = "-p";
 
-104 
+106 
 ¨gv
 [
 ¨gc
 ++] = "11211";
 
-105 
+107 
 ¨gv
 [
 ¨gc
 ++] = "-vv";
 
-106 
+108 
 ¨gv
 [
 ¨gc
 ++] = "-I";
 
-107 
+109 
 ¨gv
 [
 ¨gc
 ++] = "10M";
 
-109 i‡(
+111 i‡(
 run_as_d´m⁄
 )
 
-111 
+113 
 ¨gv
 [
 ¨gc
 ++] = "-d";
 
-112 
+114 
 ¨gv
 [
 ¨gc
 ++] = "-P";
 
-113 
+115 
 ¨gv
 [
 ¨gc
@@ -53589,7 +53739,7 @@ run_as_d´m⁄
 MEMCACHED_PID_FILE
 ;
 
-116 
+118 
 ¨gv
 [
 ¨gc
@@ -53597,25 +53747,25 @@ MEMCACHED_PID_FILE
 NULL
 ;
 
-118 
+120 
 pid
  = 
 	`f‹k
 ();
 
-120 i‡(
+122 i‡(
 pid
  < 0)
 
-122 
+124 
 	`poﬁ_îr‹
 ("fork() failed.");
 
-126 i‡(
+128 i‡(
 pid
  == 0)
 
-128 
+130 
 	`execv
 (
 poﬁ_c⁄fig
@@ -53625,7 +53775,7 @@ memˇched_bö
 ¨gv
 );
 
-131 
+133 
 	`poﬁ_îr‹
 ("FaûedÅÿ°¨à\"%s\".", 
 poﬁ_c⁄fig
@@ -53633,35 +53783,35 @@ poﬁ_c⁄fig
 memˇched_bö
 );
 
-132 
+134 
 	`exô
 (-1);
 
-135 
+137 
 	`poﬁ_debug
 ("pqc_start_memcached: memcachedÜaunched.");
 
-138 
+140 
 	}
 }
 
-141 
+143 
 	$pqc_°›_memˇched
 ()
 
-143 
+145 
 pid_t
  
 pid
 ;
 
-144 
+146 
 FILE
  *
 Â
 ;
 
-146 
+148 
 Â
  = 
 	`f›í
@@ -53669,19 +53819,19 @@ FILE
 MEMCACHED_PID_FILE
 , "r");
 
-147 i‡(
+149 i‡(
 Â
  =
 NULL
 )
 
-149 
+151 
 	`poﬁ_îr‹
 ("PID fûêˇn'àbê›íed. - %s", 
 MEMCACHED_PID_FILE
 );
 
-153 
+155 
 	`fsˇnf
 (
 Â
@@ -53689,19 +53839,19 @@ MEMCACHED_PID_FILE
 pid
 );
 
-154 
+156 
 	`f˛o£
 (
 Â
 );
 
-156 
+158 
 	`poﬁ_debug
 ("Sídög SIGTERMÅÿPID %d...", 
 pid
 );
 
-158 
+160 
 	`kûl
 (
 pid
@@ -53709,39 +53859,39 @@ pid
 SIGTERM
 );
 
-160 
+162 
 	`Ârötf
 (
 °dîr
 , "stopÑequest sentÅo memcached. waiting forÅermination...");
 
-162 
+164 
 	`kûl
 (
 pid
 , 0) == 0)
 
-164 
+166 
 	`Ârötf
 (
 °dîr
 , ".");
 
-165 
+167 
 	`¶ìp
 (1);
 
-167 
+169 
 	`Ârötf
 (
 °dîr
 , "done from Nagayasu.\n");
 
-170 
+172 
 	}
 }
 
-173 
+175 
 	$pqc_check_ˇche_avaû
 (
 POOL_CONNECTION
@@ -53751,35 +53901,35 @@ POOL_CONNECTION
 quîy
 )
 
-175 
+177 
 buf
 [
 PQC_MAX_VALUE
 ];
 
-176 
+178 
 size_t
  
 Àn
 ;
 
-178 i‡(!
+180 i‡(!
 U£QuîyCache
 )
 
-181 
+183 
 	`mem£t
 (
 buf
 , 0, (buf));
 
-183 
+185 
 	`poﬁ_debug
 ("pqc_check_ˇche_avaû: %s", 
 quîy
 );
 
-185 i‡–!
+187 i‡–!
 	`pqc_gë_ˇche
 (
 ‰⁄ãnd
@@ -53791,17 +53941,17 @@ buf
 Àn
 ) )
 
-189 
+191 
 	}
 }
 
-192 
+194 
 	$pqc_push_cuºít_quîy
 (c⁄° *
 quîy
 )
 
-194 
+196 
 	`°∫˝y
 (
 ˇche_key
@@ -53809,43 +53959,43 @@ quîy
 quîy
 , (cache_key));
 
-197 
+199 
 	}
 }
 
-200 
+202 
 	$pqc_p›_cuºít_quîy
 ()
 
-202  
+204  
 ˇche_key
 ;
 
-203 
+205 
 	}
 }
 
-206 
+208 
 	$pqc_buf_öô
 ()
 
-208 
+210 
 buÊí
  = 0;
 
-209 i‡(
+211 i‡(
 buf
  =
 NULL
 )
 
-211 
+213 
 bufsize
  = 
 PQC_MAX_VALUE
 ;
 
-212 
+214 
 buf
  = (*)
 	`mÆloc
@@ -53853,7 +54003,7 @@ buf
 bufsize
 );
 
-214 
+216 
 	`mem£t
 (
 buf
@@ -53861,11 +54011,11 @@ buf
 bufsize
 );
 
-215 
+217 
 	}
 }
 
-218 
+220 
 	$pqc_buf_add
 (c⁄° *
 s
@@ -53875,15 +54025,15 @@ size_t
 Àn
 )
 
-220 
+222 
 pos
 =0;
 
-222 i‡–!
+224 i‡–!
 IsQuîyCacheE«bÀd
  )
 
-226 i‡–
+228 i‡–
 buf
 ==
 NULL
@@ -53891,7 +54041,7 @@ NULL
 buÊí
 <0 )
 
-233 i‡–
+235 i‡–
 buÊí
  + 
 Àn
@@ -53899,7 +54049,7 @@ buÊí
 PQC_MAX_CACHELEN
  )
 
-235 
+237 
 	`poﬁ_log
 ("Thêªsu… sëÅoÿœrgêtÿ°‹êötÿthêˇche. (Àn=%d)", 
 buÊí
@@ -53907,23 +54057,23 @@ buÊí
 Àn
 );
 
-236 
+238 
 	`‰ì
 (
 buf
 );
 
-237 
+239 
 buf
  = 
 NULL
 ;
 
-238 
+240 
 buÊí
  = -1;
 
-243 i‡(
+245 i‡(
 buÊí
  + 
 Àn
@@ -53931,7 +54081,7 @@ buÊí
 bufsize
 )
 
-246 
+248 
 size_t
  
 √wbufsize
@@ -53943,7 +54093,7 @@ buÊí
 PQC_MAX_VALUE
  + 1 ) * PQC_MAX_VALUE;
 
-247 
+249 
 	`poﬁ_debug
 ("pqc_buf_add:ÑóŒo¯bu‡bufsize=%dÇewbufsize=%d", 
 bufsize
@@ -53951,13 +54101,13 @@ bufsize
 √wbufsize
 );
 
-248 
+250 
 bufsize
  = 
 √wbufsize
 ;
 
-249 
+251 
 buf
  = (*)
 	`ªÆloc
@@ -53965,13 +54115,13 @@ buf
 bufsize
 );
 
-252 
+254 
 pos
 =0 ;Öos<
 Àn
  ;Öos++)
 
-254 
+256 
 buf
 [
 buÊí
@@ -53981,13 +54131,13 @@ pos
 s
 [pos];
 
-256 
+258 
 buÊí
  +
 pos
 ;
 
-258 
+260 
 	`poﬁ_debug
 ("pqc_buf_add:Üí=%d,ÅŸÆ=%d bufsize=%d", 
 Àn
@@ -53997,39 +54147,39 @@ buÊí
 bufsize
 );
 
-260  
+262  
 buÊí
 ;
 
-261 
+263 
 	}
 }
 
-264 
+266 
 	$pqc_buf_Àn
 ()
 
-266  
+268  
 buÊí
 ;
 
-267 
+269 
 	}
 }
 
-270 
+272 
 	$pqc_buf_gë
 ()
 
-272  
+274  
 buf
 ;
 
-273 
+275 
 	}
 }
 
-276 
+278 
 	$dump_ˇche_d©a
 (c⁄° *
 d©a
@@ -54039,11 +54189,11 @@ size_t
 Àn
 )
 
-299 
+301 
 	}
 }
 
-305 * 
+307 * 
 	$ícode_key
 (c⁄° *
 s
@@ -54055,13 +54205,13 @@ POOL_CONNECTION
 backíd
 )
 
-307 
+309 
 to_hash
 [
 MAXDATASIZE
 ];
 
-309 
+311 
 	`°r˝y
 (
 to_hash
@@ -54071,7 +54221,7 @@ backíd
 d©aba£
 );
 
-310 
+312 
 	`°∫ˇt
 (
 to_hash
@@ -54087,7 +54237,7 @@ backíd
 d©aba£
 )-1) );
 
-311 
+313 
 	`pg_md5_hash
 (
 to_hash
@@ -54097,15 +54247,15 @@ to_hash
 buf
 );
 
-312  
+314  
 buf
 ;
 
-313 
+315 
 	}
 }
 
-316 
+318 
 	$pqc_£t_ˇche
 (
 POOL_CONNECTION
@@ -54121,29 +54271,35 @@ size_t
 d©Æí
 )
 
-318 
+320 
 tmpkey
 [
 MD5KEYSIZE
 ];
 
-320 i‡–!
+322 i‡–!
 IsQuîyCacheE«bÀd
  )
 
-323 i‡–
+325 i‡–
 	`°æí
 (
 quîy
 )<=0 )
 
-326 
+328 
+quîy
+ = 
+	`skù_commít_•a˚
+(query);
+
+330 
 	`poﬁ_debug
 ("pqc_£t_ˇche: Quîy=%s", 
 quîy
 );
 
-327 
+331 
 	`dump_ˇche_d©a
 (
 d©a
@@ -54151,7 +54307,7 @@ d©a
 d©Æí
 );
 
-329 
+333 
 	`ícode_key
 (
 quîy
@@ -54161,7 +54317,7 @@ tmpkey
 ‰⁄ãnd
 );
 
-331 
+335 
 rc
  = 
 	`memˇched_£t
@@ -54181,13 +54337,13 @@ poﬁ_c⁄fig
 quîy_ˇche_expú©i⁄
 , 0);
 
-333 i‡(
+337 i‡(
 rc
  !
 MEMCACHED_SUCCESS
 )
 
-335 
+339 
 	`poﬁ_îr‹
 ("pqc_£t_ˇche: %s", 
 	`memˇched_°ªº‹
@@ -54197,7 +54353,7 @@ memc
 rc
 ));
 
-339 
+343 
 	`add_èbÀ_oid
 (
 ‰⁄ãnd
@@ -54205,15 +54361,67 @@ rc
 tmpkey
 );
 
-341 
+345 
 	`poﬁ_debug
 ("pqc_set_cache: succeeded.");
 
-344 
+348 
 	}
 }
 
-347 
+354 *
+	$skù_commít_•a˚
+(c⁄° *
+quîy
+)
+
+356 i‡(
+	`°∫cmp
+(
+quîy
+, "/*", 2) == 0)
+
+358 
+quîy
+ += 2;
+
+359 
+quîy
+)
+
+361 i‡(
+	`°∫cmp
+(
+quîy
+, "*/", 2) == 0)
+
+363 
+quîy
+ += 2;
+
+366 
+quîy
+++;
+
+371 
+	`is•a˚
+(*
+quîy
+))
+
+372 
+quîy
+++;
+
+373  (*)
+quîy
+;
+
+374 
+	}
+}
+
+377 
 	$pqc_gë_ˇche
 (
 POOL_CONNECTION
@@ -54229,33 +54437,39 @@ size_t
 Àn
 )
 
-349 
+379 
 uöt32_t
  
 Êags2
 ;
 
-350 *
+380 *
 ±r
 ;
 
-351 
+381 
 tmpkey
 [
 PQC_MAX_KEY
 ];
 
-353 i‡–!
+383 i‡–!
 IsQuîyCacheE«bÀd
  )
 
-356 i‡–
+386 i‡–
 	`°æí
 (
 quîy
 )<=0 )
 
-370 
+400 
+quîy
+ = 
+	`skù_commít_•a˚
+(query);
+
+401 
 	`ícode_key
 (
 quîy
@@ -54265,7 +54479,7 @@ tmpkey
 ‰⁄ãnd
 );
 
-372 
+403 
 ±r
  = 
 	`memˇched_gë
@@ -54283,13 +54497,13 @@ tmpkey
 rc
 );
 
-374 i‡(
+405 i‡(
 rc
  !
 MEMCACHED_SUCCESS
 )
 
-376 
+407 
 	`poﬁ_îr‹
 ("pqc_gë_ˇche: %s", 
 	`memˇched_°ªº‹
@@ -54299,7 +54513,7 @@ memc
 rc
 ));
 
-380 
+411 
 	`mem˝y
 (
 buf
@@ -54309,19 +54523,19 @@ buf
 Àn
 );
 
-381 
+412 
 	`‰ì
 (
 ±r
 );
 
-383 
+414 
 	`poﬁ_debug
 ("pqc_gë_ˇche: Quîy=%s", 
 quîy
 );
 
-384 
+415 
 	`dump_ˇche_d©a
 (
 buf
@@ -54329,11 +54543,11 @@ buf
 Àn
 );
 
-387 
+418 
 	}
 }
 
-390 
+421 
 	$pqc_check_ˇche_höt
 (c⁄° *
 °mt
@@ -54345,93 +54559,93 @@ u£
 höt_off£t
 )
 
-396 i‡(
+427 i‡(
 	`°∫cmp
 ("/* cache:of‡*/", 
 °mt
 , 15) == 0)
 
-399 *
+430 *
 íabÀd
  = 
 Ál£
 ;
 
-400 *
+431 *
 u£
  = 
 Ál£
 ;
 
-401 *
+432 *
 höt_off£t
  = 15;
 
-403 
+434 
 	`poﬁ_debug
 ("Query Cache Hint: cache:off");
 
-405 i‡(
+436 i‡(
 	`°∫cmp
 ("/* cache:⁄ */", 
 °mt
 , 14) == 0)
 
-408 *
+439 *
 íabÀd
  = 
 åue
 ;
 
-409 *
+440 *
 u£
  = 
 åue
 ;
 
-410 *
+441 *
 höt_off£t
  = 14;
 
-412 
+443 
 	`poﬁ_debug
 ("Query Cache Hint: cache:on");
 
-414 i‡(
+445 i‡(
 	`°∫cmp
 ("/* cache:ª‰esh */", 
 °mt
 , 19) == 0)
 
-416 *
+447 *
 íabÀd
  = 
 åue
 ;
 
-417 *
+448 *
 u£
  = 
 Ál£
 ;
 
-418 *
+449 *
 höt_off£t
  = 19;
 
-420 
+451 
 	`poﬁ_debug
 ("Query Cache Hint: cache:refresh");
 
-423  *
+454  *
 höt_off£t
 ;
 
-424 
+455 
 	}
 }
 
-427 
+458 
 	$pqc_£nd_mesßge
 (
 POOL_CONNECTION
@@ -54445,7 +54659,7 @@ köd
 d©a
 )
 
-430 
+461 
 	`poﬁ_debug
 ("pqc_£nd_mesßge: köd=%c,Üí=%d, d©a=%p", 
 köd
@@ -54455,7 +54669,7 @@ köd
 d©a
 );
 
-432 
+463 
 	`poﬁ_wrôe
 (
 c⁄n
@@ -54463,13 +54677,13 @@ c⁄n
 köd
 , 1);
 
-434 
+465 
 Àn
  = 
 	`ht⁄l
 (len);
 
-435 
+466 
 	`poﬁ_wrôe
 (
 c⁄n
@@ -54477,13 +54691,13 @@ c⁄n
 Àn
 , (len));
 
-437 
+468 
 Àn
  = 
 	`¡ohl
 (len);
 
-438 
+469 
 	`poﬁ_wrôe
 (
 c⁄n
@@ -54493,17 +54707,17 @@ d©a
 Àn
 -(len));
 
-440 i‡(
+471 i‡(
 	`poﬁ_Êush
 (
 c⁄n
 ))
 
-444 
+475 
 	}
 }
 
-447 
+478 
 	$pqc_£nd_ˇched_mesßges
 (
 POOL_CONNECTION
@@ -54515,39 +54729,39 @@ qˇche
 qˇchñí
 )
 
-449 
+480 
 msg
  = 0;
 
-450 
+481 
 i
  = 0;
 
-451 
+482 
 is_¥ï¨ed_°mt
  = 0;
 
-453 
+484 
 i
  < 
 qˇchñí
 )
 
-455 
+486 
 tmpköd
 ;
 
-456 
+487 
 tm∂í
 ;
 
-457 
+488 
 tmpbuf
 [
 PQC_MAX_VALUE
 ];
 
-459 
+490 
 tmpköd
  = 
 qˇche
@@ -54555,11 +54769,11 @@ qˇche
 i
 ];
 
-460 
+491 
 i
  += 1;
 
-462 
+493 
 	`mem˝y
 (&
 tm∂í
@@ -54569,19 +54783,19 @@ qˇche
 i
 , (tmplen));
 
-463 
+494 
 i
  +(
 tm∂í
 );
 
-465 
+496 
 tm∂í
  = 
 	`¡ohl
 (tmplen);
 
-467 
+498 
 	`mem˝y
 (
 tmpbuf
@@ -54593,27 +54807,27 @@ i
 tm∂í
  - (tmplen));
 
-468 
+499 
 i
  +
 tm∂í
  - (tmplen);
 
-471 i‡(
+502 i‡(
 tmpköd
  == '1' ||Åmpkind == '2')
 
-473 
+504 
 is_¥ï¨ed_°mt
  = 1;
 
-481 i‡(
+512 i‡(
 is_¥ï¨ed_°mt
  && 
 tmpköd
  == 'T')
 
-484 
+515 
 	`pqc_£nd_mesßge
 (
 ‰⁄ãnd
@@ -54625,43 +54839,43 @@ tm∂í
 tmpbuf
 );
 
-486 
+517 
 msg
 ++;
 
-489  
+520  
 msg
 ;
 
-490 
+521 
 	}
 }
 
-493 
+524 
 	$pqc_de°roy
 ()
 
-495 
+526 
 	`pqc_°›_memˇched
 ();
 
-497 i‡–
+528 i‡–
 memc
 ==
 NULL
  )
 
-503 
+534 
 	`memˇched_‰ì
 (
 memc
 );
 
-505 
+536 
 	`poﬁ_debug
 ("pqc_destroy: memcached has been destroyed.");
 
-508 
+539 
 	}
 }
 

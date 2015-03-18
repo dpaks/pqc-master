@@ -318,32 +318,49 @@ int
 pqc_set_cache(POOL_CONNECTION *frontend, const char *query, const char *data, size_t datalen)
 {
     char tmpkey[MD5KEYSIZE];
+    char *query1 = malloc(sizeof(char) * MAXDATASIZE);
+
+    strncpy(query1, query, MAXDATASIZE);
+    query1[MAXDATASIZE-1] = '\0';
 
     if ( !IsQueryCacheEnabled )
         return 0;
 
-    if ( strlen(query)<=0 )
+    if ( strlen(query1)<=0 )
         return 0;
 
-    query = skip_comment_space(query);
-
-    pool_debug("pqc_set_cache: Query=%s", query);
-    dump_cache_data(data, datalen);
-
-    encode_key(query, tmpkey, frontend);
-
-    rc = memcached_set(memc, tmpkey, strlen(tmpkey), data, datalen, pool_config.query_cache_expiration, 0);
-
-    if (rc != MEMCACHED_SUCCESS)
+    query1 = skip_comment_space(query1);
+    if (strlen(query1) == (MAXDATASIZE-1))
     {
-        pool_error("pqc_set_cache: %s", memcached_strerror(memc, rc));
-        return 0;
+        query1[MAXDATASIZE-2] = ';';
+        query1[MAXDATASIZE-1] = '\0';
     }
 
-    add_table_oid(frontend, tmpkey);
+    pool_debug("pqc_set_cache: Query=%s of size=%d & DB=%s", query1, strlen(query1), frontend->database);
+    dump_cache_data(data, datalen);
 
-    pool_debug("pqc_set_cache: succeeded.");
+    encode_key(query1, tmpkey, frontend);
 
+    if (!check_if_meta(tmpkey))
+    {
+        rc = memcached_set(memc, tmpkey, strlen(tmpkey), data, datalen, pool_config.query_cache_expiration, 0);
+
+        if (rc != MEMCACHED_SUCCESS)
+        {
+            pool_error("pqc_set_cache: %s", memcached_strerror(memc, rc));
+            return 0;
+        }
+
+        add_table_oid(frontend, tmpkey);
+
+        pool_debug("pqc_set_cache: succeeded.");
+    }
+    else
+    {
+        pool_debug("\tMETA command not cached in pqc_set_cache\n");
+    }
+
+    //free(query1);
     return 1;
 }
 
@@ -379,11 +396,15 @@ pqc_get_cache(POOL_CONNECTION *frontend, const char *query, char **buf, size_t *
     uint32_t flags2;
     char *ptr;
     char tmpkey[PQC_MAX_KEY];
+    char *query1 = malloc(sizeof(char) * MAXDATASIZE);
+
+    strncpy(query1, query, MAXDATASIZE);
+    query1[MAXDATASIZE-1] = '\0';
 
     if ( !IsQueryCacheEnabled )
         return 0;
 
-    if ( strlen(query)<=0 )
+    if ( strlen(query1)<=0 )
         return 0;
 
     /* if ( frontend!=NULL && frontend->database!=NULL )
@@ -397,8 +418,14 @@ pqc_get_cache(POOL_CONNECTION *frontend, const char *query, char **buf, size_t *
      {
          encode_key(query, tmpkey, sizeof(tmpkey));
      }*/
-    query = skip_comment_space(query);
-    encode_key(query, tmpkey, frontend);
+    query1 = skip_comment_space(query1);
+    if (strlen(query1) == (MAXDATASIZE-1))
+    {
+        query1[MAXDATASIZE-2] = ';';
+        query1[MAXDATASIZE-1] = '\0';
+    }
+
+    encode_key(query1, tmpkey, frontend);
 
     ptr = memcached_get(memc, tmpkey, strlen(tmpkey), len, &flags2, &rc);
 
@@ -411,9 +438,10 @@ pqc_get_cache(POOL_CONNECTION *frontend, const char *query, char **buf, size_t *
     memcpy(buf, ptr, *len);
     free(ptr);
 
-    pool_debug("pqc_get_cache: Query=%s", query);
+    pool_debug("pqc_get_cache: Query=%s of size=%d & DB=%s", query1, strlen(query1), frontend->database);
     dump_cache_data(buf, *len);
 
+    //free(query1);
     return 1;
 }
 

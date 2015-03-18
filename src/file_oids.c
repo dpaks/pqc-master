@@ -95,6 +95,13 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
                 perror("\tSkipping the first white space after checksum in file_oids");
                 exit(1);
             }
+
+            if (c == '\n')      /* for meta, checksum is followed by newline char */
+            {
+                pool_debug("\tIt is a meta command. Ignore in add_file_oids!\n");
+                continue;
+            }
+
             tmpkey_from_file[(MD5KEYSIZE-1)] = '\0';
 
             pool_debug("\tREAD checksum %s of size %zd from file in file_oids\n"
@@ -544,3 +551,102 @@ int read_from_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH])
     }           /* outermost else ends */
     return 1;
 }
+
+int check_if_meta(char tmpkey[MD5KEYSIZE])
+{
+    pool_debug("\tEntered check_if_meta\n");
+    int fd_new, read_bytes, flag = 0;
+    struct flock fl_new;
+    char tmpkey_from_file[MD5KEYSIZE], c, path[512];
+
+    fl_new.l_type = F_WRLCK;
+    fl_new.l_whence = SEEK_SET;
+    fl_new.l_start = 0;
+    fl_new.l_len = 0;
+
+    snprintf(path, sizeof(path), "%s/%s", dir, "ext_info_meta");
+    if ((fd_new = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|S_IRWXO|S_IRWXG)) == -1)
+    {
+        perror("\tFailed to open file ext_info_meta ");
+        exit(EXIT_FAILURE);
+    }
+
+    if (fcntl(fd_new, F_SETLKW, &fl_new) == -1)     /* locking ext info file */
+    {
+        perror("fcntl");
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        pool_debug("\tFILE locked in ext_info_meta!\n");
+    }
+
+    while (1)
+    {
+        if ((read_bytes = read(fd_new, &tmpkey_from_file, (MD5KEYSIZE-1))) != -1)
+        {
+
+            if (read_bytes == 0)
+            {
+                pool_debug("\tFinished reading file!!!\n");
+                break;
+            }
+            else if (read_bytes > 0 && read_bytes < (MD5KEYSIZE-1))
+            {
+                pool_debug("\tThis should not be executed! OMG! :\(\n");
+                break;
+            }
+            tmpkey_from_file[(MD5KEYSIZE-1)] = '\0';
+            pool_debug("\tREAD checksum %s of size %zd from meta file in \
+                       file_oids\n",tmpkey_from_file, strlen(tmpkey_from_file));
+
+            if (memcmp(tmpkey, tmpkey_from_file, MD5KEYSIZE) == 0)
+            {
+                pool_debug("\t %s of size %d EQUAL TO %s of size %d\n", tmpkey,
+                           strlen(tmpkey), tmpkey_from_file, strlen(tmpkey_from_file));
+
+                flag = 1;   /* match found */
+                break;
+            }       /* inner if ends */
+            else
+            {
+                pool_debug("\t %s of size %d NOT EQUAL TO %s of size %d\n", tmpkey,
+                           strlen(tmpkey), tmpkey_from_file, strlen(tmpkey_from_file));
+
+                /*skipping the new line after checksum */
+
+                if (read(fd_new, &c, 1) == -1)
+                {
+                    perror("\tSkipping the new line after checksum in file_oids");
+                    exit(EXIT_FAILURE);
+                }
+
+                continue;
+
+            }       /* inner else ends */
+
+        }       /* outermost if ends */
+        else
+        {
+            perror("\tReading 2 from extracted info file in file_oids");
+            exit(EXIT_FAILURE);
+        }       /* outermost else ends */
+
+    }       /* while loop ends */
+
+    fl_new.l_type = F_UNLCK;                 /* Unlocking the file */
+    if (fcntl(fd_new, F_SETLK, &fl_new) == -1)
+    {
+        perror("\tUnlocking in ext_info_hash ");
+        close(fd_new);
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        pool_debug("\tFILE unlocked in ext_info_hash!\n");
+    }
+
+    close(fd_new);
+    return flag;
+}
+

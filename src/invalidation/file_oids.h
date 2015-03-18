@@ -14,4 +14,6 @@ extern void write_to_oid_file(char [], char [], char []);
 
 extern int read_from_oid_file(char [], char []);
 
+extern int check_if_meta(char []);
+
 #endif // FILE_OIDS_H

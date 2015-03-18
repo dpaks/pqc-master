@@ -14,8 +14,8 @@
 #include "pool.h"
 #include "invalidation/main_headers.h"
 
-#define PORT "3490"  // the port users will be connecting to
-#define BACKLOG 10     // how many pending connections queue will hold
+#define PORT "3490"  /* the port users will be connecting to */
+#define BACKLOG 10     /* how many pending connections queue will hold */
 
 char *dir = "/tmp/mypqcd";
 
@@ -36,7 +36,7 @@ void *get_in_addr(struct sockaddr *sa)              /* get socket addr */
 
 void *recv_info(void *arg)
 {
-    char path[PATHLENGTH], s[INET6_ADDRSTRLEN], buf[MAXDATASIZE];
+    char path[PATHLENGTH], s[INET6_ADDRSTRLEN], buf[BUFSIZE];
     /* listen on sock_fd, new connection on new_fd */
     int yes=1, rv, numbytes, c_status, sockfd, new_fd, fd;
     struct addrinfo hints, *servinfo, *p;
@@ -160,7 +160,7 @@ void *recv_info(void *arg)
         {
             close(sockfd);                          /* child doesn't need the listener */
 
-            if ((numbytes = recv(new_fd, buf, MAXDATASIZE-1, 0)) == -1)
+            if ((numbytes = recv(new_fd, buf, 1000-1, 0)) == -1)
             {
                 perror("recv");
                 exit(1);
@@ -191,7 +191,7 @@ void *recv_info(void *arg)
         numbytes = 0;
         new_buf = get_from_mmap(&numbytes);
         store_extracted_info(new_buf, numbytes);        /* extracting and storing */
-        pool_debug("\tBUF RETRIEVED FROM MMAP: %s", new_buf);
+        pool_debug("\tBUF RETRIEVED FROM MMAP: %s of size %d", new_buf, numbytes);
         free(new_buf);
         pthread_mutex_unlock(&lock_ll);               /* mutex unlock */
 
