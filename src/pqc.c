@@ -28,7 +28,7 @@ static char *buf = NULL;
 static int pqc_start_memcached(int);
 static int pqc_stop_memcached();
 static char *encode_key(const char *, char *, POOL_CONNECTION *);
-static char *skip_comment_space(const char *);
+static char *skip_comment_space(char *);
 
 memcached_st *memc_for_inva = NULL;
 
@@ -318,8 +318,10 @@ int
 pqc_set_cache(POOL_CONNECTION *frontend, const char *query, const char *data, size_t datalen)
 {
     char tmpkey[MD5KEYSIZE];
+    char *query2;
     char *query1 = malloc(sizeof(char) * MAXDATASIZE);
 
+    query2 = query1;
     strncpy(query1, query, MAXDATASIZE);
     query1[MAXDATASIZE-1] = '\0';
 
@@ -360,7 +362,7 @@ pqc_set_cache(POOL_CONNECTION *frontend, const char *query, const char *data, si
         pool_debug("\tMETA command not cached in pqc_set_cache\n");
     }
 
-    //free(query1);
+    free(query2);
     return 1;
 }
 
@@ -368,7 +370,7 @@ pqc_set_cache(POOL_CONNECTION *frontend, const char *query, const char *data, si
  *Skipping comments of a query
  */
 
-char *skip_comment_space(const char *query)
+char *skip_comment_space(char *query)
 {
     if (strncmp(query, "/*", 2) == 0)
     {
@@ -385,7 +387,7 @@ char *skip_comment_space(const char *query)
     }
 
     /* skip spaces */
-    while (isspace(*query))
+    while (*query && isspace(*query))
         query++;
     return (char *)query;
 }
@@ -394,10 +396,11 @@ int
 pqc_get_cache(POOL_CONNECTION *frontend, const char *query, char **buf, size_t *len)
 {
     uint32_t flags2;
-    char *ptr;
+    char *ptr, *query2;
     char tmpkey[PQC_MAX_KEY];
     char *query1 = malloc(sizeof(char) * MAXDATASIZE);
 
+    query2 = query1;
     strncpy(query1, query, MAXDATASIZE);
     query1[MAXDATASIZE-1] = '\0';
 
@@ -422,7 +425,6 @@ pqc_get_cache(POOL_CONNECTION *frontend, const char *query, char **buf, size_t *
     if (strlen(query1) == (MAXDATASIZE-1))
     {
         query1[MAXDATASIZE-2] = ';';
-        query1[MAXDATASIZE-1] = '\0';
     }
 
     encode_key(query1, tmpkey, frontend);
@@ -441,7 +443,7 @@ pqc_get_cache(POOL_CONNECTION *frontend, const char *query, char **buf, size_t *
     pool_debug("pqc_get_cache: Query=%s of size=%d & DB=%s", query1, strlen(query1), frontend->database);
     dump_cache_data(buf, *len);
 
-    //free(query1);
+    free(query2);
     return 1;
 }
 

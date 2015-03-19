@@ -201,7 +201,7 @@ void write_meta(char *checksum)
 
     int fd_new;
     struct flock fl_new;
-    char path[512];
+    char path[PATHLENGTH];
 
     fl_new.l_type = F_WRLCK;
     fl_new.l_whence = SEEK_SET;

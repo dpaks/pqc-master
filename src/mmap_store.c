@@ -4,8 +4,9 @@
 #include "pool.h"
 #include "invalidation/main_headers.h"
 
-/**************************Writing to File using MMAP***************************/
-
+/*
+ *Writing to File using MMAP
+ */
 void send_to_mmap(char *str, int numbytes)
 {
     int fdin;
@@ -49,8 +50,9 @@ void send_to_mmap(char *str, int numbytes)
     pool_debug("\tWritten to mmap successfully\n");
 }
 
-/******************************Retrieving from File*****************************/
-
+/*
+ *Retrieving from File
+ */
 char *get_from_mmap(int *numbytes)
 {
     FILE *fp;

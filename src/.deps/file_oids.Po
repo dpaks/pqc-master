@@ -111,9 +111,10 @@ file_oids.o: file_oids.c /usr/include/stdc-predef.h \
  /usr/include/libmemcached-1.0/version.h \
  /usr/include/libmemcached-1.0/sasl.h \
  /usr/include/libmemcached-1.0/deprecated_types.h \
- /usr/include/i386-linux-gnu/bits/timex.h invalidation/main_headers.h \
- /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.8/include/stdarg.h \
+ /usr/include/i386-linux-gnu/bits/timex.h /usr/include/ctype.h \
+ invalidation/main_headers.h /usr/include/stdio.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/i686-linux-gnu/4.8/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h \
  /usr/include/i386-linux-gnu/bits/stdio.h \
@@ -397,6 +398,8 @@ file_oids.o: file_oids.c /usr/include/stdc-predef.h \
 /usr/include/libmemcached-1.0/deprecated_types.h:
 
 /usr/include/i386-linux-gnu/bits/timex.h:
+
+/usr/include/ctype.h:
 
 invalidation/main_headers.h:
 
