@@ -1,3 +1,26 @@
+/*
+ * FILE: my_server.c
+ * HEADER: invalidation/my_server.h
+ *
+ * Receives data from PostgreSQL backend and sends it for extraction
+ *
+ * Written by Deepak S
+ *
+ * Copyright (c) 2015-Today	Deepak S (in.live.in@live.in)
+ *
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby
+ * granted, provided that the above copyright notice appear in all
+ * copies and that both that copyright notice and this permission
+ * notice appear in supporting documentation, and that the name of the
+ * author not be used in advertising or publicity pertaining to
+ * distribution of the software without specific, written prior
+ * permission. The author makes no representations about the
+ * suitability of this software for any purpose.  It is provided "as
+ * is" without express or implied warranty.
+ *
+ */
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -145,7 +168,7 @@ void *recv_info(void *arg)
 
     pool_debug("\tserver: waiting for connections...\n");
 
-    while(1)                                                    /*concurrent server */
+    while(1)                                        /*concurrent server */
     {
         sin_size = sizeof their_addr;
         new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &sin_size);
@@ -161,7 +184,7 @@ void *recv_info(void *arg)
 
         if (!fork())
         {
-            close(sockfd);                          /* child doesn't need the listener */
+            close(sockfd);                /* child doesn't need the listener */
 
             if ((numbytes = recv(new_fd, buf, 1000-1, 0)) == -1)
             {
@@ -170,13 +193,14 @@ void *recv_info(void *arg)
             }
             pool_debug("\tSize of %s using strlen is %d\n", buf, strlen(buf));
             buf[numbytes] = '\0';
+
             /*
              *   t:cacheable, f:invalidateable; >2: in the called fn, we
              *     shift elements of array to left by two positions
              */
             if ((buf[0] == 't' || buf[0] == 'f') && numbytes > 2)
             {
-                send_to_mmap(buf, numbytes);                /* invoking shared memory */
+                send_to_mmap(buf, numbytes);    /* invoking shared memory */
             }
             close(new_fd);
             exit(0);
@@ -193,8 +217,11 @@ void *recv_info(void *arg)
 
         numbytes = 0;
         new_buf = get_from_mmap(&numbytes);
-        store_extracted_info(new_buf, numbytes);        /* extracting and storing */
-        pool_debug("\tBUF RETRIEVED FROM MMAP: %s of size %d", new_buf, numbytes);
+
+        /* extracting and storing */
+        store_extracted_info(new_buf, numbytes);
+        pool_debug("\tBUF RETRIEVED FROM MMAP: %s of size %d",
+                   new_buf, numbytes);
         free(new_buf);
         pthread_mutex_unlock(&lock_ll);               /* mutex unlock */
 

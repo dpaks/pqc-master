@@ -15,7 +15,7 @@
 #define DBLENGTH 20
 #define OIDLENGTH 6
 #define BUFSIZE 1000    /* size of buffer that accepts data from client */
-#define COMLENGTH 100
+#define COMLENGTH 100   /* Dir removal command for use in system fuction call */
 
 extern char *dir;       /* path where files have to be created & is
                                 defined in my_server.c */

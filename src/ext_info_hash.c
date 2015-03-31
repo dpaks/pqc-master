@@ -1,3 +1,27 @@
+/*
+ * FILE: ext_info_hash.c
+ * HEADER: invalidation/ext_info_hash.h
+ *
+ * Receives data from pqcd, extracts, categorizes and
+ * stores them in a file
+ *
+ * Written by Deepak S
+ *
+ * Copyright (c) 2015-Today	Deepak S (in.live.in@live.in)
+ *
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby
+ * granted, provided that the above copyright notice appear in all
+ * copies and that both that copyright notice and this permission
+ * notice appear in supporting documentation, and that the name of the
+ * author not be used in advertising or publicity pertaining to
+ * distribution of the software without specific, written prior
+ * permission. The author makes no representations about the
+ * suitability of this software for any purpose.  It is provided "as
+ * is" without express or implied warranty.
+ *
+ */
+
 #include <ctype.h>
 
 #include "invalidation/ext_info_hash.h"
@@ -7,12 +31,15 @@
 
 static void write_meta(char *);
 
-/* Extracting and storing the info received */
+/*
+ * Extract and store the info received
+ */
 void store_extracted_info(char buf[BUFSIZE], int numbytes)
 {
     int i, j;                   /* -2-shifting, -6-relid, +1-NULL char */
     char *query_from_buf = malloc(MAXDATASIZE * sizeof(char));
-    char oid_from_buf[OIDLENGTH], dbname_from_buf[DBLENGTH], to_hash[MAXDATASIZE];
+    char oid_from_buf[OIDLENGTH], dbname_from_buf[DBLENGTH];
+    char to_hash[MAXDATASIZE];
 
     char *checksum = malloc(sizeof(char) *MD5KEYSIZE);
     int fd, oid_size;
@@ -32,7 +59,8 @@ void store_extracted_info(char buf[BUFSIZE], int numbytes)
     {
         snprintf(path, sizeof(path), "%s/%s", dir, "ext_info_inva");
     }
-    if ((fd = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|S_IRWXO|S_IRWXG)) == -1)
+    if ((fd = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|
+                   S_IRWXO|S_IRWXG)) == -1)
     {
         perror("\tFailed to open file in ext_info_hash ");
         exit(EXIT_FAILURE);
@@ -117,7 +145,7 @@ void store_extracted_info(char buf[BUFSIZE], int numbytes)
         }
         oid_from_buf[j] = '\0';
 
-        if (atoi(oid_from_buf) < 10000)     /* meta commands are taken care of */
+        if (atoi(oid_from_buf) < 10000)   /* meta commands are taken care of */
         {
             write_meta(checksum);
             break;
@@ -127,7 +155,8 @@ void store_extracted_info(char buf[BUFSIZE], int numbytes)
         pool_debug("\tEXTRACTED OID FROM BUF: %s of size: %d", oid_from_buf,
                    strlen(oid_from_buf));
 
-        if ((write(fd, " ", 1) == -1) || (write(fd, oid_from_buf, (OIDLENGTH-1)) == -1))
+        if ((write(fd, " ", 1) == -1) || (write(fd, oid_from_buf,
+                                                (OIDLENGTH-1)) == -1))
         {
             perror("\tWrite error for OID! ");
         }
@@ -195,6 +224,9 @@ void get_dbname(char dbname[DBLENGTH], char query_from_buf[MAXDATASIZE])
 }
 #endif // TRIGGER_ON_DROP
 
+/*
+ * Write meta query info to file
+ */
 void write_meta(char *checksum)
 {
     pool_debug("\tMETA command recvd in ext_info_hash\n");
@@ -209,7 +241,8 @@ void write_meta(char *checksum)
     fl_new.l_len = 0;
 
     snprintf(path, sizeof(path), "%s/%s", dir, "ext_info_meta");
-    if ((fd_new = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|S_IRWXO|S_IRWXG)) == -1)
+    if ((fd_new = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|
+                       S_IRWXO|S_IRWXG)) == -1)
     {
         perror("\tFailed to open meta file in ext_info_hash ");
         exit(EXIT_FAILURE);
@@ -225,7 +258,8 @@ void write_meta(char *checksum)
         pool_debug("\tFILE meta locked in ext_info_hash!\n");
     }
 
-    if ( (write(fd_new, checksum, strlen(checksum)) == -1) || (write(fd_new, "\n", 1) == -1) )
+    if ( (write(fd_new, checksum, strlen(checksum)) == -1) ||
+            (write(fd_new, "\n", 1) == -1) )
     {
         perror("\tWrite error for Checksum in meta in ext_info_hash! ");
         exit(EXIT_FAILURE);

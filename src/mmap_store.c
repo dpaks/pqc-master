@@ -1,3 +1,26 @@
+/*
+ * FILE: mmap_store.c
+ * HEADER: invalidation/mmap_store.h
+ *
+ * Stores and retrieves data received from PostgreSQL backend into MMAP
+ *
+ * Written by Deepak S
+ *
+ * Copyright (c) 2015-Today	Deepak S (in.live.in@live.in)
+ *
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby
+ * granted, provided that the above copyright notice appear in all
+ * copies and that both that copyright notice and this permission
+ * notice appear in supporting documentation, and that the name of the
+ * author not be used in advertising or publicity pertaining to
+ * distribution of the software without specific, written prior
+ * permission. The author makes no representations about the
+ * suitability of this software for any purpose.  It is provided "as
+ * is" without express or implied warranty.
+ *
+ */
+
 #include <sys/mman.h>
 
 #include "invalidation/mmap_store.h"
@@ -5,7 +28,7 @@
 #include "invalidation/main_headers.h"
 
 /*
- *Writing to File using MMAP
+ * Writing to MMAP
  */
 void send_to_mmap(char *str, int numbytes)
 {
@@ -16,7 +39,8 @@ void send_to_mmap(char *str, int numbytes)
 
     snprintf(path, sizeof(path), "%s/%s", dir, "mmapfile.txt");
 
-    if ((fdin = open(path, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH)) < 0)
+    if ((fdin = open(path, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR |
+                     S_IROTH | S_IWOTH)) < 0)
     {
         perror("can’t open mmapfile for reading");
         exit(EXIT_FAILURE);
@@ -30,7 +54,8 @@ void send_to_mmap(char *str, int numbytes)
     }
     lseek(fdin, 0, SEEK_SET);
 
-    if (fstat(fdin, &sbuf) < 0)        /* need size of file area where data can be written to */
+    /* need size of file area where data can be written to */
+    if (fstat(fdin, &sbuf) < 0)
     {
         perror("fstat error");
         exit(EXIT_FAILURE);
@@ -51,7 +76,7 @@ void send_to_mmap(char *str, int numbytes)
 }
 
 /*
- *Retrieving from File
+ * Retrieving from MMAP
  */
 char *get_from_mmap(int *numbytes)
 {

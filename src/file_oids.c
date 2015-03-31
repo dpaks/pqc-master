@@ -1,3 +1,30 @@
+/*
+ * FILE: file_oids.c
+ * HEADER: invalidation/file_oids.h
+ *
+ * File I/O is done here. For each received query at pqcd, a match is checked
+ * in the corresponding file where the extracted info is stored. Matching MD5
+ * checksums of queries are written to necessary OID file(s) for cacheable
+ * queries and matching MD5 checksums of invalidateable queries are read from
+ * proper OID file(s) for invalidation.
+ *
+ * Written by Deepak S
+ *
+ * Copyright (c) 2015-Today	Deepak S (in.live.in@live.in)
+ *
+ * Permission to use, copy, modify, and distribute this software and
+ * its documentation for any purpose and without fee is hereby
+ * granted, provided that the above copyright notice appear in all
+ * copies and that both that copyright notice and this permission
+ * notice appear in supporting documentation, and that the name of the
+ * author not be used in advertising or publicity pertaining to
+ * distribution of the software without specific, written prior
+ * permission. The author makes no representations about the
+ * suitability of this software for any purpose.  It is provided "as
+ * is" without express or implied warranty.
+ *
+ */
+
 #include <libmemcached/memcached.h>
 #include <time.h>
 #include <ctype.h>
@@ -8,7 +35,9 @@
 
 static char *skip_comment_space(char *);
 
-/* To write query checksum to its dependent table oid(s) */
+/*
+ * To write query checksum to its dependent table oid(s) file(s)
+ */
 void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
 {
     char db_name[DBLENGTH], path[PATHLENGTH];
@@ -60,7 +89,7 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
 
     snprintf(path, sizeof(path), "%s/%s", dir, "ext_info");
     if ((fd_old = open(path, O_CREAT|O_RDWR|O_APPEND,
-    S_IRWXU|S_IRWXO|S_IRWXG)) == -1)
+                       S_IRWXU|S_IRWXO|S_IRWXG)) == -1)
     {
         perror("\tFailed to open extracted file in file_oids ");
         return;
@@ -149,14 +178,16 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
             else
             {
                 pool_debug("\t %s of size %d NOT EQUAL TO %s of size %d\n",
-                           tmpkey, strlen(tmpkey), tmpkey_from_file, strlen(tmpkey_from_file));
+                           tmpkey, strlen(tmpkey), tmpkey_from_file,
+                           strlen(tmpkey_from_file));
 
                 /*skip that line if checksum do not match */
                 while (1)
                 {
                     if (read(fd_old, &c, 1) == -1)
                     {
-                        perror("\tReading till new line char from ext info file in file_oids");
+                        perror("\tReading till new line char from ext info \
+                        file in file_oids");
                         exit(1);
                     }
                     if (c == '\n')
@@ -189,7 +220,9 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
     close(fd_old);
 }
 
-/* writing matched checksum to oid file */
+/*
+ * Writing matched received checksum from extracted info storage to oid file
+ */
 void write_to_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH],
                        char tmpkey_from_file[MD5KEYSIZE])
 {
@@ -203,7 +236,8 @@ void write_to_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH],
     fl_new.l_len    = 0;
 
     /* create or open oid file to write checksum */
-    snprintf(path, sizeof(path), "%s/%s/%s/%s", dir, "oiddir", db_name, oid_from_file);
+    snprintf(path, sizeof(path), "%s/%s/%s/%s", dir, "oiddir",
+             db_name, oid_from_file);
     if ((fd = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|S_IROTH)) == -1)
     {
         perror("\tCreating or opening oid file\n");
@@ -223,7 +257,8 @@ void write_to_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH],
         /* if already an entry exists in oid file, then do not write again */
         while (1)
         {
-            if ((read_bytes = read(fd, &tmpkey_from_oid_file, (MD5KEYSIZE-1))) != -1)
+            if ((read_bytes = read(fd, &tmpkey_from_oid_file,
+                                   (MD5KEYSIZE-1))) != -1)
             {
 
                 if (read_bytes == 0)
@@ -233,7 +268,8 @@ void write_to_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH],
                 }
                 tmpkey_from_oid_file[(MD5KEYSIZE-1)] = '\0';
 
-                if (memcmp(tmpkey_from_file, tmpkey_from_oid_file, MD5KEYSIZE) == 0)
+                if (memcmp(tmpkey_from_file, tmpkey_from_oid_file,
+                           MD5KEYSIZE) == 0)
                 {
                     flag = 1;
                     lseek(fd, 0, SEEK_END);
@@ -270,7 +306,7 @@ void write_to_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH],
 }
 
 /*
- *Skipping comments of a query
+ * Skipping comments of a query
  */
 char *skip_comment_space(char *query)
 {
@@ -295,7 +331,7 @@ char *skip_comment_space(char *query)
 }
 
 /*
- * read checksum from oid file and invalidate memcached entry
+ * Read checksum from oid file and invalidate memcached entry
  */
 void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
 {
@@ -496,7 +532,9 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
     free(query2);
 }
 
-/* read checksum from oid file */
+/*
+ * Read checksum from oid file
+ */
 int read_from_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH])
 {
     int fd, read_bytes;
@@ -559,8 +597,8 @@ int read_from_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH])
                 }
                 tmpkey_to_be_inva[(MD5KEYSIZE-1)] = '\0';
 
-                pool_debug("\tREAD key %s of size %zd from file in file_oids in\
-                inva part\n",tmpkey_to_be_inva, strlen(tmpkey_to_be_inva));
+                pool_debug("\tREAD key %s of size %zd from file in file_oids \
+                in inva part\n",tmpkey_to_be_inva, strlen(tmpkey_to_be_inva));
 
                 memcached_st *memc = get_memc();
                 rc= memcached_delete(memc, (char *)tmpkey_to_be_inva,
@@ -606,6 +644,9 @@ int read_from_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH])
     return 1;
 }
 
+/*
+ * Check if the query is meta by probing meta query file storage
+ */
 int check_if_meta(char tmpkey[MD5KEYSIZE])
 {
     pool_debug("\tEntered check_if_meta\n");
@@ -619,13 +660,15 @@ int check_if_meta(char tmpkey[MD5KEYSIZE])
     fl_new.l_len = 0;
 
     snprintf(path, sizeof(path), "%s/%s", dir, "ext_info_meta");
-    if ((fd_new = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|S_IRWXO|S_IRWXG)) == -1)
+    if ((fd_new = open(path, O_CREAT|O_RDWR|O_APPEND,
+                       S_IRWXU|S_IRWXO|S_IRWXG)) == -1)
     {
         perror("\tFailed to open file ext_info_meta ");
         exit(EXIT_FAILURE);
     }
 
-    if (fcntl(fd_new, F_SETLKW, &fl_new) == -1)     /* locking ext info file */
+    /* locking ext info file */
+    if (fcntl(fd_new, F_SETLKW, &fl_new) == -1)
     {
         perror("fcntl");
         exit(EXIT_FAILURE);
@@ -637,7 +680,8 @@ int check_if_meta(char tmpkey[MD5KEYSIZE])
 
     while (1)
     {
-        if ((read_bytes = read(fd_new, &tmpkey_from_file, (MD5KEYSIZE-1))) != -1)
+        if ((read_bytes = read(fd_new, &tmpkey_from_file,
+                               (MD5KEYSIZE-1))) != -1)
         {
 
             if (read_bytes == 0)
@@ -652,26 +696,28 @@ int check_if_meta(char tmpkey[MD5KEYSIZE])
             }
             tmpkey_from_file[(MD5KEYSIZE-1)] = '\0';
             pool_debug("\tREAD checksum %s of size %zd from meta file in \
-                       file_oids\n",tmpkey_from_file, strlen(tmpkey_from_file));
+                    file_oids\n",tmpkey_from_file, strlen(tmpkey_from_file));
 
             if (memcmp(tmpkey, tmpkey_from_file, MD5KEYSIZE) == 0)
             {
-                pool_debug("\t %s of size %d EQUAL TO %s of size %d\n", tmpkey,
-                           strlen(tmpkey), tmpkey_from_file, strlen(tmpkey_from_file));
+                pool_debug("\t %s of size %d EQUAL TO %s of size %d\n",
+                           tmpkey, strlen(tmpkey), tmpkey_from_file,
+                           strlen(tmpkey_from_file));
 
                 flag = 1;   /* match found */
                 break;
             }       /* inner if ends */
             else
             {
-                pool_debug("\t %s of size %d NOT EQUAL TO %s of size %d\n", tmpkey,
-                           strlen(tmpkey), tmpkey_from_file, strlen(tmpkey_from_file));
+                pool_debug("\t %s of size %d NOT EQUAL TO %s of size %d\n",
+                           tmpkey, strlen(tmpkey), tmpkey_from_file,
+                           strlen(tmpkey_from_file));
 
                 /*skipping the new line after checksum */
-
                 if (read(fd_new, &c, 1) == -1)
                 {
-                    perror("\tSkipping the new line after checksum in file_oids");
+                    perror("\tSkipping the new line after checksum in \
+                    file_oids");
                     exit(EXIT_FAILURE);
                 }
 
