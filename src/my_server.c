@@ -198,7 +198,7 @@ void *recv_info(void *arg)
              *   t:cacheable, f:invalidateable; >2: in the called fn, we
              *     shift elements of array to left by two positions
              */
-            if ((buf[0] == 't' || buf[0] == 'f') && numbytes > 2)
+            if (numbytes > 2)
             {
                 send_to_mmap(buf, numbytes);    /* invoking shared memory */
             }

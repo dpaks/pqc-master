@@ -23,6 +23,7 @@
  */
 
 #include <ctype.h>
+#include <limits.h>
 
 #include "invalidation/ext_info_hash.h"
 #include "invalidation/md5.h"
@@ -39,7 +40,7 @@ void store_extracted_info(char buf[BUFSIZE], int numbytes)
     int i, j;                   /* -2-shifting, -6-relid, +1-NULL char */
     char *query_from_buf = malloc(MAXDATASIZE * sizeof(char));
     char oid_from_buf[OIDLENGTH], dbname_from_buf[DBLENGTH];
-    char to_hash[MAXDATASIZE];
+    char to_hash[MAXDATASIZE], flag;
 
     char *checksum = malloc(sizeof(char) *MD5KEYSIZE);
     int fd, oid_size;
@@ -55,16 +56,20 @@ void store_extracted_info(char buf[BUFSIZE], int numbytes)
     {
         snprintf(path, sizeof(path), "%s/%s", dir, "ext_info");
     }
-    else
+    else if (buf[0] == 'f')
     {
         snprintf(path, sizeof(path), "%s/%s", dir, "ext_info_inva");
     }
-    if ((fd = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|
-                   S_IRWXO|S_IRWXG)) == -1)
+    if (buf[0] == 't' || buf[0] == 'f')
     {
-        perror("\tFailed to open file in ext_info_hash ");
-        exit(EXIT_FAILURE);
+        if ((fd = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|
+                       S_IRWXO|S_IRWXG)) == -1)
+        {
+            perror("\tFailed to open file in ext_info_hash ");
+            exit(EXIT_FAILURE);
+        }
     }
+    flag = buf[0];
 
     /* shifting buf by two to the left to ignore flag value */
     for (i = 0; i < 2; i++)
@@ -117,6 +122,18 @@ void store_extracted_info(char buf[BUFSIZE], int numbytes)
     strncat(to_hash, query_from_buf, (MAXDATASIZE-strlen(dbname_from_buf)-1));
     pg_md5_hash(to_hash, strlen(to_hash), checksum);
 
+    /*
+     * Queries that refer no table, meta queries as well as utility
+     * queries are written to ext_info_meta file
+     */
+    if (flag == 'u')
+    {
+        write_meta(checksum);
+        free(checksum);
+        free(query_from_buf);
+        return;
+    }
+
     if (fcntl(fd, F_SETLKW, &fl) == -1)     /* locking ext info file */
     {
         perror("fcntl");
@@ -145,7 +162,10 @@ void store_extracted_info(char buf[BUFSIZE], int numbytes)
         }
         oid_from_buf[j] = '\0';
 
-        if (atoi(oid_from_buf) < 10000)   /* meta commands are taken care of */
+        /* meta commands and those queries which do not refer any tables
+         * are taken care of.
+         */
+        if (atoi(oid_from_buf) < 10000 || atoi(oid_from_buf) == 55555)
         {
             write_meta(checksum);
             break;
