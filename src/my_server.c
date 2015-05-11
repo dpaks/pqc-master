@@ -186,7 +186,7 @@ void *recv_info(void *arg)
         {
             close(sockfd);                /* child doesn't need the listener */
 
-            if ((numbytes = recv(new_fd, buf, 1000-1, 0)) == -1)
+            if ((numbytes = recv(new_fd, buf, BUFSIZE, 0)) == -1)
             {
                 perror("recv");
                 exit(1);

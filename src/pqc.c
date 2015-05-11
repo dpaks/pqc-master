@@ -106,7 +106,7 @@ pqc_start_memcached(int run_as_daemon)
     argv[argc++] = "11211";
     argv[argc++] = "-vv";
     argv[argc++] = "-I";
-    argv[argc++] = "10M";
+    argv[argc++] = "1M";
 
     if (run_as_daemon)
     {

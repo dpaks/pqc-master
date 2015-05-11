@@ -1,4 +1,4 @@
-/*
+    /*
  * FILE: file_oids.c
  * HEADER: invalidation/file_oids.h
  *
@@ -33,6 +33,13 @@
 #include "invalidation/file_oids.h"
 #include "invalidation/md5.h"
 
+/*
+ * OFFSET_VAL: The offset relative to the end of file from where the
+ *             checksum comparison has to begin in files
+ */
+
+#define OFFSET_VAL -150
+
 static char *skip_comment_space(char *);
 
 /*
@@ -46,7 +53,7 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
     {
         if (errno != EEXIST)
         {
-            perror("\tCREATION of directory1 failed in file_oids.c ");
+            perror("\tCREATION of directory1 failed in add_table_oid ");
             exit(EXIT_FAILURE);
         }
     }
@@ -58,7 +65,7 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
         if (errno != EEXIST)
         {
 
-            perror("\tCREATION of directory2 failed in file_oids.c ");
+            perror("\tCREATION of directory2 failed in add_table_oid ");
         }
         else
         {
@@ -91,18 +98,49 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
     if ((fd_old = open(path, O_CREAT|O_RDWR|O_APPEND,
                        S_IRWXU|S_IRWXO|S_IRWXG)) == -1)
     {
-        perror("\tFailed to open extracted file in file_oids ");
+        perror("\tFailed to open extracted file in add_table_oid ");
         return;
     }
 
     if (fcntl(fd_old, F_SETLKW, &fl) == -1)
     {
-        perror("\tProblem locking in file_oids ");
+        perror("\tProblem locking in add_table_oid ");
         exit(1);
     }
     else
     {
-        pool_debug("\tFile locked in file_oids!\n");
+        pool_debug("\tFile locked in add_table_oid!\n");
+    }
+
+    /*
+     * To minimize the resource consumption in reading and comparing all
+     * the checksums in a file. This workaround will force the read and
+     * comparison to start only from OFFSET_VAL characters before the
+     * end of the file
+     */
+    if (lseek(fd_old, OFFSET_VAL, SEEK_END) == -1)
+    {
+        perror("\tlseek in add_table_oid ");
+    }
+    else
+    {
+        while (1)
+        {
+            if ((read_bytes = read(fd_old, &c, 1)) == -1)
+            {
+                perror("\tSkipping till newline after lseek in add_table_oid");
+                exit(1);
+            }
+            else if (read_bytes == 0)
+            {
+                break;
+            }
+
+            if (c == '\n')
+            {
+                break;
+            }
+        }
     }
 
     while (1)
@@ -126,7 +164,7 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
             if (read(fd_old, &c, 1) == -1)
             {
                 perror("\tSkipping the first white space after \
-                checksum in file_oids");
+                checksum in add_table_oid");
                 exit(1);
             }
 
@@ -138,7 +176,7 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
 
             tmpkey_from_file[(MD5KEYSIZE-1)] = '\0';
 
-            pool_debug("\tREAD checksum %s of size %zd from file in file_oids\n"
+            pool_debug("\tREAD checksum %s of size %zd from file in add_table_oid\n"
                        ,tmpkey_from_file, strlen(tmpkey_from_file));
 
             if (memcmp(tmpkey, tmpkey_from_file, MD5KEYSIZE) == 0)
@@ -151,21 +189,23 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
                 {
                     if (read(fd_old, &oid_from_file, 5) == -1)
                     {
-                        perror("\tReading oid from ext info file in file_oids");
+                        perror("\tReading oid from ext info file in add_table_oid");
                         exit(1);
                     }
                     else
                     {
                         oid_from_file[5] = '\0';
                         pool_debug("\tREAD oid %s of size %zd from oidfile in \
-                        file_oids\n",oid_from_file, strlen(oid_from_file));
-                        write_to_oid_file(db_name, oid_from_file, tmpkey_from_file);
+                        add_table_oid\n",oid_from_file, strlen(oid_from_file));
 
+                        /* writing to OID file */
+                        write_to_oid_file(db_name, oid_from_file, tmpkey_from_file);
                     }
+
                     if (read(fd_old, &c, 1) == -1)
                     {
                         perror("\tReading till new line char from ext \
-                        info file in file_oids");
+                        info file in add_table_oid");
                         exit(1);
                     }
                     if (c == '\n')
@@ -187,7 +227,7 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
                     if (read(fd_old, &c, 1) == -1)
                     {
                         perror("\tReading till new line char from ext info \
-                        file in file_oids");
+                        file in add_table_oid");
                         exit(1);
                     }
                     if (c == '\n')
@@ -200,7 +240,7 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
         }       /* end of outermost if */
         else
         {
-            perror("\tReading 2 from extracted info file in file_oids");
+            perror("\tReading 2 from extracted info file in add_table_oid");
             exit(1);
         }       /* end of outermost else */
 
@@ -210,12 +250,12 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
     fl.l_type = F_UNLCK;        /* Unlocking the file */
     if (fcntl(fd_old, F_SETLK, &fl) == -1)
     {
-        perror("\tUnlocking in file_oids ");
+        perror("\tUnlocking in add_table_oid ");
         exit(1);
     }
     else
     {
-        pool_debug("\tFile unlocked in file_oids! ");
+        pool_debug("\tFile unlocked in add_table_oid! ");
     }
     close(fd_old);
 }
@@ -226,8 +266,10 @@ void add_table_oid(POOL_CONNECTION *frontend, char tmpkey[MD5KEYSIZE])
 void write_to_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH],
                        char tmpkey_from_file[MD5KEYSIZE])
 {
-    int flag = 0, fd, read_bytes;
-    char tmpkey_from_oid_file[MD5KEYSIZE], path[PATHLENGTH];
+    int flag = 0, fd;
+    //int read_bytes;
+    //char tmpkey_from_oid_file[MD5KEYSIZE];
+    char path[PATHLENGTH];
     struct flock fl_new;
 
     fl_new.l_type   = F_WRLCK;
@@ -246,15 +288,16 @@ void write_to_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH],
     {
         if (fcntl(fd, F_SETLKW, &fl_new) == -1)
         {
-            perror("\tProblem locking oid file in file_oids ");
+            perror("\tProblem locking oid file in add_table_oid ");
             exit(EXIT_FAILURE);
         }
         else
         {
-            pool_debug("\tOID file locked in file_oids!\n");
+            pool_debug("\tOID file locked in add_table_oid!\n");
         }
 
         /* if already an entry exists in oid file, then do not write again */
+        #if OID_FILE_ENTRY_DUPLICATION
         while (1)
         {
             if ((read_bytes = read(fd, &tmpkey_from_oid_file,
@@ -278,10 +321,12 @@ void write_to_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH],
             }
             else
             {
-                perror("\tOID file in file_oids for match checking ");
+                perror("\tOID file in add_table_oid for match checking ");
                 break;
             }
         }       /* end of inner while loop */
+        #endif // OID_FILE_ENTRY_DUPLICATION
+
 
         if (flag == 0)
         {
@@ -294,12 +339,12 @@ void write_to_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH],
         fl_new.l_type = F_UNLCK;        /* Unlocking the file */
         if (fcntl(fd, F_SETLK, &fl_new) == -1)
         {
-            perror("\tUnlocking in file_oids ");
+            perror("\tUnlocking in add_table_oid ");
             exit(1);
         }
         else
         {
-            pool_debug("\tFile unlocked in file_oids! ");
+            pool_debug("\tFile unlocked in add_table_oid! ");
         }
         close(fd);
     }       /* end of outermost else */
@@ -357,7 +402,7 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
     {
         if (errno != EEXIST)
         {
-            perror("\tCREATION of directory1 failed in file_oids.c ");
+            perror("\tCREATION of directory1 failed in invalidate_query_cache ");
             exit(EXIT_FAILURE);
         }
     }
@@ -368,7 +413,7 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
     {
         if (errno != EEXIST)
         {
-            perror("\tCREATION of directory2 failed in file_oids.c ");
+            perror("\tCREATION of directory2 failed in invalidate_query_cache ");
             exit(EXIT_FAILURE);
         }
         else
@@ -402,18 +447,49 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
     if ((fd_old = open(path, O_CREAT|O_RDWR|O_APPEND,
                        S_IRWXU|S_IRWXO|S_IRWXG)) == -1)
     {
-        perror("\tFailed to open extracted file in file_oids ");
+        perror("\tFailed to open extracted file in invalidate_query_cache ");
         exit(EXIT_FAILURE);
     }
 
     if (fcntl(fd_old, F_SETLKW, &fl) == -1)
     {
-        perror("\tProblem locking in file_oids ");
+        perror("\tProblem locking in invalidate_query_cache ");
         exit(EXIT_FAILURE);
     }
     else
     {
-        pool_debug("\tFile locked in file_oids!\n");
+        pool_debug("\tFile locked in invalidate_query_cache!\n");
+    }
+
+    /*
+     * To minimize the resource consumption in reading and comparing all
+     * the checksums in a file. This workaround will force the read and
+     * comparison to start only from OFFSET_VAL characters before the
+     * end of the file
+     */
+    if (lseek(fd_old, OFFSET_VAL, SEEK_END) == -1)
+    {
+        perror("\tlseek in invalidate_query_cache ");
+    }
+    else
+    {
+        while (1)
+        {
+            if ((read_bytes = read(fd_old, &c, 1)) == -1)
+            {
+                perror("\tSkipping till newline after lseek in invalidate_query_cache");
+                exit(1);
+            }
+            else if (read_bytes == 0)
+            {
+                break;
+            }
+
+            if (c == '\n')
+            {
+                break;
+            }
+        }
     }
 
     while (1)
@@ -436,12 +512,12 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
             if (read(fd_old, &c, 1) == -1)
             {
                 perror("\tSkipping the first white space after \
-                checksum in file_oids");
+                checksum in invalidate_query_cache");
                 exit(EXIT_FAILURE);
             }
             tmpkey_from_file[(MD5KEYSIZE-1)] = '\0';
             pool_debug("\tREAD checksum %s of size %zd from file in \
-                    file_oids\n",tmpkey_from_file, strlen(tmpkey_from_file));
+                    invalidate_query_cache\n",tmpkey_from_file, strlen(tmpkey_from_file));
 
             if (memcmp(tmpkey, tmpkey_from_file, MD5KEYSIZE) == 0)
             {
@@ -451,17 +527,21 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
 
                 while (1)
                 {
-                    if (read(fd_old, &oid_from_file, 5) == -1)
+                    if ((read_bytes = read(fd_old, &oid_from_file, 5)) == -1)
                     {
                         perror("\tReading oid from ext_info_inva \
-                        file in file_oids");
+                        file in invalidate_query_cache");
                         exit(EXIT_FAILURE);
+                    }
+                    else if (read_bytes < 5)
+                    {
+                        break;
                     }
                     else
                     {
                         oid_from_file[5] = '\0';
                         pool_debug("\tREAD oid %s of size %zd from file in \
-                        file_oids in inva part\n",oid_from_file,
+                        invalidate_query_cache in inva part\n",oid_from_file,
                                    strlen(oid_from_file));
 
                         /* 0 on failure */
@@ -474,7 +554,7 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
                     if (read(fd_old, &c, 1) == -1)
                     {
                         perror("\tReading till new line char from ext \
-                        info file in file_oids");
+                        info file in invalidate_query_cache");
                         exit(EXIT_FAILURE);
                     }
 
@@ -497,7 +577,7 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
                     if (read(fd_old, &c, 1) == -1)
                     {
                         perror("\tReading till new line char from ext \
-                        info file in file_oids");
+                        info file in invalidate_query_cache");
                         exit(1);
                     }
                     if (c == '\n')
@@ -510,7 +590,7 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
         }       /* outermost if ends */
         else
         {
-            perror("\tReading 2 from extracted info file in file_oids");
+            perror("\tReading 2 from extracted info file in invalidate_query_cache");
             exit(EXIT_FAILURE);
         }       /* outermost else ends */
 
@@ -525,7 +605,7 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
     }
     else
     {
-        pool_debug("\tFile ext_info_inva unlocked in file_oids! ");
+        pool_debug("\tFile ext_info_inva unlocked in invalidate_query_cache! ");
     }
     close(fd_old);
     free(tmpkey);
@@ -538,7 +618,8 @@ void invalidate_query_cache(POOL_CONNECTION *frontend, char query1[MAXDATASIZE])
 int read_from_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH])
 {
     int fd, read_bytes;
-    char path[PATHLENGTH], tmpkey_to_be_inva[MD5KEYSIZE], command[COMLENGTH];
+    char path[PATHLENGTH], tmpkey_to_be_inva[MD5KEYSIZE];
+    //char command[COMLENGTH];
     struct flock fl_new;
     memcached_return rc;
 
@@ -549,9 +630,11 @@ int read_from_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH])
 
     /* create or open oid file */
     snprintf(path, sizeof(path), "%s/%s/%s/%s", dir, "oiddir", db_name, oid_from_file);
+#if ENABLE_COMMAND
     snprintf(command, sizeof(command), "rm -rf %s",path);
+#endif // ENABLE_COMMAND
 
-    if ((fd = open(path, O_CREAT|O_RDWR|O_APPEND, S_IRWXU|S_IROTH)) == -1)
+    if ((fd = open(path, O_CREAT|O_RDWR|O_APPEND|O_TRUNC, S_IRWXU|S_IROTH)) == -1)
     {
         perror("\tCreating or opening oid file\n");
         /*
@@ -559,11 +642,13 @@ int read_from_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH])
          * been issued since the program has been started.
          */
 
+        /*
         if (system(command) == -1)
         {
             perror("\tSystem command ");
             exit(EXIT_FAILURE);
         }
+        */
         return 0;       /* if more oid files to be read */
     }
     else
@@ -571,12 +656,12 @@ int read_from_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH])
 
         if (fcntl(fd, F_SETLKW, &fl_new) == -1)
         {
-            perror("\tProblem locking oid file in file_oids ");
+            perror("\tProblem locking oid file in invalidate_query_cache ");
             exit(1);
         }
         else
         {
-            pool_debug("\tOID file %s locked for reading file_oids in  \
+            pool_debug("\tOID file %s locked for invalidation in \
             inva part!\n", oid_from_file);
         }
 
@@ -597,7 +682,7 @@ int read_from_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH])
                 }
                 tmpkey_to_be_inva[(MD5KEYSIZE-1)] = '\0';
 
-                pool_debug("\tREAD key %s of size %zd from file in file_oids \
+                pool_debug("\tREAD key %s of size %zd from file in invalidate_query_cache \
                 in inva part\n",tmpkey_to_be_inva, strlen(tmpkey_to_be_inva));
 
                 memcached_st *memc = get_memc();
@@ -622,25 +707,35 @@ int read_from_oid_file(char db_name[DBLENGTH], char oid_from_file[OIDLENGTH])
 
         }       /* while ends */
 
+        /*
         if (system(command) == -1)
         {
             perror("\tSystem command ");
             exit(EXIT_FAILURE);
         }
+        */
+
+        /* flushing the contents of the OID file after invalidation */
+        if (write(fd, "", 0) == -1 )   /* TRUNC mode */
+        {
+            perror("\tFailed in TRUNCating invalidated OID file contents ");
+        }
+        pool_debug("\tFlushed invalidated OID file contents. ");
 
         fl_new.l_type = F_UNLCK;        //Unlocking the file
         if (fcntl(fd, F_SETLK, &fl_new) == -1)
         {
-            perror("\tUnlocking in file_oids ");
+            perror("\tUnlocking in invalidate_query_cache ");
             exit(1);
         }
         else
         {
-            pool_debug("\tFile oid unlocked in file_oids! ");
+            pool_debug("\tFile oid unlocked in invalidate_query_cache! ");
         }
 
         close(fd);
     }           /* outermost else ends */
+
     return 1;
 }
 
@@ -678,6 +773,37 @@ int check_if_meta(char tmpkey[MD5KEYSIZE])
         pool_debug("\tFILE locked in ext_info_meta!\n");
     }
 
+    /*
+     * To minimize the resource consumption in reading and comparing all
+     * the checksums in a file. This workaround will force the read and
+     * comparison to start only from OFFSET_VAL characters before the
+     * end of the file
+     */
+    if (lseek(fd_new, OFFSET_VAL, SEEK_END) == -1)
+    {
+        perror("\tlseek in check_if_meta ");
+    }
+    else
+    {
+        while (1)
+        {
+            if ((read_bytes = read(fd_new, &c, 1)) == -1)
+            {
+                perror("\tSkipping till newline after lseek in invalidate_query_cache");
+                exit(1);
+            }
+            else if (read_bytes == 0)
+            {
+                break;
+            }
+
+            if (c == '\n')
+            {
+                break;
+            }
+        }
+    }
+
     while (1)
     {
         if ((read_bytes = read(fd_new, &tmpkey_from_file,
@@ -696,7 +822,7 @@ int check_if_meta(char tmpkey[MD5KEYSIZE])
             }
             tmpkey_from_file[(MD5KEYSIZE-1)] = '\0';
             pool_debug("\tREAD checksum %s of size %zd from meta file in \
-                    file_oids\n",tmpkey_from_file, strlen(tmpkey_from_file));
+                    invalidate_query_cache\n",tmpkey_from_file, strlen(tmpkey_from_file));
 
             if (memcmp(tmpkey, tmpkey_from_file, MD5KEYSIZE) == 0)
             {
@@ -728,7 +854,7 @@ int check_if_meta(char tmpkey[MD5KEYSIZE])
         }       /* outermost if ends */
         else
         {
-            perror("\tReading 2 from extracted info file in file_oids");
+            perror("\tReading 2 from extracted info file in invalidate_query_cache");
             exit(EXIT_FAILURE);
         }       /* outermost else ends */
 
